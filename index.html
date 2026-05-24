@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Miku Nakano — 中野 三玖</title>
+<title>Quintuplets — Nakano Sisters</title>
 <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
 <style>
 /* ============================================================
@@ -11,24 +11,38 @@
 ============================================================ */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --r:#e05068;      /* rose */
-  --rb:#f28fa0;     /* rose bright */
-  --rp:#fce8ed;     /* rose pale */
-  --rm:#fad5de;     /* rose mid */
-  --ink:#18080e;    /* near-black */
-  --wine:#5c1526;   /* dark wine */
-  --mist:#f8edf0;   /* off-white */
-  --sub:#8a4456;    /* muted text */
-  --gold:#c8919e;   /* gold-rose */
+  /* MIKU theme (default) */
+  --accent:#e05068;
+  --accent-b:#f28fa0;
+  --accent-p:#fce8ed;
+  --accent-m:#fad5de;
+  --ink:#18080e;
+  --dark1:#0e0408;
+  --dark2:#0c0308;
+  --dark3:#0a0205;
+  --wine:#5c1526;
+  --mist:#f8edf0;
+  --sub:#8a4456;
+  --gold:#c8919e;
   --w:#fff;
-  --fs-xs:.65rem;
-  --fs-sm:.82rem;
-  --fs-md:1rem;
-  --fs-lg:1.25rem;
-  --fs-xl:clamp(2rem,5vw,3.5rem);
-  --fs-hero:clamp(2.8rem,8vw,6rem);
   --ease:cubic-bezier(.25,.46,.45,.94);
   --ease-out:cubic-bezier(0,0,.2,1);
+}
+
+/* NINO theme overrides */
+body.nino{
+  --accent:#8b5cf6;
+  --accent-b:#a78bfa;
+  --accent-p:#ede9fe;
+  --accent-m:#ddd6fe;
+  --wine:#3b0764;
+  --mist:#f5f3ff;
+  --sub:#6d28d9;
+  --gold:#a78bfa;
+  --dark1:#08040f;
+  --dark2:#0a0514;
+  --dark3:#070310;
+  --ink:#0f0818;
 }
 
 html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
@@ -38,748 +52,421 @@ body{
   color:var(--ink);
   overflow-x:hidden;
   cursor:none;
+  transition:background .5s, color .5s;
 }
 
 /* ============================================================
    CUSTOM CURSOR
 ============================================================ */
 #cursor-dot,#cursor-ring{
-  position:fixed;top:0;left:0;
-  border-radius:50%;pointer-events:none;
-  z-index:9999;transform:translate(-50%,-50%);
-  will-change:left,top;
+  position:fixed;top:0;left:0;border-radius:50%;
+  pointer-events:none;z-index:9999;transform:translate(-50%,-50%);
+  will-change:left,top;transition:width .25s,height .25s,border-color .4s,background .4s;
 }
-#cursor-dot{width:6px;height:6px;background:var(--r);transition:transform .1s}
-#cursor-ring{
-  width:32px;height:32px;
-  border:1.5px solid rgba(224,80,104,.5);
-  transition:width .25s var(--ease),height .25s var(--ease),border-color .25s,transform .08s;
-}
-body:has(a:hover) #cursor-ring,
-body:has(button:hover) #cursor-ring,
-.cursor-expand #cursor-ring{width:52px;height:52px;border-color:var(--r)}
+#cursor-dot{width:6px;height:6px;background:var(--accent)}
+#cursor-ring{width:32px;height:32px;border:1.5px solid rgba(224,80,104,.45)}
+body.nino #cursor-ring{border-color:rgba(139,92,246,.45)}
+.cur-big #cursor-ring{width:50px;height:50px;border-color:var(--accent)}
 @media(hover:none){#cursor-dot,#cursor-ring{display:none}}
 
 /* ============================================================
-   NOISE TEXTURE OVERLAY
+   CHARACTER SWITCHER (TOP BAR)
 ============================================================ */
-body::after{
-  content:'';position:fixed;inset:0;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.035'/%3E%3C/svg%3E");
-  pointer-events:none;z-index:0;mix-blend-mode:overlay;
+#switcher-bar{
+  position:fixed;top:0;left:0;right:0;z-index:300;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(6,2,9,.96);
+  border-bottom:1px solid rgba(255,255,255,.05);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  padding:.5rem 1.5rem;
+  gap:.6rem;
 }
+.sw-label{
+  font-size:.55rem;letter-spacing:.5em;text-transform:uppercase;
+  color:rgba(255,255,255,.3);margin-right:.4rem;white-space:nowrap;
+}
+.sw-btn{
+  display:flex;align-items:center;gap:.55rem;
+  padding:.45rem 1.2rem .45rem .7rem;
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:100px;
+  background:rgba(255,255,255,.04);
+  color:rgba(255,255,255,.45);
+  font-family:'DM Sans',sans-serif;
+  font-size:.65rem;letter-spacing:.3em;text-transform:uppercase;
+  cursor:pointer;
+  transition:all .3s var(--ease);
+  white-space:nowrap;
+}
+.sw-btn:hover{border-color:rgba(255,255,255,.25);color:rgba(255,255,255,.7);background:rgba(255,255,255,.07)}
+.sw-btn.active-miku{
+  border-color:#e05068;
+  background:rgba(224,80,104,.15);
+  color:#f28fa0;
+}
+.sw-btn.active-nino{
+  border-color:#8b5cf6;
+  background:rgba(139,92,246,.15);
+  color:#a78bfa;
+}
+.sw-avatar{
+  width:24px;height:24px;border-radius:50%;
+  object-fit:cover;object-position:top;
+  border:1.5px solid currentColor;
+  background:#222;
+  flex-shrink:0;
+  font-size:10px;display:flex;align-items:center;justify-content:center;overflow:hidden;
+}
+.sw-avatar img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
+.sw-dot{
+  width:7px;height:7px;border-radius:50%;flex-shrink:0;
+  transition:background .3s;
+}
+.sw-btn.active-miku .sw-dot{background:#e05068}
+.sw-btn.active-nino .sw-dot{background:#8b5cf6}
+.sw-btn:not(.active-miku):not(.active-nino) .sw-dot{background:rgba(255,255,255,.2)}
 
 /* ============================================================
-   NAV
+   NAV (below switcher)
 ============================================================ */
 #nav{
-  position:fixed;top:0;left:0;right:0;z-index:200;
-  padding:1.2rem clamp(1.5rem,5vw,4rem);
+  position:fixed;top:36px;left:0;right:0;z-index:200;
+  padding:1.1rem clamp(1.5rem,5vw,4rem);
   display:flex;align-items:center;justify-content:space-between;
   transition:all .4s var(--ease);
 }
 #nav.solid{
-  background:rgba(14,4,8,.92);
-  backdrop-filter:blur(18px);
-  -webkit-backdrop-filter:blur(18px);
-  border-bottom:1px solid rgba(224,80,104,.08);
+  background:rgba(10,3,13,.93);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(255,255,255,.05);
 }
 .nav-logo{
   font-family:'Shippori Mincho',serif;
-  font-size:1rem;letter-spacing:.35em;color:var(--w);
-  text-decoration:none;
+  font-size:.95rem;letter-spacing:.35em;color:var(--w);
+  text-decoration:none;transition:color .4s;
 }
-.nav-links{
-  display:flex;gap:clamp(1.2rem,3vw,2.5rem);
-  list-style:none;
-}
+.nav-links{display:flex;gap:clamp(1rem,2.5vw,2.2rem);list-style:none}
 .nav-links a{
-  font-size:var(--fs-xs);letter-spacing:.5em;text-transform:uppercase;
-  color:rgba(255,255,255,.4);text-decoration:none;
-  transition:color .25s;
-  white-space:nowrap;
+  font-size:.6rem;letter-spacing:.5em;text-transform:uppercase;
+  color:rgba(255,255,255,.38);text-decoration:none;
+  transition:color .25s;white-space:nowrap;
 }
-.nav-links a:hover{color:var(--rb)}
-
-/* hamburger — mobile */
+.nav-links a:hover{color:var(--accent-b)}
 .nav-burger{
-  display:none;
-  flex-direction:column;gap:5px;
+  display:none;flex-direction:column;gap:5px;
   background:none;border:none;cursor:pointer;padding:.3rem;
 }
-.nav-burger span{
-  display:block;width:22px;height:1.5px;
-  background:rgba(255,255,255,.6);
-  transition:all .3s var(--ease);
-}
+.nav-burger span{display:block;width:22px;height:1.5px;background:rgba(255,255,255,.55);transition:all .3s var(--ease)}
 .nav-burger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
 .nav-burger.open span:nth-child(2){opacity:0;transform:scaleX(0)}
 .nav-burger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
-
-/* mobile menu */
 .nav-mobile{
-  display:none;
-  position:fixed;inset:0;
-  background:rgba(12,3,7,.97);
-  z-index:190;
-  flex-direction:column;align-items:center;justify-content:center;gap:2.5rem;
-  list-style:none;
+  display:none;position:fixed;inset:0;
+  background:rgba(8,2,12,.97);z-index:190;
+  flex-direction:column;align-items:center;justify-content:center;
+  gap:2.2rem;list-style:none;
 }
 .nav-mobile.open{display:flex}
 .nav-mobile a{
   font-family:'Shippori Mincho',serif;
-  font-size:clamp(1.4rem,6vw,2rem);
-  letter-spacing:.25em;color:rgba(255,255,255,.7);
-  text-decoration:none;transition:color .2s;
+  font-size:clamp(1.3rem,5vw,1.9rem);letter-spacing:.25em;
+  color:rgba(255,255,255,.65);text-decoration:none;transition:color .2s;
 }
-.nav-mobile a:hover{color:var(--rb)}
+.nav-mobile a:hover{color:var(--accent-b)}
 
 /* ============================================================
    HERO
 ============================================================ */
 #hero{
-  min-height:100svh;
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  position:relative;overflow:hidden;
-  align-items:center;
+  min-height:100svh;padding-top:72px;
+  display:grid;grid-template-columns:1fr 1fr;
+  position:relative;overflow:hidden;align-items:center;
 }
-
-/* animated gradient mesh */
 .hero-mesh{
   position:absolute;inset:0;z-index:0;
   background:
-    radial-gradient(ellipse 70% 60% at 80% 40%, rgba(200,50,80,.22) 0%, transparent 65%),
-    radial-gradient(ellipse 50% 50% at 10% 80%, rgba(100,20,40,.35) 0%, transparent 60%),
-    radial-gradient(ellipse 80% 100% at 50% 100%, rgba(12,3,7,1) 0%, transparent 50%),
-    #0e0408;
-  animation:meshpulse 12s ease-in-out infinite alternate;
+    radial-gradient(ellipse 65% 55% at 80% 40%,var(--hero-orb1,rgba(200,50,80,.22)) 0%,transparent 65%),
+    radial-gradient(ellipse 50% 50% at 10% 80%,var(--hero-orb2,rgba(100,20,40,.35)) 0%,transparent 60%),
+    radial-gradient(ellipse 80% 100% at 50% 100%,rgba(6,2,9,1) 0%,transparent 50%),
+    var(--dark1);
+  transition:background .8s var(--ease);
 }
-@keyframes meshpulse{
-  from{filter:brightness(1) saturate(1)}
-  to{filter:brightness(1.08) saturate(1.12)}
-}
+body.miku .hero-mesh{--hero-orb1:rgba(200,50,80,.22);--hero-orb2:rgba(100,20,40,.35)}
+body.nino .hero-mesh{--hero-orb1:rgba(100,50,200,.22);--hero-orb2:rgba(50,10,100,.35)}
+.orb{position:absolute;border-radius:50%;filter:blur(75px);pointer-events:none;z-index:0;animation:orb-drift ease-in-out infinite alternate}
+.orb1{width:clamp(280px,45vw,560px);height:clamp(280px,45vw,560px);background:radial-gradient(circle,rgba(var(--orb-rgb,224,80,104),.16),transparent 70%);top:-20%;left:-10%;animation-duration:16s}
+.orb2{width:clamp(220px,35vw,420px);height:clamp(220px,35vw,420px);background:radial-gradient(circle,rgba(var(--orb2-rgb,92,21,38),.3),transparent 70%);bottom:-15%;right:5%;animation-duration:20s;animation-delay:-6s}
+body.miku .orb1{background:radial-gradient(circle,rgba(224,80,104,.16),transparent 70%)}
+body.miku .orb2{background:radial-gradient(circle,rgba(92,21,38,.3),transparent 70%)}
+body.nino .orb1{background:radial-gradient(circle,rgba(139,92,246,.16),transparent 70%)}
+body.nino .orb2{background:radial-gradient(circle,rgba(59,7,100,.3),transparent 70%)}
+@keyframes orb-drift{from{transform:translate(0,0) scale(1)}to{transform:translate(30px,25px) scale(1.1)}}
 
-/* floating orbs */
-.orb{
-  position:absolute;border-radius:50%;
-  filter:blur(70px);pointer-events:none;z-index:0;
-  animation:orb-drift ease-in-out infinite alternate;
-}
-.orb1{width:clamp(300px,45vw,580px);height:clamp(300px,45vw,580px);
-  background:radial-gradient(circle,rgba(224,80,104,.18),transparent 70%);
-  top:-20%;left:-10%;animation-duration:16s}
-.orb2{width:clamp(250px,35vw,450px);height:clamp(250px,35vw,450px);
-  background:radial-gradient(circle,rgba(92,21,38,.35),transparent 70%);
-  bottom:-15%;right:5%;animation-duration:20s;animation-delay:-6s}
-.orb3{width:clamp(150px,20vw,280px);height:clamp(150px,20vw,280px);
-  background:radial-gradient(circle,rgba(242,143,160,.12),transparent 70%);
-  top:40%;left:40%;animation-duration:13s;animation-delay:-3s}
-@keyframes orb-drift{
-  from{transform:translate(0,0) scale(1)}
-  to{transform:translate(30px,25px) scale(1.1)}
-}
-
-/* sakura petals */
-.petal{
-  position:absolute;border-radius:50% 0 50% 50%;
-  pointer-events:none;z-index:1;opacity:0;
-  animation:petal-fall linear infinite;
-}
+.petal{position:absolute;border-radius:50% 0 50% 50%;pointer-events:none;z-index:1;opacity:0;animation:petal-fall linear infinite}
 @keyframes petal-fall{
   0%{transform:translateY(-30px) rotate(0deg) translateX(0);opacity:.7}
   60%{opacity:.4;transform:translateY(55vh) rotate(220deg) translateX(28px)}
   100%{transform:translateY(108vh) rotate(400deg) translateX(-20px);opacity:0}
 }
 
-/* hero left content */
 .hero-content{
   position:relative;z-index:3;
-  padding:clamp(5rem,10vh,8rem) clamp(1.5rem,4vw,3rem) clamp(3rem,6vh,5rem) clamp(1.5rem,5vw,5rem);
-  display:flex;flex-direction:column;
-  gap:clamp(.8rem,1.5vh,1.4rem);
+  padding:clamp(2rem,5vh,4rem) clamp(1.5rem,4vw,3rem) clamp(2rem,5vh,4rem) clamp(1.5rem,5vw,5rem);
+  display:flex;flex-direction:column;gap:clamp(.7rem,1.3vh,1.3rem);
 }
+.h-eyebrow{display:inline-flex;align-items:center;gap:.8rem;font-size:.6rem;letter-spacing:.65em;text-transform:uppercase;color:var(--accent-b);opacity:0;animation:slide-up .7s .2s var(--ease-out) forwards}
+.h-eyebrow::before{content:'';display:block;width:22px;height:1px;background:var(--accent-b)}
+.h-jp{font-family:'Shippori Mincho',serif;font-size:clamp(2.6rem,7.5vw,5.8rem);font-weight:500;color:var(--w);line-height:.93;opacity:0;animation:slide-up .8s .36s var(--ease-out) forwards}
+.h-en{font-family:'Playfair Display',serif;font-size:clamp(.88rem,1.7vw,1.18rem);font-style:italic;letter-spacing:.25em;color:var(--gold);opacity:0;animation:slide-up .8s .5s var(--ease-out) forwards}
+.h-divider{width:44px;height:1px;background:linear-gradient(90deg,var(--accent),transparent);margin:clamp(.1rem,.3vh,.4rem) 0;opacity:0;animation:slide-up .7s .62s var(--ease-out) forwards}
+.h-tagline{font-size:clamp(.7rem,.88vw,.84rem);letter-spacing:.1em;color:rgba(255,255,255,.42);line-height:2.1;max-width:min(340px,90%);opacity:0;animation:slide-up .8s .74s var(--ease-out) forwards}
+.h-chips{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:.2rem;opacity:0;animation:slide-up .8s .88s var(--ease-out) forwards}
+.chip{padding:.25rem .72rem;border:1px solid rgba(var(--chip-rgb,224,80,104),.3);border-radius:100px;font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-b);background:rgba(var(--chip-rgb,224,80,104),.06);transition:all .25s;cursor:default;white-space:nowrap}
+.chip:hover{background:var(--accent);color:var(--w);border-color:var(--accent)}
+body.miku .chip{--chip-rgb:224,80,104}
+body.nino .chip{--chip-rgb:139,92,246}
+.h-scroll{display:inline-flex;align-items:center;gap:.7rem;font-size:.56rem;letter-spacing:.45em;text-transform:uppercase;color:rgba(255,255,255,.22);margin-top:.4rem;opacity:0;animation:slide-up .7s 1.08s var(--ease-out) forwards}
+.h-scroll-line{width:32px;height:1px;background:rgba(255,255,255,.14)}
+.h-arrow{width:18px;height:18px;border-right:1px solid var(--accent);border-bottom:1px solid var(--accent);transform:rotate(45deg);animation:bounce-d 2s ease-in-out infinite}
+@keyframes bounce-d{0%,100%{transform:rotate(45deg) translate(0,0)}50%{transform:rotate(45deg) translate(3px,3px)}}
 
-.h-eyebrow{
-  display:inline-flex;align-items:center;gap:.8rem;
-  font-size:var(--fs-xs);letter-spacing:.65em;text-transform:uppercase;
-  color:var(--rb);
-  opacity:0;animation:slide-up .7s .2s var(--ease-out) forwards;
-}
-.h-eyebrow::before{content:'';display:block;width:24px;height:1px;background:var(--rb)}
+.hero-visual{position:relative;z-index:2;height:calc(100svh - 72px);display:flex;align-items:flex-end;justify-content:center;overflow:hidden}
+.hero-visual::before{content:'';position:absolute;inset:0;background:linear-gradient(to right,var(--dark1) 0%,transparent 22%,transparent 78%,var(--dark1) 100%),linear-gradient(to top,var(--dark1) 0%,transparent 35%);z-index:2;transition:background .8s}
+.hero-img{position:relative;z-index:1;height:100%;width:100%;object-fit:cover;object-position:top center;opacity:0;animation:img-reveal 1.1s .55s var(--ease-out) forwards;filter:drop-shadow(0 0 40px rgba(var(--img-glow,224,80,104),.3));background:linear-gradient(160deg,#2a0e18,#1a0810)}
+body.miku .hero-img{--img-glow:224,80,104;filter:drop-shadow(0 0 40px rgba(224,80,104,.3))}
+body.nino .hero-img{--img-glow:139,92,246;filter:drop-shadow(0 0 40px rgba(139,92,246,.3))}
+.hero-kanji{position:absolute;right:4%;top:8%;font-family:'Shippori Mincho',serif;font-size:clamp(5rem,10vw,10rem);font-weight:400;color:rgba(255,255,255,.04);line-height:1;z-index:1;pointer-events:none;writing-mode:vertical-rl;opacity:0;animation:slide-up .9s .35s var(--ease-out) forwards}
 
-.h-jp{
-  font-family:'Shippori Mincho',serif;
-  font-size:var(--fs-hero);font-weight:500;
-  color:var(--w);line-height:.95;
-  opacity:0;animation:slide-up .8s .38s var(--ease-out) forwards;
-}
-
-.h-en{
-  font-family:'Playfair Display',serif;
-  font-size:clamp(.9rem,1.8vw,1.2rem);
-  font-style:italic;font-weight:400;
-  letter-spacing:.25em;color:var(--gold);
-  opacity:0;animation:slide-up .8s .52s var(--ease-out) forwards;
-}
-
-.h-divider{
-  width:48px;height:1px;
-  background:linear-gradient(90deg,var(--r),transparent);
-  margin:clamp(.2rem,.5vh,.5rem) 0;
-  opacity:0;animation:slide-up .7s .64s var(--ease-out) forwards;
-}
-
-.h-tagline{
-  font-size:clamp(.72rem,.9vw,.85rem);
-  letter-spacing:.12em;
-  color:rgba(255,255,255,.45);
-  line-height:2;
-  max-width:min(340px,90%);
-  opacity:0;animation:slide-up .8s .76s var(--ease-out) forwards;
-}
-
-.h-chips{
-  display:flex;flex-wrap:wrap;gap:.5rem;
-  margin-top:.3rem;
-  opacity:0;animation:slide-up .8s .9s var(--ease-out) forwards;
-}
-.chip{
-  padding:.28rem .75rem;
-  border:1px solid rgba(224,80,104,.3);
-  border-radius:100px;
-  font-size:clamp(.55rem,.65rem,.65rem);letter-spacing:.22em;text-transform:uppercase;
-  color:rgba(242,143,160,.8);
-  background:rgba(224,80,104,.06);
-  transition:all .25s;cursor:default;white-space:nowrap;
-}
-.chip:hover{background:var(--r);color:var(--w);border-color:var(--r)}
-
-.h-scroll{
-  display:inline-flex;align-items:center;gap:.7rem;
-  font-size:.58rem;letter-spacing:.45em;text-transform:uppercase;
-  color:rgba(255,255,255,.25);
-  margin-top:.5rem;
-  opacity:0;animation:slide-up .7s 1.1s var(--ease-out) forwards;
-}
-.h-scroll-line{width:36px;height:1px;background:rgba(255,255,255,.15)}
-.h-scroll-arrow{
-  width:20px;height:20px;
-  border-right:1px solid rgba(224,80,104,.5);
-  border-bottom:1px solid rgba(224,80,104,.5);
-  transform:rotate(45deg);
-  animation:bounce-down 2s ease-in-out infinite;
-  margin-left:.3rem;
-}
-@keyframes bounce-down{
-  0%,100%{transform:rotate(45deg) translate(0,0)}
-  50%{transform:rotate(45deg) translate(3px,3px)}
-}
-
-/* hero right — image */
-.hero-visual{
-  position:relative;z-index:2;
-  height:100svh;
-  display:flex;align-items:flex-end;justify-content:center;
-  overflow:hidden;
-}
-.hero-visual::before{
-  content:'';position:absolute;inset:0;
-  background:
-    linear-gradient(to right,#0e0408 0%,transparent 22%,transparent 78%,#0e0408 100%),
-    linear-gradient(to top,#0e0408 0%,transparent 35%);
-  z-index:2;
-}
-.hero-img{
-  position:relative;z-index:1;
-  height:100%;width:100%;
-  object-fit:cover;object-position:top center;
-  opacity:0;
-  animation:img-reveal 1.1s .55s var(--ease-out) forwards;
-  filter:drop-shadow(0 0 40px rgba(224,80,104,.3));
-  /* graceful fallback */
-  background:linear-gradient(160deg,#2a0e18,#1a0810);
-}
-.hero-img-fallback{
-  position:absolute;inset:0;z-index:0;
-  display:flex;align-items:center;justify-content:center;
-}
-/* kanji watermark */
-.hero-kanji{
-  position:absolute;right:4%;top:8%;
-  font-family:'Shippori Mincho',serif;
-  font-size:clamp(5rem,11vw,11rem);font-weight:400;
-  color:rgba(224,80,104,.05);
-  line-height:1;z-index:1;pointer-events:none;
-  writing-mode:vertical-rl;
-  opacity:0;animation:slide-up .9s .35s var(--ease-out) forwards;
-}
-
-@keyframes slide-up{
-  from{opacity:0;transform:translateY(20px)}
-  to{opacity:1;transform:translateY(0)}
-}
-@keyframes img-reveal{
-  from{opacity:0;transform:translateY(18px) scale(1.02)}
-  to{opacity:1;transform:translateY(0) scale(1)}
-}
+@keyframes slide-up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes img-reveal{from{opacity:0;transform:translateY(18px) scale(1.02)}to{opacity:1;transform:translateY(0) scale(1)}}
 
 /* ============================================================
    STATS RIBBON
 ============================================================ */
-.stats-ribbon{
-  background:#080206;
-  border-top:1px solid rgba(255,255,255,.04);
-  border-bottom:1px solid rgba(255,255,255,.04);
-  position:relative;z-index:3;
-}
-.stats-inner{
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
-  max-width:1100px;margin:0 auto;
-  border-left:1px solid rgba(255,255,255,.04);
-}
-.stat-cell{
-  padding:clamp(1.2rem,3vh,2rem) 1rem;
-  text-align:center;
-  border-right:1px solid rgba(255,255,255,.04);
-  transition:background .3s;
-  cursor:default;
-}
-.stat-cell:hover{background:rgba(224,80,104,.05)}
-.stat-n{
-  font-family:'Playfair Display',serif;
-  font-size:clamp(1.6rem,3vw,2.2rem);
-  color:var(--r);display:block;line-height:1;
-  margin-bottom:.4rem;
-}
-.stat-l{
-  font-size:clamp(.5rem,.6rem,.6rem);
-  letter-spacing:.4em;text-transform:uppercase;
-  color:rgba(255,255,255,.3);
-}
+.stats-ribbon{background:var(--dark3);border-top:1px solid rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.04);position:relative;z-index:3;transition:background .5s}
+.stats-inner{display:grid;grid-template-columns:repeat(5,1fr);max-width:1100px;margin:0 auto;border-left:1px solid rgba(255,255,255,.04)}
+.stat-cell{padding:clamp(1rem,2.5vh,1.8rem) 1rem;text-align:center;border-right:1px solid rgba(255,255,255,.04);transition:background .3s;cursor:default}
+.stat-cell:hover{background:rgba(var(--stat-rgb,224,80,104),.05)}
+body.miku .stat-cell:hover{background:rgba(224,80,104,.05)}
+body.nino .stat-cell:hover{background:rgba(139,92,246,.05)}
+.stat-n{font-family:'Playfair Display',serif;font-size:clamp(1.5rem,2.8vw,2.1rem);color:var(--accent);display:block;line-height:1;margin-bottom:.38rem;transition:color .4s}
+.stat-l{font-size:clamp(.48rem,.58rem,.58rem);letter-spacing:.4em;text-transform:uppercase;color:rgba(255,255,255,.28)}
 
 /* ============================================================
-   SECTION SHARED
+   SECTION BASE
 ============================================================ */
-.s-light{background:var(--mist)}
-.s-dark{background:#0c0308}
-.s-wine{background:#0a0205}
-
-.s-pad{padding:clamp(3.5rem,8vh,6.5rem) clamp(1.5rem,5vw,4rem)}
+.s-light{background:var(--mist);transition:background .5s}
+.s-dark{background:var(--dark2);transition:background .5s}
+.s-wine{background:var(--dark3);transition:background .5s}
+.s-pad{padding:clamp(3rem,7vh,6rem) clamp(1.5rem,5vw,4rem)}
 .s-inner{max-width:1100px;margin:0 auto}
-
-.s-eyebrow{
-  display:inline-flex;align-items:center;gap:.7rem;
-  font-size:.6rem;letter-spacing:.58em;text-transform:uppercase;
-  color:var(--r);margin-bottom:.6rem;
-}
-.s-eyebrow::before{content:'';display:block;width:22px;height:1px;background:var(--r)}
-
-.s-title{
-  font-family:'Playfair Display',serif;
-  font-size:clamp(1.8rem,3.5vw,2.8rem);
-  font-weight:400;line-height:1.15;
-  color:var(--wine);margin-bottom:clamp(1.5rem,3vh,2.5rem);
-}
+.s-eye{display:inline-flex;align-items:center;gap:.7rem;font-size:.58rem;letter-spacing:.58em;text-transform:uppercase;color:var(--accent);margin-bottom:.55rem;transition:color .4s}
+.s-eye::before{content:'';display:block;width:20px;height:1px;background:var(--accent);transition:background .4s}
+.s-title{font-family:'Playfair Display',serif;font-size:clamp(1.7rem,3.3vw,2.7rem);font-weight:400;line-height:1.15;color:var(--wine);margin-bottom:clamp(1.3rem,2.5vh,2.2rem);transition:color .4s}
 .s-dark .s-title,.s-wine .s-title{color:var(--w)}
 .s-light .s-title{color:var(--wine)}
 
 /* ============================================================
    PROFILE
 ============================================================ */
-.profile-grid{
-  display:grid;
-  grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);
-  gap:clamp(2rem,5vw,5rem);
-  align-items:start;
-}
-.prof-img-wrap{position:relative}
-.prof-img-frame{
-  position:relative;
-  border-radius:6px;overflow:hidden;
-  box-shadow:0 24px 70px rgba(92,21,38,.35);
-  aspect-ratio:3/4;
-  background:linear-gradient(160deg,#2a0e18,#1a0810);
-}
-.prof-img{
-  width:100%;height:100%;
-  object-fit:cover;object-position:top center;
-  display:block;
-  background:linear-gradient(160deg,#2a0e18,#1a0810);
-}
-.prof-img-frame::after{
-  content:'';
-  position:absolute;inset:0;
-  background:linear-gradient(to top,rgba(12,3,8,.6) 0%,transparent 45%);
-  pointer-events:none;
-}
-.prof-frame-deco{
-  position:absolute;top:14px;left:14px;right:-14px;bottom:-14px;
-  border:1px solid rgba(224,80,104,.18);
-  border-radius:6px;z-index:-1;
-}
-.prof-caption{
-  margin-top:1rem;
-  font-size:.6rem;letter-spacing:.35em;text-transform:uppercase;
-  color:var(--sub);text-align:center;
-}
-
-.prof-info{display:flex;flex-direction:column;gap:clamp(1rem,2vh,1.6rem)}
-.info-lbl{
-  font-size:.58rem;letter-spacing:.45em;text-transform:uppercase;
-  color:var(--r);margin-bottom:.3rem;
-}
-.info-val{
-  font-family:'Playfair Display',serif;
-  font-size:clamp(1rem,1.2vw,1.12rem);
-  color:var(--ink);line-height:1.7;
-}
-.info-sep{height:1px;background:rgba(92,21,38,.1)}
-.data-box{
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:.9rem 1.6rem;
-  background:var(--rm);
-  padding:1.4rem;border-radius:8px;
-  border-left:3px solid var(--r);
-}
-.db-lbl{font-size:.56rem;letter-spacing:.42em;text-transform:uppercase;color:var(--sub);margin-bottom:.25rem}
-.db-val{font-family:'Playfair Display',serif;font-size:1rem;color:var(--wine)}
+.profile-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:clamp(2rem,5vw,5rem);align-items:start}
+.prof-img-frame{position:relative;border-radius:8px;overflow:hidden;box-shadow:0 20px 60px rgba(var(--shadow-rgb,92,21,38),.35);aspect-ratio:3/4;background:linear-gradient(160deg,#2a0e18,#1a0810);transition:box-shadow .5s}
+body.miku .prof-img-frame{box-shadow:0 20px 60px rgba(92,21,38,.35)}
+body.nino .prof-img-frame{box-shadow:0 20px 60px rgba(59,7,100,.35)}
+.prof-img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block}
+.prof-img-frame::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(8,2,12,.55) 0%,transparent 45%);pointer-events:none}
+.prof-deco{position:absolute;top:12px;left:12px;right:-12px;bottom:-12px;border:1px solid rgba(var(--deco-rgb,224,80,104),.18);border-radius:8px;z-index:-1;transition:border-color .4s}
+body.miku .prof-deco{border-color:rgba(224,80,104,.18)}
+body.nino .prof-deco{border-color:rgba(139,92,246,.18)}
+.prof-caption{margin-top:1rem;font-size:.58rem;letter-spacing:.35em;text-transform:uppercase;color:var(--sub);text-align:center;transition:color .4s}
+.prof-info{display:flex;flex-direction:column;gap:clamp(.9rem,1.8vh,1.5rem)}
+.info-lbl{font-size:.56rem;letter-spacing:.45em;text-transform:uppercase;color:var(--accent);margin-bottom:.28rem;transition:color .4s}
+.info-val{font-family:'Playfair Display',serif;font-size:clamp(.95rem,1.15vw,1.1rem);color:var(--ink);line-height:1.7}
+.s-light .info-val{color:var(--ink)}
+.info-sep{height:1px;background:rgba(92,21,38,.1);transition:background .4s}
+body.nino .info-sep{background:rgba(59,7,100,.1)}
+.data-box{display:grid;grid-template-columns:1fr 1fr;gap:.85rem 1.5rem;background:var(--accent-m);padding:1.3rem;border-radius:8px;border-left:3px solid var(--accent);transition:background .4s,border-color .4s}
+.db-lbl{font-size:.54rem;letter-spacing:.42em;text-transform:uppercase;color:var(--sub);margin-bottom:.22rem;transition:color .4s}
+.db-val{font-family:'Playfair Display',serif;font-size:.97rem;color:var(--wine);transition:color .4s}
 
 /* ============================================================
    QUOTE BANNER
 ============================================================ */
-.quote-band{
-  background:var(--r);
-  padding:clamp(3rem,7vh,5.5rem) clamp(1.5rem,5vw,4rem);
-  text-align:center;position:relative;overflow:hidden;
-}
-.quote-band::before{
-  content:'"';
-  position:absolute;top:-3rem;left:2vw;
-  font-family:'Playfair Display',serif;
-  font-size:clamp(8rem,16vw,16rem);
-  color:rgba(255,255,255,.07);line-height:1;
-  pointer-events:none;
-}
-.q-jp{
-  font-family:'Shippori Mincho',serif;
-  font-size:clamp(.95rem,2.2vw,1.35rem);
-  color:var(--w);line-height:2.3;
-  max-width:min(680px,90%);margin:0 auto;
-}
-.q-tr{
-  font-family:'DM Sans',sans-serif;
-  font-size:clamp(.7rem,.9vw,.82rem);
-  letter-spacing:.15em;font-style:italic;
-  color:rgba(255,255,255,.65);
-  margin-top:1rem;
-}
-.q-src{
-  margin-top:1.1rem;
-  font-size:.58rem;letter-spacing:.45em;text-transform:uppercase;
-  color:rgba(255,255,255,.4);
-}
+.quote-band{background:var(--accent);padding:clamp(2.8rem,6vh,5rem) clamp(1.5rem,5vw,4rem);text-align:center;position:relative;overflow:hidden;transition:background .5s}
+.quote-band::before{content:'"';position:absolute;top:-3rem;left:2vw;font-family:'Playfair Display',serif;font-size:clamp(8rem,15vw,15rem);color:rgba(255,255,255,.07);line-height:1;pointer-events:none}
+.q-jp{font-family:'Shippori Mincho',serif;font-size:clamp(.9rem,2vw,1.3rem);color:var(--w);line-height:2.3;max-width:min(680px,92%);margin:0 auto}
+.q-tr{font-size:clamp(.68rem,.88vw,.8rem);letter-spacing:.14em;font-style:italic;color:rgba(255,255,255,.62);margin-top:.9rem}
+.q-src{margin-top:1rem;font-size:.56rem;letter-spacing:.44em;text-transform:uppercase;color:rgba(255,255,255,.38)}
 
 /* ============================================================
-   TRAITS (Personality)
+   TRAITS
 ============================================================ */
-.traits-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:clamp(1rem,1.5vw,1.6rem);
-}
-.t-card{
-  padding:clamp(1.4rem,2.5vh,2.2rem) clamp(1.2rem,2vw,1.8rem);
-  border:1px solid rgba(255,255,255,.05);
-  border-radius:8px;
-  background:rgba(255,255,255,.02);
-  transition:all .35s var(--ease);
-  position:relative;overflow:hidden;
-  cursor:default;
-}
-.t-card::after{
-  content:'';position:absolute;left:0;top:0;
-  width:2px;height:0;background:var(--r);
-  transition:height .4s var(--ease);
-}
+.traits-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(.9rem,1.4vw,1.5rem)}
+.t-card{padding:clamp(1.3rem,2.3vh,2rem) clamp(1.1rem,1.8vw,1.7rem);border:1px solid rgba(255,255,255,.05);border-radius:8px;background:rgba(255,255,255,.02);transition:all .35s var(--ease);position:relative;overflow:hidden;cursor:default}
+.t-card::after{content:'';position:absolute;left:0;top:0;width:2px;height:0;background:var(--accent);transition:height .4s var(--ease),background .4s}
 .t-card:hover::after{height:100%}
-.t-card:hover{
-  background:rgba(224,80,104,.06);
-  border-color:rgba(224,80,104,.2);
-  transform:translateY(-4px);
-}
-.t-icon{font-size:clamp(1.8rem,2.2vw,2.2rem);margin-bottom:.9rem;display:block}
-.t-name{
-  font-family:'Playfair Display',serif;
-  font-size:clamp(1rem,1.2vw,1.18rem);
-  color:var(--w);margin-bottom:.6rem;
-}
-.t-desc{
-  font-size:clamp(.72rem,.8vw,.8rem);
-  line-height:1.9;
-  color:rgba(255,255,255,.45);
-}
+.t-card:hover{background:rgba(var(--card-rgb,224,80,104),.06);border-color:rgba(var(--card-rgb,224,80,104),.2);transform:translateY(-4px)}
+body.miku .t-card:hover{--card-rgb:224,80,104}
+body.nino .t-card:hover{--card-rgb:139,92,246}
+.t-icon{font-size:clamp(1.7rem,2vw,2.1rem);margin-bottom:.85rem;display:block}
+.t-name{font-family:'Playfair Display',serif;font-size:clamp(.95rem,1.15vw,1.15rem);color:var(--w);margin-bottom:.55rem}
+.t-desc{font-size:clamp(.7rem,.78vw,.78rem);line-height:1.9;color:rgba(255,255,255,.43)}
 
 /* ============================================================
    GALLERY
 ============================================================ */
-.gallery-layout{
-  display:grid;
-  grid-template-columns:1.55fr 1fr 1fr;
-  grid-template-rows:280px 280px;
-  gap:clamp(.6rem,.8vw,1rem);
-}
-.g-panel{
-  border-radius:8px;overflow:hidden;
-  position:relative;background:#110508;
-  cursor:default;
-}
+.gallery-layout{display:grid;grid-template-columns:1.5fr 1fr 1fr;grid-template-rows:270px 270px;gap:clamp(.6rem,.8vw,.95rem)}
+.g-panel{border-radius:8px;overflow:hidden;position:relative;background:#100508;cursor:default}
 .g-panel.g-tall{grid-row:span 2}
-.g-panel img{
-  width:100%;height:100%;
-  object-fit:cover;object-position:top center;
-  transition:transform .65s var(--ease),filter .4s;
-  filter:brightness(.92) saturate(1.05);
-  background:linear-gradient(160deg,#2a0e18,#1a0810);
-}
-.g-panel:hover img{transform:scale(1.06);filter:brightness(1.04) saturate(1.1)}
-.g-overlay{
-  position:absolute;inset:0;
-  background:linear-gradient(to top,rgba(8,2,5,.88) 0%,transparent 50%);
-  display:flex;align-items:flex-end;padding:1rem 1.2rem;
-  opacity:0;transition:opacity .35s;
-}
+.g-panel img{width:100%;height:100%;object-fit:cover;object-position:top center;transition:transform .65s var(--ease),filter .4s;filter:brightness(.9) saturate(1.05)}
+.g-panel:hover img{transform:scale(1.06);filter:brightness(1.04) saturate(1.12)}
+.g-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(6,2,9,.88) 0%,transparent 50%);display:flex;align-items:flex-end;padding:.95rem 1.1rem;opacity:0;transition:opacity .35s}
 .g-panel:hover .g-overlay{opacity:1}
-.g-lbl{
-  font-size:.6rem;letter-spacing:.35em;text-transform:uppercase;
-  color:var(--gold);
-}
-/* text-only panel */
-.g-text-panel{
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  background:linear-gradient(135deg,#180810,#260d18);
-  border:1px solid rgba(224,80,104,.08);
-  gap:.6rem;
-}
-.g-kanji{
-  font-family:'Shippori Mincho',serif;
-  font-size:clamp(3rem,5vw,4.5rem);
-  color:rgba(224,80,104,.25);line-height:1;
-}
-.g-text-lbl{
-  font-size:.58rem;letter-spacing:.5em;text-transform:uppercase;
-  color:rgba(255,255,255,.25);
-}
+.g-lbl{font-size:.58rem;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);transition:color .4s}
+.g-text-panel{display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,#160810,#220c18);border:1px solid rgba(255,255,255,.06);gap:.55rem;transition:background .5s,border-color .5s}
+body.nino .g-text-panel{background:linear-gradient(135deg,#0e0620,#160a2e)}
+.g-kanji{font-family:'Shippori Mincho',serif;font-size:clamp(2.8rem,5vw,4.2rem);color:rgba(var(--kanji-rgb,224,80,104),.22);line-height:1;transition:color .4s}
+body.miku .g-kanji{color:rgba(224,80,104,.22)}
+body.nino .g-kanji{color:rgba(139,92,246,.22)}
+.g-text-lbl{font-size:.55rem;letter-spacing:.5em;text-transform:uppercase;color:rgba(255,255,255,.22)}
 
 /* ============================================================
    HOBBIES
 ============================================================ */
-.hobbies-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:clamp(1rem,1.5vw,1.4rem);
-}
-.h-card{
-  display:flex;gap:clamp(.8rem,1.5vw,1.2rem);
-  padding:clamp(1.2rem,2.5vh,1.8rem);
-  background:var(--rm);
-  border-radius:8px;
-  transition:all .3s var(--ease);
-  cursor:default;
-}
-.h-card:hover{background:var(--rp);transform:translateY(-3px);box-shadow:0 8px 30px rgba(200,50,80,.12)}
-.h-num{
-  font-family:'Playfair Display',serif;
-  font-size:clamp(2rem,3vw,2.6rem);
-  font-weight:400;
-  color:rgba(92,21,38,.18);
-  line-height:1;flex-shrink:0;
-  min-width:1.8ch;
-}
-.h-ttl{
-  font-family:'Playfair Display',serif;
-  font-size:clamp(.95rem,1.1vw,1.08rem);
-  color:var(--wine);margin-bottom:.35rem;
-}
-.h-txt{
-  font-size:clamp(.7rem,.8vw,.78rem);
-  line-height:1.88;color:var(--sub);
-}
+.hobbies-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(.9rem,1.4vw,1.35rem)}
+.h-card{display:flex;gap:clamp(.75rem,1.3vw,1.1rem);padding:clamp(1.1rem,2.2vh,1.7rem);background:var(--accent-m);border-radius:8px;transition:all .3s var(--ease);cursor:default}
+.h-card:hover{background:var(--accent-p);transform:translateY(-3px);box-shadow:0 8px 28px rgba(var(--hover-rgb,200,50,80),.12)}
+body.miku .h-card:hover{--hover-rgb:200,50,80}
+body.nino .h-card:hover{--hover-rgb:100,50,200}
+.h-num{font-family:'Playfair Display',serif;font-size:clamp(1.9rem,2.8vw,2.5rem);font-weight:400;color:rgba(var(--num-rgb,92,21,38),.17);line-height:1;flex-shrink:0;min-width:1.8ch;transition:color .4s}
+body.miku .h-num{color:rgba(92,21,38,.17)}
+body.nino .h-num{color:rgba(59,7,100,.17)}
+.h-ttl{font-family:'Playfair Display',serif;font-size:clamp(.92rem,1.05vw,1.06rem);color:var(--wine);margin-bottom:.32rem;transition:color .4s}
+.h-txt{font-size:clamp(.68rem,.78vw,.77rem);line-height:1.88;color:var(--sub);transition:color .4s}
 
 /* ============================================================
    TIMELINE
 ============================================================ */
-.tl-wrap{
-  max-width:760px;margin:0 auto;
-  padding-left:clamp(1.8rem,4vw,3rem);
-  position:relative;
-}
-.tl-wrap::before{
-  content:'';position:absolute;
-  left:clamp(6px,1.2vw,8px);top:6px;bottom:0;
-  width:1px;
-  background:linear-gradient(180deg,var(--r) 0%,rgba(224,80,104,.1) 100%);
-}
-.tl-item{margin-bottom:clamp(1.8rem,4vh,3rem);position:relative}
-.tl-dot{
-  position:absolute;
-  left:calc(-1 * clamp(1.8rem,4vw,3rem) + clamp(6px,1.2vw,8px) - 6px);
-  top:4px;
-  width:13px;height:13px;border-radius:50%;
-  border:2px solid var(--r);
-  background:var(--s-dark,#0c0308);
-  box-shadow:0 0 0 4px rgba(224,80,104,.1),0 0 16px rgba(224,80,104,.3);
-}
-.tl-yr{
-  font-size:.58rem;letter-spacing:.48em;text-transform:uppercase;
-  color:var(--rb);margin-bottom:.4rem;
-}
-.tl-h{
-  font-family:'Playfair Display',serif;
-  font-size:clamp(1.1rem,1.5vw,1.3rem);
-  color:var(--w);margin-bottom:.5rem;
-}
-.tl-b{
-  font-size:clamp(.72rem,.8vw,.8rem);
-  line-height:1.92;color:rgba(255,255,255,.42);
-}
+.tl-wrap{max-width:760px;margin:0 auto;padding-left:clamp(1.6rem,3.5vw,2.8rem);position:relative}
+.tl-wrap::before{content:'';position:absolute;left:clamp(5px,1vw,7px);top:6px;bottom:0;width:1px;background:linear-gradient(180deg,var(--accent) 0%,rgba(var(--tl-rgb,224,80,104),.08) 100%);transition:background .4s}
+body.miku .tl-wrap::before{background:linear-gradient(180deg,#e05068 0%,rgba(224,80,104,.08) 100%)}
+body.nino .tl-wrap::before{background:linear-gradient(180deg,#8b5cf6 0%,rgba(139,92,246,.08) 100%)}
+.tl-item{margin-bottom:clamp(1.6rem,3.5vh,2.8rem);position:relative}
+.tl-dot{position:absolute;left:calc(-1*clamp(1.6rem,3.5vw,2.8rem) + clamp(5px,1vw,7px) - 6px);top:4px;width:13px;height:13px;border-radius:50%;border:2px solid var(--accent);background:var(--dark3);box-shadow:0 0 0 4px rgba(var(--dot-rgb,224,80,104),.1),0 0 14px rgba(var(--dot-rgb,224,80,104),.28);transition:border-color .4s,background .5s}
+body.miku .tl-dot{--dot-rgb:224,80,104}
+body.nino .tl-dot{--dot-rgb:139,92,246}
+.tl-yr{font-size:.56rem;letter-spacing:.48em;text-transform:uppercase;color:var(--accent-b);margin-bottom:.38rem;transition:color .4s}
+.tl-h{font-family:'Playfair Display',serif;font-size:clamp(1.05rem,1.4vw,1.28rem);color:var(--w);margin-bottom:.48rem}
+.tl-b{font-size:clamp(.7rem,.78vw,.78rem);line-height:1.92;color:rgba(255,255,255,.4)}
 
 /* ============================================================
    FOOTER
 ============================================================ */
-footer{
-  background:#060103;
-  padding:clamp(2.5rem,5vh,4rem) clamp(1.5rem,5vw,4rem);
-  display:flex;flex-direction:column;align-items:center;
-  gap:1rem;text-align:center;
-  border-top:1px solid rgba(255,255,255,.03);
-}
-.f-rose{width:32px;height:1px;background:var(--r)}
-.f-logo{
-  font-family:'Shippori Mincho',serif;
-  font-size:clamp(1.3rem,2.5vw,1.8rem);
-  font-weight:400;
-  color:rgba(255,255,255,.1);letter-spacing:.35em;
-}
-.f-txt{
-  font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;
-  color:rgba(255,255,255,.18);
-}
-.f-made{font-size:.58rem;color:rgba(255,255,255,.12);letter-spacing:.2em}
+footer{background:#050103;padding:clamp(2.2rem,4.5vh,3.5rem) clamp(1.5rem,5vw,4rem);display:flex;flex-direction:column;align-items:center;gap:.9rem;text-align:center;border-top:1px solid rgba(255,255,255,.03)}
+.f-rose{width:28px;height:1px;background:var(--accent);transition:background .4s}
+.f-logo{font-family:'Shippori Mincho',serif;font-size:clamp(1.2rem,2.2vw,1.7rem);color:rgba(255,255,255,.1);letter-spacing:.35em}
+.f-txt{font-size:.58rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(255,255,255,.16)}
+.f-made{font-size:.56rem;color:rgba(255,255,255,.1);letter-spacing:.2em}
+
+/* ============================================================
+   THEME TRANSITION OVERLAY
+============================================================ */
+#theme-overlay{position:fixed;inset:0;z-index:400;pointer-events:none;opacity:0;background:var(--accent);transition:opacity .18s}
+#theme-overlay.flash{opacity:.12}
 
 /* ============================================================
    SCROLL REVEAL
 ============================================================ */
-[data-reveal]{
-  opacity:0;transform:translateY(24px);
-  transition:opacity .7s var(--ease),transform .7s var(--ease);
-}
+[data-reveal]{opacity:0;transform:translateY(22px);transition:opacity .68s var(--ease),transform .68s var(--ease)}
 [data-reveal].in{opacity:1;transform:none}
-[data-reveal][data-d="1"]{transition-delay:.08s}
-[data-reveal][data-d="2"]{transition-delay:.16s}
-[data-reveal][data-d="3"]{transition-delay:.24s}
-[data-reveal][data-d="4"]{transition-delay:.32s}
-[data-reveal][data-d="5"]{transition-delay:.40s}
-[data-reveal][data-d="6"]{transition-delay:.48s}
+[data-reveal][data-d="1"]{transition-delay:.07s}
+[data-reveal][data-d="2"]{transition-delay:.14s}
+[data-reveal][data-d="3"]{transition-delay:.21s}
+[data-reveal][data-d="4"]{transition-delay:.28s}
+[data-reveal][data-d="5"]{transition-delay:.35s}
+[data-reveal][data-d="6"]{transition-delay:.42s}
 
 /* ============================================================
    RESPONSIVE — TABLET ≤ 1024px
 ============================================================ */
 @media(max-width:1024px){
-  .gallery-layout{
-    grid-template-columns:1fr 1fr;
-    grid-template-rows:220px 220px 220px;
-  }
+  .gallery-layout{grid-template-columns:1fr 1fr;grid-template-rows:220px 220px 220px}
   .g-panel.g-tall{grid-row:span 2}
+  .traits-grid{grid-template-columns:repeat(2,1fr)}
 }
 
 /* ============================================================
    RESPONSIVE — MOBILE ≤ 768px
 ============================================================ */
 @media(max-width:768px){
-  /* nav */
+  #switcher-bar{padding:.4rem 1rem;gap:.4rem}
+  .sw-label{display:none}
+  .sw-btn{padding:.38rem .9rem .38rem .55rem;font-size:.58rem}
+  #nav{top:34px}
   .nav-links{display:none}
   .nav-burger{display:flex}
-
-  /* hero */
-  #hero{
-    grid-template-columns:1fr;
-    min-height:100svh;
-  }
-  .hero-visual{
-    position:absolute;inset:0;height:100%;
-    opacity:.35;z-index:1;
-  }
-  .hero-visual::before{
-    background:linear-gradient(to top,#0e0408 0%,rgba(14,4,8,.5) 60%,rgba(14,4,8,.3) 100%);
-  }
-  .hero-content{
-    z-index:4;
-    padding:7rem 1.5rem 4rem;
-    min-height:100svh;
-    justify-content:flex-end;
-  }
+  #hero{grid-template-columns:1fr;min-height:100svh}
+  .hero-visual{position:absolute;inset:0;height:100%;opacity:.32;z-index:1}
+  .hero-visual::before{background:linear-gradient(to top,var(--dark1) 0%,rgba(14,4,8,.55) 60%,rgba(14,4,8,.28) 100%)}
+  .hero-content{z-index:4;padding:6.5rem 1.5rem 3.5rem;min-height:100svh;justify-content:flex-end}
   .hero-kanji{display:none}
-
-  /* stats */
-  .stats-inner{
-    grid-template-columns:repeat(3,1fr);
-  }
-  .stat-cell:nth-child(4),.stat-cell:nth-child(5){
-    border-top:1px solid rgba(255,255,255,.04);
-  }
-
-  /* profile */
+  .stats-inner{grid-template-columns:repeat(3,1fr)}
+  .stat-cell:nth-child(4),.stat-cell:nth-child(5){border-top:1px solid rgba(255,255,255,.04)}
   .profile-grid{grid-template-columns:1fr}
-  .prof-img-frame{aspect-ratio:4/3;max-height:360px}
-  .prof-img{object-position:top center}
-
-  /* traits */
-  .traits-grid{grid-template-columns:1fr 1fr}
-
-  /* gallery */
-  .gallery-layout{
-    grid-template-columns:1fr 1fr;
-    grid-template-rows:auto;
-  }
-  .g-panel.g-tall{grid-row:span 1;min-height:220px}
-  .g-panel.g-tall img{object-position:top center}
-
-  /* hobbies */
+  .prof-img-frame{aspect-ratio:4/3;max-height:340px}
   .hobbies-grid{grid-template-columns:1fr 1fr}
-
-  /* data box */
+  .gallery-layout{grid-template-columns:1fr 1fr;grid-template-rows:auto}
+  .g-panel.g-tall{grid-row:span 1;min-height:200px}
   .data-box{grid-template-columns:1fr}
 }
-
-/* ============================================================
-   RESPONSIVE — SMALL MOBILE ≤ 480px
-============================================================ */
 @media(max-width:480px){
   .stats-inner{grid-template-columns:1fr 1fr}
   .stat-cell:last-child{grid-column:span 2}
   .traits-grid{grid-template-columns:1fr}
   .hobbies-grid{grid-template-columns:1fr}
-  .gallery-layout{
-    grid-template-columns:1fr;
-    grid-template-rows:auto;
-  }
-  .g-panel{min-height:200px}
-  .g-text-panel{min-height:160px}
+  .gallery-layout{grid-template-columns:1fr;grid-template-rows:auto}
+  .g-panel{min-height:190px}
 }
 </style>
 </head>
-<body>
+<body class="miku">
 
-<!-- ── Cursor ── -->
+<!-- Flash overlay for theme switch -->
+<div id="theme-overlay"></div>
+
+<!-- Custom cursor -->
 <div id="cursor-dot"></div>
 <div id="cursor-ring"></div>
 
-<!-- ── Nav ── -->
+<!-- ══════════════════════════════════════
+     CHARACTER SWITCHER BAR
+══════════════════════════════════════ -->
+<div id="switcher-bar">
+  <span class="sw-label">五等分の花嫁</span>
+
+  <button class="sw-btn active-miku" id="btn-miku" onclick="switchChar('miku')">
+    <div class="sw-avatar" id="av-miku">
+      <img src="miku.jpg" alt="Miku" onerror="this.style.display='none';this.parentElement.textContent='三'"/>
+    </div>
+    <div class="sw-dot"></div>
+    中野 三玖
+  </button>
+
+  <button class="sw-btn" id="btn-nino" onclick="switchChar('nino')">
+    <div class="sw-avatar" id="av-nino">
+      <img src="nino.jpg" alt="Nino" onerror="this.style.display='none';this.parentElement.textContent='二'"/>
+    </div>
+    <div class="sw-dot"></div>
+    中野 二乃
+  </button>
+</div>
+
+<!-- ══════════════════════════════════════
+     NAV
+══════════════════════════════════════ -->
 <nav id="nav">
-  <a class="nav-logo" href="#">中野三玖</a>
+  <a class="nav-logo" href="#" id="nav-logo">中野三玖</a>
   <ul class="nav-links">
     <li><a href="#profile">Profil</a></li>
     <li><a href="#traits">Karakter</a></li>
@@ -791,8 +478,6 @@ footer{
     <span></span><span></span><span></span>
   </button>
 </nav>
-
-<!-- ── Mobile Menu ── -->
 <ul class="nav-mobile" id="mobile-menu">
   <li><a href="#profile">Profil</a></li>
   <li><a href="#traits">Karakter</a></li>
@@ -808,20 +493,15 @@ footer{
   <div class="hero-mesh"></div>
   <div class="orb orb1"></div>
   <div class="orb orb2"></div>
-  <div class="orb orb3"></div>
-  <div class="hero-kanji" aria-hidden="true">三玖</div>
+  <div class="hero-kanji" id="hero-kanji" aria-hidden="true">三玖</div>
 
-  <!-- Left content -->
   <div class="hero-content">
-    <span class="h-eyebrow">五等分の花嫁 · Quintessential Quintuplets</span>
-    <h1 class="h-jp">中野<br>三玖</h1>
-    <p class="h-en">Nakano Miku</p>
-    <div class="h-divider" aria-hidden="true"></div>
-    <p class="h-tagline">
-      Putri ketiga dari lima bersaudara kembar —<br>
-      pemalu, tenang, namun berani dalam cinta.
-    </p>
-    <div class="h-chips">
+    <span class="h-eyebrow" id="h-series">五等分の花嫁 · Quintessential Quintuplets</span>
+    <h1 class="h-jp" id="h-jp">中野<br>三玖</h1>
+    <p class="h-en" id="h-en">Nakano Miku</p>
+    <div class="h-divider"></div>
+    <p class="h-tagline" id="h-tagline">Putri ketiga dari lima bersaudara kembar —<br>pemalu, tenang, namun berani dalam cinta.</p>
+    <div class="h-chips" id="h-chips">
       <span class="chip">Sengoku Fan</span>
       <span class="chip">🎧 Headphone Merah</span>
       <span class="chip">Capricorn ♑</span>
@@ -829,19 +509,13 @@ footer{
     </div>
     <div class="h-scroll" aria-hidden="true">
       <div class="h-scroll-line"></div>
-      Scroll untuk mengenal Miku
-      <div class="h-scroll-arrow"></div>
+      Scroll untuk mengenal lebih
+      <div class="h-arrow"></div>
     </div>
   </div>
 
-  <!-- Right: image -->
   <div class="hero-visual">
-    <img
-      class="hero-img"
-      src="miku.jpg"
-      alt="Miku Nakano"
-      id="heroImg"
-    />
+    <img class="hero-img" id="hero-img" src="miku.jpg" alt="Miku Nakano"/>
   </div>
 </section>
 
@@ -850,26 +524,11 @@ footer{
 ══════════════════════════════════════ -->
 <div class="stats-ribbon">
   <div class="stats-inner" data-reveal>
-    <div class="stat-cell">
-      <span class="stat-n">3rd</span>
-      <span class="stat-l">Urutan Lahir</span>
-    </div>
-    <div class="stat-cell">
-      <span class="stat-n">159<span style="font-size:.75em">cm</span></span>
-      <span class="stat-l">Tinggi</span>
-    </div>
-    <div class="stat-cell">
-      <span class="stat-n">49<span style="font-size:.75em">kg</span></span>
-      <span class="stat-l">Berat</span>
-    </div>
-    <div class="stat-cell">
-      <span class="stat-n">5 Mei</span>
-      <span class="stat-l">Ulang Tahun</span>
-    </div>
-    <div class="stat-cell">
-      <span class="stat-n">♑</span>
-      <span class="stat-l">Capricorn</span>
-    </div>
+    <div class="stat-cell"><span class="stat-n" id="s-order">3rd</span><span class="stat-l">Urutan Lahir</span></div>
+    <div class="stat-cell"><span class="stat-n" id="s-height">159<span style="font-size:.75em">cm</span></span><span class="stat-l">Tinggi</span></div>
+    <div class="stat-cell"><span class="stat-n" id="s-weight">49<span style="font-size:.75em">kg</span></span><span class="stat-l">Berat</span></div>
+    <div class="stat-cell"><span class="stat-n" id="s-bday">5 Mei</span><span class="stat-l">Ulang Tahun</span></div>
+    <div class="stat-cell"><span class="stat-n" id="s-zodiac">♑</span><span class="stat-l" id="s-zodiac-lbl">Capricorn</span></div>
   </div>
 </div>
 
@@ -879,350 +538,461 @@ footer{
 <section class="s-light s-pad" id="profile">
   <div class="s-inner">
     <div class="profile-grid">
-
-      <!-- Image col -->
       <div data-reveal>
-        <div class="prof-img-wrap">
-          <div class="prof-img-frame">
-            <img class="prof-img" src="miku.jpg" alt="Miku Nakano Portrait"/>
-          </div>
-          <div class="prof-frame-deco"></div>
+        <div class="prof-img-frame">
+          <img class="prof-img" id="prof-img" src="miku.jpg" alt="Portrait"/>
         </div>
-        <p class="prof-caption">中野 三玖 · Nakano Miku · © Negi Haruba / Kodansha</p>
+        <div class="prof-deco"></div>
+        <p class="prof-caption" id="prof-caption">中野 三玖 · Nakano Miku · © Negi Haruba / Kodansha</p>
       </div>
-
-      <!-- Info col -->
       <div class="prof-info">
         <div>
-          <p class="s-eyebrow" data-reveal>Tentang</p>
-          <h2 class="s-title" data-reveal>
-            Putri Ketiga<br>
-            <em style="font-style:italic;font-size:.75em;color:var(--sub)">yang Berani Mencintai Pertama</em>
-          </h2>
+          <p class="s-eye" data-reveal>Tentang</p>
+          <h2 class="s-title" data-reveal id="prof-title">Putri Ketiga<br><em style="font-style:italic;font-size:.74em;color:var(--sub)">yang Berani Mencintai Pertama</em></h2>
         </div>
         <div class="info-sep" data-reveal></div>
         <div data-reveal>
           <p class="info-lbl">Deskripsi</p>
-          <p class="info-val">
-            Miku Nakano adalah karakter utama dalam manga/anime
-            <em>Go-Toubun no Hanayome</em> karya Negi Haruba.
-            Ia dikenal sebagai sosok yang tenang dan pemalu, namun menyimpan
-            tekad dan keberanian yang luar biasa — terutama dalam hal
-            perasaannya kepada Fuutarou Uesugi.
-          </p>
+          <p class="info-val" id="prof-desc">Miku Nakano adalah karakter utama dalam manga/anime <em>Go-Toubun no Hanayome</em> karya Negi Haruba. Ia dikenal sebagai sosok yang tenang dan pemalu, namun menyimpan tekad dan keberanian luar biasa — terutama dalam hal perasaannya kepada Fuutarou Uesugi.</p>
         </div>
-        <div class="data-box" data-reveal>
-          <div><p class="db-lbl">Nama</p><p class="db-val">中野 三玖</p></div>
-          <div><p class="db-lbl">Usia</p><p class="db-val">17–22 tahun</p></div>
-          <div><p class="db-lbl">Tinggi</p><p class="db-val">159 → 165 cm</p></div>
-          <div><p class="db-lbl">Golongan Darah</p><p class="db-val">A</p></div>
-          <div><p class="db-lbl">Sekolah</p><p class="db-val">Asahiyama High</p></div>
-          <div><p class="db-lbl">Pekerjaan</p><p class="db-val">Bakery (Komugiya)</p></div>
-          <div><p class="db-lbl">Warna Rambut</p><p class="db-val">Coklat / Pearl Pink</p></div>
-          <div><p class="db-lbl">Warna Mata</p><p class="db-val">Biru</p></div>
+        <div class="data-box" data-reveal id="data-box">
+          <!-- filled by JS -->
         </div>
-        <div class="h-chips" data-reveal style="opacity:1;animation:none">
-          <span class="chip" style="border-color:rgba(92,21,38,.25);color:var(--wine)">Sejarah Sengoku</span>
-          <span class="chip" style="border-color:rgba(92,21,38,.25);color:var(--wine)">Kopi & Teh</span>
-          <span class="chip" style="border-color:rgba(92,21,38,.25);color:var(--wine)">Headphones Merah</span>
-          <span class="chip" style="border-color:rgba(92,21,38,.25);color:var(--wine)">Introvert</span>
+        <div class="h-chips" data-reveal id="prof-chips" style="opacity:1;animation:none;margin-top:.2rem">
+          <!-- filled by JS -->
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══════════════════════════════════════
-     QUOTE
-══════════════════════════════════════ -->
+<!-- QUOTE -->
 <div class="quote-band" data-reveal>
-  <p class="q-jp">「好きです。中野三玖は、あなたのことが好きです。」</p>
-  <p class="q-tr">"Aku menyukaimu. Miku Nakano menyukaimu."</p>
-  <p class="q-src">— Miku Nakano kepada Fuutarou Uesugi · Pengakuan Pertama</p>
+  <p class="q-jp" id="q-jp">「好きです。中野三玖は、あなたのことが好きです。」</p>
+  <p class="q-tr" id="q-tr">"Aku menyukaimu. Miku Nakano menyukaimu."</p>
+  <p class="q-src" id="q-src">— Miku Nakano kepada Fuutarou Uesugi · Pengakuan Pertama</p>
 </div>
 
-<!-- ══════════════════════════════════════
-     TRAITS
-══════════════════════════════════════ -->
+<!-- TRAITS -->
 <section class="s-dark s-pad" id="traits">
   <div class="s-inner">
-    <p class="s-eyebrow" data-reveal>Kepribadian</p>
-    <h2 class="s-title" data-reveal>Sisi-Sisi Miku</h2>
-    <div class="traits-grid">
-      <div class="t-card" data-reveal data-d="1">
-        <span class="t-icon">🎧</span>
-        <p class="t-name">Introvert & Tenang</p>
-        <p class="t-desc">Headphone merahnya bagai pelindung dari dunia luar. Di balik sikapnya yang pendiam tersimpan pikiran yang dalam dan penuh pertimbangan.</p>
-      </div>
-      <div class="t-card" data-reveal data-d="2">
-        <span class="t-icon">🏯</span>
-        <p class="t-name">Penggemar Sejarah Sengoku</p>
-        <p class="t-desc">Ketika membahas era Sengoku, Miku berubah total — matanya berbinar dan semangat mengalir deras. Ini satu-satunya saat ia paling ekspresif.</p>
-      </div>
-      <div class="t-card" data-reveal data-d="3">
-        <span class="t-icon">💌</span>
-        <p class="t-name">Berani dalam Cinta</p>
-        <p class="t-desc">Meski pemalu, Miku adalah saudari pertama yang mengakui perasaannya secara langsung. Sebuah keberanian yang mengejutkan semua orang.</p>
-      </div>
-      <div class="t-card" data-reveal data-d="4">
-        <span class="t-icon">☕</span>
-        <p class="t-name">Tekun & Pantang Menyerah</p>
-        <p class="t-desc">Ia berlatih keras meracik kopi sempurna demi seseorang istimewa — tak berhenti hingga setiap tegukan terasa seperti ungkapan perasaan.</p>
-      </div>
-      <div class="t-card" data-reveal data-d="5">
-        <span class="t-icon">📚</span>
-        <p class="t-name">Rendah Hati</p>
-        <p class="t-desc">Miku sadar akan kelemahannya dan memperbaikinya diam-diam, tanpa meminta perhatian atau pengakuan dari siapapun.</p>
-      </div>
-      <div class="t-card" data-reveal data-d="6">
-        <span class="t-icon">🌸</span>
-        <p class="t-name">Tulus & Loyal</p>
-        <p class="t-desc">Miku sangat menyayangi keluarganya. Di tengah persaingan cinta, ia tidak pernah melukai saudarinya dan selalu menjaga kepercayaan.</p>
-      </div>
-    </div>
+    <p class="s-eye" data-reveal>Kepribadian</p>
+    <h2 class="s-title" data-reveal id="traits-title">Sisi-Sisi Miku</h2>
+    <div class="traits-grid" id="traits-grid"><!-- filled by JS --></div>
   </div>
 </section>
 
-<!-- ══════════════════════════════════════
-     GALLERY
-══════════════════════════════════════ -->
+<!-- GALLERY -->
 <section class="s-wine s-pad" id="gallery">
   <div class="s-inner">
-    <p class="s-eyebrow" data-reveal style="color:var(--rb)">Galeri</p>
-    <h2 class="s-title" data-reveal>Ekspresi Miku</h2>
-    <div class="gallery-layout" data-reveal>
-
-      <!-- Main tall -->
-      <div class="g-panel g-tall">
-        <img src="miku.jpg" alt="Miku Nakano Main Art" loading="lazy"/>
-        <div class="g-overlay"><span class="g-lbl">中野三玖 · Main Visual</span></div>
-      </div>
-
-      <!-- Top right 1 -->
-      <div class="g-panel">
-        <img src="s1.jpg" alt="Season 1" loading="lazy"/>
-        <div class="g-overlay"><span class="g-lbl">Season 1</span></div>
-      </div>
-
-      <!-- Top right 2 -->
-      <div class="g-panel">
-        <img src="s2.jpg" alt="Season 2" loading="lazy"/>
-        <div class="g-overlay"><span class="g-lbl">Season 2</span></div>
-      </div>
-
-      <!-- Bottom right 1 -->
-      <div class="g-panel">
-        <img src="movie.jpg" alt="Movie" loading="lazy"/>
-        <div class="g-overlay"><span class="g-lbl">The Movie</span></div>
-      </div>
-
-      <!-- Bottom right 2 — decorative text panel -->
-      <div class="g-panel g-text-panel">
-        <div class="g-kanji">三</div>
-        <div class="g-text-lbl">Third Sister · 三女</div>
-        <div class="g-overlay" style="opacity:.1"><span class="g-lbl">三女 · The Third</span></div>
-      </div>
-
-    </div>
+    <p class="s-eye" data-reveal style="color:var(--accent-b)" id="gallery-eye">Galeri</p>
+    <h2 class="s-title" data-reveal id="gallery-title">Ekspresi Miku</h2>
+    <div class="gallery-layout" data-reveal id="gallery-grid"><!-- filled by JS --></div>
   </div>
 </section>
 
-<!-- ══════════════════════════════════════
-     HOBBIES
-══════════════════════════════════════ -->
+<!-- HOBBIES -->
 <section class="s-light s-pad" id="hobbies">
   <div class="s-inner">
-    <p class="s-eyebrow" data-reveal>Minat & Hobi</p>
-    <h2 class="s-title" data-reveal>Hal yang Miku Cintai</h2>
-    <div class="hobbies-grid">
-      <div class="h-card" data-reveal data-d="1">
-        <div class="h-num">01</div>
-        <div>
-          <p class="h-ttl">Sejarah Era Sengoku</p>
-          <p class="h-txt">Miku hafal detail para daimyo, pertempuran besar, dan strategi perang era Sengoku Jepang — bahkan melebihi pelajaran sejarah sekolah.</p>
-        </div>
-      </div>
-      <div class="h-card" data-reveal data-d="2">
-        <div class="h-num">02</div>
-        <div>
-          <p class="h-ttl">Headphone & Musik</p>
-          <p class="h-txt">Headphone merah ikoniknya adalah cara menenangkan pikiran dan menciptakan dunianya sendiri yang damai dari keramaian sekitar.</p>
-        </div>
-      </div>
-      <div class="h-card" data-reveal data-d="3">
-        <div class="h-num">03</div>
-        <div>
-          <p class="h-ttl">Meracik Kopi & Teh</p>
-          <p class="h-txt">Miku berlatih keras meracik minuman sempurna — percaya bahwa secangkir kopi buatan sendiri mampu menyampaikan perasaan terdalam.</p>
-        </div>
-      </div>
-      <div class="h-card" data-reveal data-d="4">
-        <div class="h-num">04</div>
-        <div>
-          <p class="h-ttl">Tokugawa Ieyasu</p>
-          <p class="h-txt">Ia mengagumi ketekunan dan strategi jangka panjang Tokugawa dalam menyatukan Jepang setelah puluhan tahun perang saudara.</p>
-        </div>
-      </div>
-      <div class="h-card" data-reveal data-d="5">
-        <div class="h-num">05</div>
-        <div>
-          <p class="h-ttl">Membaca & Belajar</p>
-          <p class="h-txt">Meski nilai akademiknya tidak cemerlang, Miku rajin membaca buku sejarah dan cerita tentang kesetiaan serta tekad hidup.</p>
-        </div>
-      </div>
-      <div class="h-card" data-reveal data-d="6">
-        <div class="h-num">06</div>
-        <div>
-          <p class="h-ttl">Bekerja di Bakery</p>
-          <p class="h-txt">Miku bekerja paruh waktu di toko roti Komugiya untuk melatih kemampuan memasaknya — sisi rajin dan mandirinya yang tersembunyi.</p>
-        </div>
-      </div>
-    </div>
+    <p class="s-eye" data-reveal>Minat & Hobi</p>
+    <h2 class="s-title" data-reveal id="hobbies-title">Hal yang Miku Cintai</h2>
+    <div class="hobbies-grid" id="hobbies-grid"><!-- filled by JS --></div>
   </div>
 </section>
 
-<!-- ══════════════════════════════════════
-     TIMELINE
-══════════════════════════════════════ -->
+<!-- TIMELINE -->
 <section class="s-wine s-pad" id="timeline">
   <div class="s-inner">
-    <p class="s-eyebrow" data-reveal style="color:var(--rb)">Perjalanan</p>
-    <h2 class="s-title" data-reveal>Kisah Miku</h2>
-    <div class="tl-wrap">
-      <div class="tl-item" data-reveal>
-        <div class="tl-dot"></div>
-        <p class="tl-yr">Pertemuan Pertama</p>
-        <h3 class="tl-h">Fuutarou Uesugi, Sang Tutor</h3>
-        <p class="tl-b">Miku bertemu Fuutarou saat ditugaskan jadi tutor les privat. Kesan pertamanya biasa saja — bahkan sempat menolak kehadirannya di rumah mereka.</p>
-      </div>
-      <div class="tl-item" data-reveal>
-        <div class="tl-dot"></div>
-        <p class="tl-yr">Percikan Pertama</p>
-        <h3 class="tl-h">Dunia Sengoku yang Sama</h3>
-        <p class="tl-b">Saat Fuutarou membahas sejarah Sengoku dengan semangat yang sama, Miku mulai melihatnya berbeda. Dari percakapan itu, benih perasaan mulai tumbuh diam-diam.</p>
-      </div>
-      <div class="tl-item" data-reveal>
-        <div class="tl-dot"></div>
-        <p class="tl-yr">Keberanian Terbesar</p>
-        <h3 class="tl-h">Pengakuan Cinta Pertama</h3>
-        <p class="tl-b">Miku menjadi saudari pertama yang secara terang-terangan mengakui perasaannya — momen paling berani dalam hidupnya yang pemalu.</p>
-      </div>
-      <div class="tl-item" data-reveal>
-        <div class="tl-dot"></div>
-        <p class="tl-yr">Perjuangan</p>
-        <h3 class="tl-h">Tumbuh Menjadi Lebih Kuat</h3>
-        <p class="tl-b">Miku berjuang keras di bidang akademik dan memasak. Ia tidak menyerah — terus berusaha menjadi versi terbaik dirinya sendiri setiap hari.</p>
-      </div>
-      <div class="tl-item" data-reveal>
-        <div class="tl-dot"></div>
-        <p class="tl-yr">Akhir Cerita</p>
-        <h3 class="tl-h">Bukan Pemenang, tapi Terkuat</h3>
-        <p class="tl-b">Meski jalan cintanya tidak berakhir seperti harapan, Miku tumbuh menjadi pribadi yang jauh lebih matang, mandiri, dan berani — karakter yang paling dicintai penggemar.</p>
-      </div>
-    </div>
+    <p class="s-eye" data-reveal style="color:var(--accent-b)">Perjalanan</p>
+    <h2 class="s-title" data-reveal id="timeline-title">Kisah Miku</h2>
+    <div class="tl-wrap" id="tl-wrap"><!-- filled by JS --></div>
   </div>
 </section>
 
-<!-- ══════════════════════════════════════
-     FOOTER
-══════════════════════════════════════ -->
+<!-- FOOTER -->
 <footer>
   <div class="f-rose"></div>
-  <p class="f-logo">中野 三玖</p>
-  <p class="f-txt">Nakano Miku · Go-Toubun no Hanayome · © Negi Haruba / Kodansha</p>
+  <p class="f-logo" id="f-logo">中野 三玖</p>
+  <p class="f-txt">Go-Toubun no Hanayome · © Negi Haruba / Kodansha</p>
   <p class="f-made">made by kazu</p>
 </footer>
 
 <!-- ══════════════════════════════════════
-     SCRIPTS
+     DATA & SCRIPTS
 ══════════════════════════════════════ -->
 <script>
-// ── Custom cursor (desktop only)
+/* ============================================================
+   CHARACTER DATA
+============================================================ */
+const CHARS = {
+  miku: {
+    /* nav / hero */
+    navLogo: '中野三玖',
+    heroKanji: '三玖',
+    heroJP: '中野<br>三玖',
+    heroEN: 'Nakano Miku',
+    tagline: 'Putri ketiga dari lima bersaudara kembar —<br>pemalu, tenang, namun berani dalam cinta.',
+    chips: ['Sengoku Fan','🎧 Headphone Merah','Capricorn ♑','Blood Type A'],
+    heroImg: 'miku.jpg',
+    /* stats */
+    order:'3rd', height:'159cm', weight:'49kg', bday:'5 Mei', zodiac:'♑', zodiacLbl:'Capricorn',
+    /* profile */
+    profImg: 'miku.jpg',
+    profCaption: '中野 三玖 · Nakano Miku · © Negi Haruba / Kodansha',
+    profTitle: 'Putri Ketiga<br><em style="font-style:italic;font-size:.74em;color:var(--sub)">yang Berani Mencintai Pertama</em>',
+    profDesc: 'Miku Nakano adalah karakter utama dalam manga/anime <em>Go-Toubun no Hanayome</em> karya Negi Haruba. Ia dikenal sebagai sosok yang tenang dan pemalu, namun menyimpan tekad dan keberanian luar biasa — terutama dalam hal perasaannya kepada Fuutarou Uesugi.',
+    dataBox: [
+      ['Nama','中野 三玖'],['Usia','17–22 tahun'],
+      ['Tinggi','159 → 165 cm'],['Golongan Darah','A'],
+      ['Sekolah','Asahiyama High'],['Pekerjaan','Bakery (Komugiya)'],
+      ['Warna Rambut','Coklat / Pearl Pink'],['Warna Mata','Biru'],
+    ],
+    profChips: ['Sejarah Sengoku','Kopi & Teh','Headphones Merah','Introvert'],
+    /* quote */
+    quoteJP: '「好きです。中野三玖は、あなたのことが好きです。」',
+    quoteTR: '"Aku menyukaimu. Miku Nakano menyukaimu."',
+    quoteSRC: '— Miku Nakano kepada Fuutarou Uesugi · Pengakuan Pertama',
+    /* traits */
+    traitsTitle: 'Sisi-Sisi Miku',
+    traits: [
+      {icon:'🎧', name:'Introvert & Tenang', desc:'Headphone merahnya bagai pelindung dari dunia luar. Di balik sikapnya yang pendiam tersimpan pikiran yang dalam dan penuh pertimbangan.'},
+      {icon:'🏯', name:'Penggemar Sejarah Sengoku', desc:'Ketika membahas era Sengoku, Miku berubah total — matanya berbinar dan semangat mengalir deras. Ini satu-satunya saat ia paling ekspresif.'},
+      {icon:'💌', name:'Berani dalam Cinta', desc:'Meski pemalu, Miku adalah saudari pertama yang mengakui perasaannya secara langsung. Sebuah keberanian yang mengejutkan semua orang.'},
+      {icon:'☕', name:'Tekun & Pantang Menyerah', desc:'Ia berlatih keras meracik kopi sempurna demi seseorang istimewa — tak berhenti hingga setiap tegukan terasa seperti ungkapan perasaan.'},
+      {icon:'📚', name:'Rendah Hati', desc:'Miku sadar akan kelemahannya dan memperbaikinya diam-diam, tanpa meminta perhatian atau pengakuan dari siapapun.'},
+      {icon:'🌸', name:'Tulus & Loyal', desc:'Miku sangat menyayangi keluarganya. Di tengah persaingan cinta, ia tidak pernah melukai saudarinya dan selalu menjaga kepercayaan.'},
+    ],
+    /* gallery */
+    galleryTitle: 'Ekspresi Miku',
+    galleryEye: 'Galeri · Miku',
+    gallery: [
+      {src:'miku.jpg', lbl:'中野三玖 · Main Visual', tall:true},
+      {src:'s1.jpg',   lbl:'Season 1'},
+      {src:'s2.jpg',   lbl:'Season 2'},
+      {src:'movie.jpg',lbl:'The Movie'},
+      {kanji:'三',     lbl:'Third Sister · 三女'},
+    ],
+    /* hobbies */
+    hobbiesTitle: 'Hal yang Miku Cintai',
+    hobbies: [
+      {n:'01', t:'Sejarah Era Sengoku', d:'Miku hafal detail para daimyo, pertempuran besar, dan strategi perang era Sengoku Jepang — bahkan melebihi pelajaran sejarah sekolah.'},
+      {n:'02', t:'Headphone & Musik', d:'Headphone merah ikoniknya adalah cara menenangkan pikiran dan menciptakan dunianya sendiri yang damai dari keramaian sekitar.'},
+      {n:'03', t:'Meracik Kopi & Teh', d:'Miku berlatih keras meracik minuman sempurna — percaya bahwa secangkir kopi buatan sendiri mampu menyampaikan perasaan terdalam.'},
+      {n:'04', t:'Tokugawa Ieyasu', d:'Ia mengagumi ketekunan dan strategi jangka panjang Tokugawa dalam menyatukan Jepang setelah puluhan tahun perang saudara.'},
+      {n:'05', t:'Membaca & Belajar', d:'Meski nilai akademiknya tidak cemerlang, Miku rajin membaca buku sejarah dan cerita tentang kesetiaan serta tekad hidup.'},
+      {n:'06', t:'Bekerja di Bakery', d:'Miku bekerja paruh waktu di toko roti Komugiya untuk melatih kemampuan memasaknya — sisi rajin dan mandirinya yang tersembunyi.'},
+    ],
+    /* timeline */
+    timelineTitle: 'Kisah Miku',
+    timeline: [
+      {yr:'Pertemuan Pertama', h:'Fuutarou Uesugi, Sang Tutor', b:'Miku bertemu Fuutarou saat ditugaskan menjadi tutor les privat. Kesan pertamanya biasa saja — bahkan sempat menolak kehadirannya.'},
+      {yr:'Percikan Pertama', h:'Dunia Sengoku yang Sama', b:'Saat Fuutarou membahas sejarah Sengoku dengan semangat yang sama, Miku mulai melihatnya berbeda. Benih perasaan mulai tumbuh diam-diam.'},
+      {yr:'Keberanian Terbesar', h:'Pengakuan Cinta Pertama', b:'Miku menjadi saudari pertama yang secara terang-terangan mengakui perasaannya — momen paling berani dalam hidupnya yang pemalu.'},
+      {yr:'Perjuangan', h:'Tumbuh Menjadi Lebih Kuat', b:'Miku berjuang keras di bidang akademik dan memasak. Ia tidak menyerah — terus berusaha menjadi versi terbaik dirinya sendiri.'},
+      {yr:'Akhir Cerita', h:'Bukan Pemenang, tapi Terkuat', b:'Meski jalan cintanya tidak berakhir seperti harapan, Miku tumbuh menjadi pribadi yang jauh lebih matang, mandiri, dan berani.'},
+    ],
+    footerLogo: '中野 三玖',
+  },
+
+  nino: {
+    navLogo: '中野二乃',
+    heroKanji: '二乃',
+    heroJP: '中野<br>二乃',
+    heroEN: 'Nakano Nino',
+    tagline: 'Putri kedua yang tegas, stylish, dan penuh semangat —<br>penjaga keluarga yang paling keras kepala.',
+    chips: ['Masak & Parfum','💄 Fashion Queen','Aquarius ♒','Blood Type B'],
+    heroImg: 'nino.jpg',
+    order:'2nd', height:'159cm', weight:'49kg', bday:'19 Jan', zodiac:'♒', zodiacLbl:'Aquarius',
+    profImg: 'nino.jpg',
+    profCaption: '中野 二乃 · Nakano Nino · © Negi Haruba / Kodansha',
+    profTitle: 'Putri Kedua<br><em style="font-style:italic;font-size:.74em;color:var(--sub)">Si Tegas yang Setia pada Perasaannya</em>',
+    profDesc: 'Nino Nakano adalah putri kedua dari lima bersaudara kembar dalam manga/anime <em>Go-Toubun no Hanayome</em>. Dikenal sebagai yang paling tegas, berani, dan keras kepala — namun di balik semua itu tersimpan kasih sayang yang besar untuk keluarganya dan tekad yang kuat dalam cinta.',
+    dataBox: [
+      ['Nama','中野 二乃'],['Usia','17–22 tahun'],
+      ['Tinggi','159 cm'],['Golongan Darah','B'],
+      ['Sekolah','Asahiyama High'],['Hobi Utama','Memasak & Parfum'],
+      ['Warna Rambut','Pink / Coklat'],['Warna Mata','Biru'],
+    ],
+    profChips: ['Memasak','Parfum Buatan','Fashion Stylish','Tegas & Berani'],
+    quoteJP: '「あなたが好きよ。二乃がFūtarōのことが好き。」',
+    quoteTR: '"Aku mencintaimu. Nino mencintai Fuutarou."',
+    quoteSRC: '— Nino Nakano kepada Fuutarou Uesugi · Ungkapan Tulus',
+    traitsTitle: 'Sisi-Sisi Nino',
+    traits: [
+      {icon:'💄', name:'Tegas & Berani', desc:'Nino tidak segan mengungkapkan pikirannya. Ia adalah yang paling blak-blakan di antara kelima saudarinya dan tidak takut konflik.'},
+      {icon:'👨‍🍳', name:'Ahli Memasak', desc:'Memasak adalah passion terbesar Nino. Ia berlatih keras membuat hidangan lezat, terutama ketika memasak untuk orang yang ia cintai.'},
+      {icon:'🌸', name:'Penjaga Keluarga', desc:'Di balik sifat kerasnya, Nino sangat protektif terhadap saudarinya. Ia rela melakukan apa saja demi menjaga keharmonisan keluarga Nakano.'},
+      {icon:'💜', name:'Setia pada Cinta', desc:'Ketika Nino jatuh cinta, ia all-in. Ia mengungkapkan perasaannya dengan berani dan tidak menyembunyikan rasa sukanya meski berkali-kali ditolak.'},
+      {icon:'🎨', name:'Pecinta Fashion & Parfum', desc:'Nino memiliki selera fashion yang tinggi dan suka meracik parfum sendiri — ekspresi diri yang mencerminkan kepribadiannya yang kuat.'},
+      {icon:'✨', name:'Transformasi Karakter', desc:'Nino mengalami salah satu transformasi karakter terbesar — dari orang yang membenci Fuutarou menjadi yang paling tulus mencintainya.'},
+    ],
+    galleryTitle: 'Ekspresi Nino',
+    galleryEye: 'Galeri · Nino',
+    gallery: [
+      {src:'nino.jpg',  lbl:'中野二乃 · Main Visual', tall:true},
+      {src:'nino2.jpg', lbl:'Season 1'},
+      {src:'nino3.jpg', lbl:'Season 2'},
+      {src:'nino4.jpg', lbl:'The Movie'},
+      {kanji:'二',      lbl:'Second Sister · 二女'},
+    ],
+    hobbiesTitle: 'Hal yang Nino Cintai',
+    hobbies: [
+      {n:'01', t:'Memasak', d:'Nino sangat berbakat memasak. Ia terus berlatih menciptakan hidangan baru, terutama untuk orang-orang tersayang yang ingin ia bahagiakan.'},
+      {n:'02', t:'Parfum Buatan Sendiri', d:'Nino suka meracik parfum sendiri. Setiap aroma yang ia ciptakan memiliki makna tersendiri — termasuk parfum khusus yang ia buat untuk Fuutarou.'},
+      {n:'03', t:'Fashion & Gaya Hidup', d:'Nino memiliki selera busana yang tinggi. Ia selalu tampil stylish dan memperhatikan setiap detail penampilannya dengan seksama.'},
+      {n:'04', t:'Menjaga Saudari', d:'Meski kadang terkesan otoriter, Nino melakukannya karena ia sangat mencintai keempat saudarinya dan ingin semua berjalan baik.'},
+      {n:'05', t:'Mengekspresikan Diri', d:'Nino tidak menyembunyikan perasaannya. Ia percaya ekspresi diri yang jujur adalah cara terbaik menjalani hidup yang bermakna.'},
+      {n:'06', t:'Mempersiapkan Masa Depan', d:'Nino punya ambisi besar — ia ingin membuka restoran sendiri dan membuktikan bahwa kemampuan memasaknya bisa menjadi karirnya.'},
+    ],
+    timelineTitle: 'Kisah Nino',
+    timeline: [
+      {yr:'Awal Cerita', h:'Menolak Sang Tutor', b:'Nino adalah yang paling keras menolak Fuutarou sebagai tutor. Ia membuat segalanya sulit dan tidak menyembunyikan rasa tidak sukanya.'},
+      {yr:'Titik Balik', h:'Bertemu "Kintoki"', b:'Nino bertemu pria misterius bernama Kintoki di bus dan mulai jatuh hati — tidak tahu bahwa itu adalah Fuutarou yang menyamar.'},
+      {yr:'Kesadaran', h:'Menyadari Perasaan Sebenarnya', b:'Saat Nino mengetahui Kintoki adalah Fuutarou, ia tidak menarik perasaannya. Inilah momen transformasinya yang paling dramatis.'},
+      {yr:'Keberanian', h:'Pengakuan yang Berulang', b:'Nino mengungkapkan perasaannya kepada Fuutarou berkali-kali meski ditolak — ia bertekad tidak akan menyerah pada cintanya.'},
+      {yr:'Akhir Cerita', h:'Menerima dengan Lapang Hati', b:'Meski Fuutarou memilih orang lain, Nino tumbuh menjadi wanita yang lebih matang, mandiri, dan siap membuka lembaran baru.'},
+    ],
+    footerLogo: '中野 二乃',
+  }
+};
+
+/* ============================================================
+   RENDER FUNCTIONS
+============================================================ */
+function renderDataBox(items){
+  return items.map(([l,v])=>`<div><p class="db-lbl">${l}</p><p class="db-val">${v}</p></div>`).join('');
+}
+function renderChips(items, style=''){
+  return items.map(c=>`<span class="chip" style="${style}">${c}</span>`).join('');
+}
+function renderTraits(items){
+  return items.map((t,i)=>`
+    <div class="t-card" data-reveal data-d="${i+1}">
+      <span class="t-icon">${t.icon}</span>
+      <p class="t-name">${t.name}</p>
+      <p class="t-desc">${t.desc}</p>
+    </div>`).join('');
+}
+function renderGallery(items){
+  return items.map(g=>{
+    if(g.kanji){
+      return `<div class="g-panel g-text-panel">
+        <div class="g-kanji">${g.kanji}</div>
+        <div class="g-text-lbl">${g.lbl}</div>
+      </div>`;
+    }
+    return `<div class="g-panel${g.tall?' g-tall':''}">
+      <img src="${g.src}" alt="${g.lbl}" loading="lazy" onerror="this.style.opacity='.15'"/>
+      <div class="g-overlay"><span class="g-lbl">${g.lbl}</span></div>
+    </div>`;
+  }).join('');
+}
+function renderHobbies(items){
+  return items.map((h,i)=>`
+    <div class="h-card" data-reveal data-d="${i+1}">
+      <div class="h-num">${h.n}</div>
+      <div>
+        <p class="h-ttl">${h.t}</p>
+        <p class="h-txt">${h.d}</p>
+      </div>
+    </div>`).join('');
+}
+function renderTimeline(items){
+  return items.map(t=>`
+    <div class="tl-item" data-reveal>
+      <div class="tl-dot"></div>
+      <p class="tl-yr">${t.yr}</p>
+      <h3 class="tl-h">${t.h}</h3>
+      <p class="tl-b">${t.b}</p>
+    </div>`).join('');
+}
+
+/* ============================================================
+   SWITCH CHARACTER
+============================================================ */
+let current = 'miku';
+
+function switchChar(id){
+  if(id === current) return;
+  current = id;
+  const d = CHARS[id];
+
+  /* flash overlay */
+  const ov = document.getElementById('theme-overlay');
+  ov.classList.add('flash');
+  setTimeout(()=>ov.classList.remove('flash'), 300);
+
+  /* body class → CSS theme */
+  document.body.classList.remove('miku','nino');
+  document.body.classList.add(id);
+
+  /* switcher button states */
+  document.getElementById('btn-miku').className = 'sw-btn' + (id==='miku'?' active-miku':'');
+  document.getElementById('btn-nino').className = 'sw-btn' + (id==='nino'?' active-nino':'');
+
+  /* scroll to top smoothly */
+  window.scrollTo({top:0, behavior:'smooth'});
+
+  /* hero */
+  document.getElementById('nav-logo').textContent = d.navLogo;
+  document.getElementById('hero-kanji').textContent = d.heroKanji;
+  document.getElementById('h-jp').innerHTML = d.heroJP;
+  document.getElementById('h-en').textContent = d.heroEN;
+  document.getElementById('h-tagline').innerHTML = d.tagline;
+  document.getElementById('h-chips').innerHTML = renderChips(d.chips);
+  const hImg = document.getElementById('hero-img');
+  hImg.style.opacity='0';
+  hImg.src = d.heroImg;
+  hImg.onload = ()=>{ hImg.style.transition='opacity .6s'; hImg.style.opacity='1'; };
+  hImg.onerror = ()=>{ hImg.style.opacity='.08'; };
+
+  /* stats */
+  document.getElementById('s-order').innerHTML = d.order;
+  document.getElementById('s-height').innerHTML = d.height+'<span style="font-size:.75em">cm</span>';
+  document.getElementById('s-weight').innerHTML = d.weight+'<span style="font-size:.75em">kg</span>';
+  document.getElementById('s-bday').textContent = d.bday;
+  document.getElementById('s-zodiac').textContent = d.zodiac;
+  document.getElementById('s-zodiac-lbl').textContent = d.zodiacLbl;
+
+  /* profile */
+  const pImg = document.getElementById('prof-img');
+  pImg.style.opacity='0';
+  pImg.src = d.profImg;
+  pImg.onload = ()=>{ pImg.style.transition='opacity .6s'; pImg.style.opacity='1'; };
+  pImg.onerror = ()=>{ pImg.style.opacity='.1'; };
+  document.getElementById('prof-caption').textContent = d.profCaption;
+  document.getElementById('prof-title').innerHTML = d.profTitle;
+  document.getElementById('prof-desc').innerHTML = d.profDesc;
+  document.getElementById('data-box').innerHTML = renderDataBox(d.dataBox);
+  document.getElementById('prof-chips').innerHTML = renderChips(d.profChips, 'border-color:rgba(var(--chip-rgb),0.25);color:var(--wine)');
+
+  /* quote */
+  document.getElementById('q-jp').textContent = d.quoteJP;
+  document.getElementById('q-tr').textContent = d.quoteTR;
+  document.getElementById('q-src').textContent = d.quoteSRC;
+
+  /* traits */
+  document.getElementById('traits-title').textContent = d.traitsTitle;
+  document.getElementById('traits-grid').innerHTML = renderTraits(d.traits);
+
+  /* gallery */
+  document.getElementById('gallery-eye').textContent = d.galleryEye;
+  document.getElementById('gallery-title').textContent = d.galleryTitle;
+  document.getElementById('gallery-grid').innerHTML = renderGallery(d.gallery);
+
+  /* hobbies */
+  document.getElementById('hobbies-title').textContent = d.hobbiesTitle;
+  document.getElementById('hobbies-grid').innerHTML = renderHobbies(d.hobbies);
+
+  /* timeline */
+  document.getElementById('timeline-title').textContent = d.timelineTitle;
+  document.getElementById('tl-wrap').innerHTML = renderTimeline(d.timeline);
+
+  /* footer */
+  document.getElementById('f-logo').textContent = d.footerLogo;
+
+  /* page title */
+  document.title = id==='miku' ? 'Miku Nakano — 中野三玖' : 'Nino Nakano — 中野二乃';
+
+  /* re-observe newly rendered elements */
+  setTimeout(()=>{
+    document.querySelectorAll('[data-reveal]:not(.in)').forEach(el=>{
+      revObserver.observe(el);
+    });
+  }, 80);
+}
+
+/* ============================================================
+   INITIAL RENDER (Miku default)
+============================================================ */
+(function initMiku(){
+  const d = CHARS.miku;
+  document.getElementById('data-box').innerHTML = renderDataBox(d.dataBox);
+  document.getElementById('prof-chips').innerHTML = renderChips(d.profChips, 'border-color:rgba(92,21,38,.22);color:var(--wine)');
+  document.getElementById('traits-grid').innerHTML = renderTraits(d.traits);
+  document.getElementById('gallery-grid').innerHTML = renderGallery(d.gallery);
+  document.getElementById('hobbies-grid').innerHTML = renderHobbies(d.hobbies);
+  document.getElementById('tl-wrap').innerHTML = renderTimeline(d.timeline);
+})();
+
+/* ============================================================
+   CUSTOM CURSOR
+============================================================ */
 const dot = document.getElementById('cursor-dot');
 const ring = document.getElementById('cursor-ring');
 if(window.matchMedia('(hover:hover)').matches){
   let mx=0,my=0,rx=0,ry=0;
   document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
   (function loop(){
-    dot.style.left=mx+'px';dot.style.top=my+'px';
-    rx+=(mx-rx)*.12;ry+=(my-ry)*.12;
-    ring.style.left=rx+'px';ring.style.top=ry+'px';
+    dot.style.left=mx+'px'; dot.style.top=my+'px';
+    rx+=(mx-rx)*.12; ry+=(my-ry)*.12;
+    ring.style.left=rx+'px'; ring.style.top=ry+'px';
     requestAnimationFrame(loop);
   })();
+  document.querySelectorAll('a,button,.t-card,.h-card,.sw-btn,.g-panel,.stat-cell').forEach(el=>{
+    el.addEventListener('mouseenter',()=>document.body.classList.add('cur-big'));
+    el.addEventListener('mouseleave',()=>document.body.classList.remove('cur-big'));
+  });
 }
 
-// ── Nav solid on scroll
-const nav=document.getElementById('nav');
-const onScroll=()=>nav.classList.toggle('solid',window.scrollY>60);
-window.addEventListener('scroll',onScroll,{passive:true});
-onScroll();
+/* ============================================================
+   NAV SOLID ON SCROLL
+============================================================ */
+const nav = document.getElementById('nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('solid',window.scrollY>55),{passive:true});
 
-// ── Hamburger menu
-const burger=document.getElementById('burger');
-const mobileMenu=document.getElementById('mobile-menu');
+/* ============================================================
+   HAMBURGER
+============================================================ */
+const burger = document.getElementById('burger');
+const mMenu = document.getElementById('mobile-menu');
 burger.addEventListener('click',()=>{
   burger.classList.toggle('open');
-  mobileMenu.classList.toggle('open');
-  document.body.style.overflow=mobileMenu.classList.contains('open')?'hidden':'';
+  mMenu.classList.toggle('open');
+  document.body.style.overflow = mMenu.classList.contains('open')?'hidden':'';
 });
-mobileMenu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{
-  burger.classList.remove('open');mobileMenu.classList.remove('open');
+mMenu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{
+  burger.classList.remove('open');
+  mMenu.classList.remove('open');
   document.body.style.overflow='';
 }));
 
-// ── Sakura petals
-const hero=document.querySelector('#hero');
-const colors=['#f2869b','#e8516e','rgba(255,255,255,.6)','#fad5de'];
-for(let i=0;i<26;i++){
-  const p=document.createElement('div');
+/* ============================================================
+   SAKURA PETALS
+============================================================ */
+const hero = document.getElementById('hero');
+const petalColors = ['#f28fa0','#e05068','rgba(255,255,255,.55)','#fad5de'];
+for(let i=0;i<24;i++){
+  const p = document.createElement('div');
   p.className='petal';
-  const sz=4+Math.random()*9;
-  const col=colors[Math.floor(Math.random()*colors.length)];
-  p.style.cssText=`
-    left:${Math.random()*100}%;
-    width:${sz}px;height:${sz*1.25}px;
-    background:${col};
-    opacity:0;
-    animation-duration:${9+Math.random()*12}s;
-    animation-delay:${Math.random()*14}s;
-    filter:blur(${Math.random()>.6?'1px':'0px'});
-    transform:rotate(${Math.random()*360}deg);
-  `;
+  const sz = 4+Math.random()*9;
+  p.style.cssText=`left:${Math.random()*100}%;width:${sz}px;height:${sz*1.25}px;background:${petalColors[i%petalColors.length]};animation-duration:${9+Math.random()*12}s;animation-delay:${Math.random()*14}s;filter:blur(${Math.random()>.6?'1px':'0'});transform:rotate(${Math.random()*360}deg)`;
   hero.appendChild(p);
 }
 
-// ── Scroll reveal with IntersectionObserver
-const revObserver=new IntersectionObserver(entries=>{
+/* ============================================================
+   SCROLL REVEAL
+============================================================ */
+const revObserver = new IntersectionObserver(entries=>{
   entries.forEach(e=>{
-    if(e.isIntersecting){
-      e.target.classList.add('in');
-      revObserver.unobserve(e.target);
-    }
+    if(e.isIntersecting){ e.target.classList.add('in'); revObserver.unobserve(e.target); }
   });
-},{threshold:.1,rootMargin:'0px 0px -40px 0px'});
+},{threshold:.1,rootMargin:'0px 0px -35px 0px'});
 document.querySelectorAll('[data-reveal]').forEach(el=>revObserver.observe(el));
 
-// ── Subtle hero parallax (desktop only)
+/* ============================================================
+   HERO PARALLAX (desktop)
+============================================================ */
 if(window.matchMedia('(hover:hover) and (min-width:769px)').matches){
-  const hImg=document.querySelector('.hero-visual');
-  let ticking=false;
+  const hv = document.querySelector('.hero-visual');
+  let tick=false;
   window.addEventListener('scroll',()=>{
-    if(!ticking){
-      requestAnimationFrame(()=>{
-        if(hImg) hImg.style.transform=`translateY(${window.scrollY*.08}px)`;
-        ticking=false;
-      });
-      ticking=true;
+    if(!tick){
+      requestAnimationFrame(()=>{ if(hv) hv.style.transform=`translateY(${window.scrollY*.07}px)`; tick=false; });
+      tick=true;
     }
   },{passive:true});
 }
-
-// ── Image graceful fallback: if miku.jpg missing, show tinted bg
-document.querySelectorAll('img').forEach(img=>{
-  img.addEventListener('error',function(){
-    this.style.visibility='hidden';
-  });
-});
 </script>
 </body>
 </html>
