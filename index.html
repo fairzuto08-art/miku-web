@@ -3,996 +3,1159 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Quintuplets — Nakano Sisters</title>
+<title>五等分の花嫁 — Nakano Sisters</title>
 <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
 <style>
-/* ============================================================
-   ROOT & RESET
-============================================================ */
+/* ====== RESET ====== */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%}
+
+/* ====== ROOT ====== */
 :root{
-  /* MIKU theme (default) */
-  --accent:#e05068;
-  --accent-b:#f28fa0;
-  --accent-p:#fce8ed;
-  --accent-m:#fad5de;
-  --ink:#18080e;
-  --dark1:#0e0408;
-  --dark2:#0c0308;
-  --dark3:#0a0205;
-  --wine:#5c1526;
-  --mist:#f8edf0;
-  --sub:#8a4456;
-  --gold:#c8919e;
-  --w:#fff;
   --ease:cubic-bezier(.25,.46,.45,.94);
   --ease-out:cubic-bezier(0,0,.2,1);
+  --w:#fff;
+
+  /* Ichika — gold */
+  --c1:#c9902a; --c1b:#f5c06e; --c1p:#fef3e2; --c1m:#fde8c0; --d1a:#0d0804; --d1b:#120b05; --d1c:#0a0603;
+  /* Nino — purple */
+  --c2:#7c3aed; --c2b:#a78bfa; --c2p:#ede9fe; --c2m:#ddd6fe; --d2a:#06030f; --d2b:#0a0514; --d2c:#070310;
+  /* Miku — rose */
+  --c3:#e05068; --c3b:#f28fa0; --c3p:#fce8ed; --c3m:#fad5de; --d3a:#0e0408; --d3b:#0c0308; --d3c:#0a0205;
+  /* Yotsuba — green */
+  --c4:#16a34a; --c4b:#4ade80; --c4p:#f0fdf4; --c4m:#dcfce7; --d4a:#030d06; --d4b:#041008; --d4c:#020b05;
+  /* Itsuki — red */
+  --c5:#dc2626; --c5b:#f87171; --c5p:#fef2f2; --c5m:#fecaca; --d5a:#0d0202; --d5b:#120303; --d5c:#0a0202;
+
+  --cur-accent:#e05068;
 }
 
-/* NINO theme overrides */
-body.nino{
-  --accent:#8b5cf6;
-  --accent-b:#a78bfa;
-  --accent-p:#ede9fe;
-  --accent-m:#ddd6fe;
-  --wine:#3b0764;
-  --mist:#f5f3ff;
-  --sub:#6d28d9;
-  --gold:#a78bfa;
-  --dark1:#08040f;
-  --dark2:#0a0514;
-  --dark3:#070310;
-  --ink:#0f0818;
-}
-
-html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
 body{
   font-family:'DM Sans',sans-serif;
-  background:var(--ink);
-  color:var(--ink);
+  background:#08030a;
+  color:#fff;
   overflow-x:hidden;
   cursor:none;
-  transition:background .5s, color .5s;
+  transition:background .6s var(--ease);
 }
 
-/* ============================================================
-   CUSTOM CURSOR
-============================================================ */
-#cursor-dot,#cursor-ring{
-  position:fixed;top:0;left:0;border-radius:50%;
-  pointer-events:none;z-index:9999;transform:translate(-50%,-50%);
-  will-change:left,top;transition:width .25s,height .25s,border-color .4s,background .4s;
-}
-#cursor-dot{width:6px;height:6px;background:var(--accent)}
-#cursor-ring{width:32px;height:32px;border:1.5px solid rgba(224,80,104,.45)}
-body.nino #cursor-ring{border-color:rgba(139,92,246,.45)}
-.cur-big #cursor-ring{width:50px;height:50px;border-color:var(--accent)}
-@media(hover:none){#cursor-dot,#cursor-ring{display:none}}
+/* ====== CURSOR ====== */
+#cd,#cr{position:fixed;top:0;left:0;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);will-change:left,top}
+#cd{width:7px;height:7px;background:var(--cur-accent);transition:background .4s}
+#cr{width:34px;height:34px;border:1.5px solid rgba(224,80,104,.4);transition:width .25s,height .25s,border-color .4s,background .4s}
+.cur-big #cr{width:52px;height:52px;border-color:var(--cur-accent)}
+@media(hover:none){#cd,#cr{display:none}}
 
-/* ============================================================
-   CHARACTER SWITCHER (TOP BAR)
-============================================================ */
-#switcher-bar{
-  position:fixed;top:0;left:0;right:0;z-index:300;
-  display:flex;align-items:center;justify-content:center;
-  background:rgba(6,2,9,.96);
-  border-bottom:1px solid rgba(255,255,255,.05);
-  backdrop-filter:blur(20px);
-  -webkit-backdrop-filter:blur(20px);
-  padding:.5rem 1.5rem;
-  gap:.6rem;
-}
-.sw-label{
-  font-size:.55rem;letter-spacing:.5em;text-transform:uppercase;
-  color:rgba(255,255,255,.3);margin-right:.4rem;white-space:nowrap;
-}
-.sw-btn{
-  display:flex;align-items:center;gap:.55rem;
-  padding:.45rem 1.2rem .45rem .7rem;
-  border:1px solid rgba(255,255,255,.1);
-  border-radius:100px;
-  background:rgba(255,255,255,.04);
-  color:rgba(255,255,255,.45);
-  font-family:'DM Sans',sans-serif;
-  font-size:.65rem;letter-spacing:.3em;text-transform:uppercase;
-  cursor:pointer;
-  transition:all .3s var(--ease);
-  white-space:nowrap;
-}
-.sw-btn:hover{border-color:rgba(255,255,255,.25);color:rgba(255,255,255,.7);background:rgba(255,255,255,.07)}
-.sw-btn.active-miku{
-  border-color:#e05068;
-  background:rgba(224,80,104,.15);
-  color:#f28fa0;
-}
-.sw-btn.active-nino{
-  border-color:#8b5cf6;
-  background:rgba(139,92,246,.15);
-  color:#a78bfa;
-}
-.sw-avatar{
-  width:24px;height:24px;border-radius:50%;
-  object-fit:cover;object-position:top;
-  border:1.5px solid currentColor;
-  background:#222;
-  flex-shrink:0;
-  font-size:10px;display:flex;align-items:center;justify-content:center;overflow:hidden;
-}
-.sw-avatar img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
-.sw-dot{
-  width:7px;height:7px;border-radius:50%;flex-shrink:0;
-  transition:background .3s;
-}
-.sw-btn.active-miku .sw-dot{background:#e05068}
-.sw-btn.active-nino .sw-dot{background:#8b5cf6}
-.sw-btn:not(.active-miku):not(.active-nino) .sw-dot{background:rgba(255,255,255,.2)}
-
-/* ============================================================
-   NAV (below switcher)
-============================================================ */
+/* ====== NAV ====== */
 #nav{
-  position:fixed;top:36px;left:0;right:0;z-index:200;
-  padding:1.1rem clamp(1.5rem,5vw,4rem);
+  position:fixed;top:0;left:0;right:0;z-index:300;
+  padding:.9rem clamp(1rem,5vw,3rem);
   display:flex;align-items:center;justify-content:space-between;
   transition:all .4s var(--ease);
 }
-#nav.solid{
-  background:rgba(10,3,13,.93);
-  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
-  border-bottom:1px solid rgba(255,255,255,.05);
+#nav.solid{background:rgba(6,2,10,.94);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.05)}
+.n-logo{font-family:'Shippori Mincho',serif;font-size:.95rem;letter-spacing:.3em;color:var(--w);text-decoration:none;opacity:.85;transition:opacity .2s}
+.n-logo:hover{opacity:1}
+.n-home-btn{
+  display:flex;align-items:center;gap:.5rem;
+  padding:.35rem 1rem;border:1px solid rgba(255,255,255,.15);border-radius:100px;
+  background:rgba(255,255,255,.05);color:rgba(255,255,255,.65);
+  font-family:'DM Sans',sans-serif;font-size:.62rem;letter-spacing:.35em;text-transform:uppercase;
+  cursor:pointer;transition:all .25s;
 }
-.nav-logo{
-  font-family:'Shippori Mincho',serif;
-  font-size:.95rem;letter-spacing:.35em;color:var(--w);
-  text-decoration:none;transition:color .4s;
-}
-.nav-links{display:flex;gap:clamp(1rem,2.5vw,2.2rem);list-style:none}
-.nav-links a{
-  font-size:.6rem;letter-spacing:.5em;text-transform:uppercase;
-  color:rgba(255,255,255,.38);text-decoration:none;
-  transition:color .25s;white-space:nowrap;
-}
-.nav-links a:hover{color:var(--accent-b)}
-.nav-burger{
-  display:none;flex-direction:column;gap:5px;
-  background:none;border:none;cursor:pointer;padding:.3rem;
-}
-.nav-burger span{display:block;width:22px;height:1.5px;background:rgba(255,255,255,.55);transition:all .3s var(--ease)}
-.nav-burger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
-.nav-burger.open span:nth-child(2){opacity:0;transform:scaleX(0)}
-.nav-burger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
-.nav-mobile{
-  display:none;position:fixed;inset:0;
-  background:rgba(8,2,12,.97);z-index:190;
-  flex-direction:column;align-items:center;justify-content:center;
-  gap:2.2rem;list-style:none;
-}
-.nav-mobile.open{display:flex}
-.nav-mobile a{
-  font-family:'Shippori Mincho',serif;
-  font-size:clamp(1.3rem,5vw,1.9rem);letter-spacing:.25em;
-  color:rgba(255,255,255,.65);text-decoration:none;transition:color .2s;
-}
-.nav-mobile a:hover{color:var(--accent-b)}
+.n-home-btn:hover{background:rgba(255,255,255,.1);color:var(--w);border-color:rgba(255,255,255,.3)}
+.n-home-btn svg{width:14px;height:14px;opacity:.7}
 
-/* ============================================================
-   HERO
-============================================================ */
+/* ====== VIEWS ====== */
+#home-view,#char-view{transition:opacity .35s var(--ease)}
+#char-view{display:none}
+
+/* ====== HOME ====== */
+#home-view{min-height:100vh;position:relative;overflow:hidden}
+
+.home-bg{
+  position:absolute;inset:0;z-index:0;
+  background:
+    radial-gradient(ellipse 60% 50% at 20% 30%, rgba(201,144,42,.12) 0%,transparent 60%),
+    radial-gradient(ellipse 50% 60% at 80% 70%, rgba(124,58,237,.1) 0%,transparent 60%),
+    radial-gradient(ellipse 40% 40% at 50% 50%, rgba(220,38,38,.08) 0%,transparent 60%),
+    #08030a;
+  animation:hbg 14s ease-in-out infinite alternate;
+}
+@keyframes hbg{from{filter:brightness(1)}to{filter:brightness(1.08)}}
+
+/* floating orbs behind */
+.h-orb{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none;animation:orbf ease-in-out infinite alternate}
+@keyframes orbf{from{transform:translate(0,0) scale(1)}to{transform:translate(30px,20px) scale(1.08)}}
+
+/* top label */
+.home-top{position:relative;z-index:2;text-align:center;padding:clamp(3.5rem,8vh,6rem) 1rem 0}
+.home-series{font-size:.6rem;letter-spacing:.65em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:1.2rem;display:flex;align-items:center;justify-content:center;gap:.8rem}
+.home-series::before,.home-series::after{content:'';display:block;width:30px;height:1px;background:rgba(255,255,255,.2)}
+.home-headline{font-family:'Shippori Mincho',serif;font-size:clamp(2.5rem,7vw,5.5rem);font-weight:500;line-height:1;color:var(--w);margin-bottom:.6rem}
+.home-sub{font-family:'Playfair Display',serif;font-size:clamp(.9rem,1.6vw,1.15rem);font-style:italic;color:rgba(255,255,255,.35);margin-bottom:clamp(2rem,4vh,3.5rem)}
+
+/* cards grid */
+.cards-wrap{
+  position:relative;z-index:2;
+  display:flex;justify-content:center;align-items:flex-end;
+  flex-wrap:wrap;
+  gap:clamp(.6rem,1.5vw,1.2rem);
+  padding:0 clamp(1rem,4vw,3rem) clamp(2rem,5vh,4rem);
+}
+
+.char-card{
+  position:relative;
+  width:clamp(140px,17vw,200px);
+  aspect-ratio:2/3;
+  border-radius:16px;
+  overflow:hidden;
+  cursor:pointer;
+  transition:transform .4s var(--ease),box-shadow .4s;
+  border:1px solid rgba(255,255,255,.06);
+  background:#111;
+  flex-shrink:0;
+}
+.char-card::before{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.92) 0%,rgba(0,0,0,.3) 55%,transparent 100%);z-index:1;transition:opacity .3s}
+.char-card:hover{transform:translateY(-14px) scale(1.03)}
+.char-card:hover::before{opacity:.7}
+.char-card img{width:100%;height:100%;object-fit:cover;object-position:top center;transition:transform .5s var(--ease),filter .4s}
+.char-card:hover img{transform:scale(1.08)}
+
+.card-glow{position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);width:80%;height:60px;filter:blur(25px);border-radius:50%;opacity:0;transition:opacity .4s;z-index:0}
+.char-card:hover .card-glow{opacity:.7}
+
+.card-info{position:absolute;bottom:0;left:0;right:0;z-index:2;padding:1rem .9rem .9rem}
+.card-num{font-size:.52rem;letter-spacing:.55em;text-transform:uppercase;margin-bottom:.3rem;opacity:.7}
+.card-jp{font-family:'Shippori Mincho',serif;font-size:clamp(.9rem,1.4vw,1.1rem);font-weight:500;line-height:1.2;margin-bottom:.15rem}
+.card-en{font-size:.58rem;letter-spacing:.3em;text-transform:uppercase;opacity:.55}
+.card-btn{
+  display:inline-flex;align-items:center;gap:.35rem;
+  margin-top:.5rem;
+  padding:.22rem .7rem;border-radius:100px;
+  font-size:.55rem;letter-spacing:.22em;text-transform:uppercase;
+  border:1px solid rgba(255,255,255,.25);
+  background:rgba(255,255,255,.08);
+  color:rgba(255,255,255,.8);
+  transition:all .25s;
+}
+.char-card:hover .card-btn{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.4);color:var(--w)}
+.card-btn svg{width:10px;height:10px}
+
+/* ichika */
+.cc-1{box-shadow:0 0 0 1px rgba(201,144,42,.2)}.cc-1:hover{box-shadow:0 24px 50px rgba(201,144,42,.25)}.cc-1 .card-glow{background:#c9902a}.cc-1 .card-num,.cc-1 .card-jp,.cc-1 .card-en{color:#f5c06e}
+/* nino */
+.cc-2{box-shadow:0 0 0 1px rgba(124,58,237,.2)}.cc-2:hover{box-shadow:0 24px 50px rgba(124,58,237,.25)}.cc-2 .card-glow{background:#7c3aed}.cc-2 .card-num,.cc-2 .card-jp,.cc-2 .card-en{color:#a78bfa}
+/* miku */
+.cc-3{box-shadow:0 0 0 1px rgba(224,80,104,.2)}.cc-3:hover{box-shadow:0 24px 50px rgba(224,80,104,.3)}.cc-3 .card-glow{background:#e05068}.cc-3 .card-num,.cc-3 .card-jp,.cc-3 .card-en{color:#f28fa0}
+/* yotsuba */
+.cc-4{box-shadow:0 0 0 1px rgba(22,163,74,.2)}.cc-4:hover{box-shadow:0 24px 50px rgba(22,163,74,.25)}.cc-4 .card-glow{background:#16a34a}.cc-4 .card-num,.cc-4 .card-jp,.cc-4 .card-en{color:#4ade80}
+/* itsuki */
+.cc-5{box-shadow:0 0 0 1px rgba(220,38,38,.2)}.cc-5:hover{box-shadow:0 24px 50px rgba(220,38,38,.25)}.cc-5 .card-glow{background:#dc2626}.cc-5 .card-num,.cc-5 .card-jp,.cc-5 .card-en{color:#f87171}
+
+/* bottom tagline */
+.home-footer-txt{position:relative;z-index:2;text-align:center;padding-bottom:2rem;font-size:.6rem;letter-spacing:.4em;color:rgba(255,255,255,.18);text-transform:uppercase}
+
+/* ====== CHAR VIEW ====== */
+#char-view{min-height:100vh}
+
+/* hero */
 #hero{
-  min-height:100svh;padding-top:72px;
+  min-height:100vh;padding-top:60px;
   display:grid;grid-template-columns:1fr 1fr;
   position:relative;overflow:hidden;align-items:center;
 }
-.hero-mesh{
-  position:absolute;inset:0;z-index:0;
-  background:
-    radial-gradient(ellipse 65% 55% at 80% 40%,var(--hero-orb1,rgba(200,50,80,.22)) 0%,transparent 65%),
-    radial-gradient(ellipse 50% 50% at 10% 80%,var(--hero-orb2,rgba(100,20,40,.35)) 0%,transparent 60%),
-    radial-gradient(ellipse 80% 100% at 50% 100%,rgba(6,2,9,1) 0%,transparent 50%),
-    var(--dark1);
-  transition:background .8s var(--ease);
+.hero-mesh{position:absolute;inset:0;z-index:0;transition:background .7s var(--ease)}
+.orb{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:0;animation:orbf ease-in-out infinite alternate}
+.orb1{width:clamp(280px,45vw,560px);height:clamp(280px,45vw,560px);top:-20%;left:-10%;animation-duration:16s}
+.orb2{width:clamp(200px,35vw,420px);height:clamp(200px,35vw,420px);bottom:-15%;right:5%;animation-duration:20s;animation-delay:-6s}
+
+.petal{position:absolute;border-radius:50% 0 50% 50%;pointer-events:none;z-index:1;opacity:0;animation:pfall linear infinite}
+@keyframes pfall{0%{transform:translateY(-30px) rotate(0deg) translateX(0);opacity:.65}60%{opacity:.35}100%{transform:translateY(108vh) rotate(400deg) translateX(-20px);opacity:0}}
+
+.hero-c{position:relative;z-index:3;padding:clamp(2rem,5vh,4rem) clamp(1.5rem,4vw,3rem) clamp(2rem,5vh,4rem) clamp(1.5rem,5vw,5rem);display:flex;flex-direction:column;gap:clamp(.7rem,1.2vh,1.2rem)}
+.h-eye{display:inline-flex;align-items:center;gap:.8rem;font-size:.58rem;letter-spacing:.62em;text-transform:uppercase;color:var(--ca-b,#f28fa0);opacity:0;animation:sup .7s .2s var(--ease-out) forwards}
+.h-eye::before{content:'';display:block;width:20px;height:1px;background:var(--ca-b,#f28fa0)}
+.h-jp{font-family:'Shippori Mincho',serif;font-size:clamp(2.5rem,7vw,5.5rem);font-weight:500;color:var(--w);line-height:.95;opacity:0;animation:sup .8s .35s var(--ease-out) forwards}
+.h-en{font-family:'Playfair Display',serif;font-size:clamp(.85rem,1.6vw,1.15rem);font-style:italic;letter-spacing:.25em;color:var(--ca-gold,#c8919e);opacity:0;animation:sup .8s .5s var(--ease-out) forwards}
+.h-div{width:42px;height:1px;background:var(--ca,#e05068);margin:clamp(.1rem,.3vh,.4rem) 0;opacity:0;animation:sup .7s .62s var(--ease-out) forwards;transition:background .4s}
+.h-tag{font-size:clamp(.68rem,.85vw,.82rem);letter-spacing:.1em;color:rgba(255,255,255,.4);line-height:2.1;max-width:min(340px,90%);opacity:0;animation:sup .8s .75s var(--ease-out) forwards}
+.h-chips{display:flex;flex-wrap:wrap;gap:.42rem;margin-top:.15rem;opacity:0;animation:sup .8s .88s var(--ease-out) forwards}
+.chip{padding:.24rem .68rem;border:1px solid var(--chip-border,rgba(224,80,104,.3));border-radius:100px;font-size:.57rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ca-b,#f28fa0);background:var(--chip-bg,rgba(224,80,104,.06));transition:all .25s;cursor:default;white-space:nowrap}
+.chip:hover{background:var(--ca,#e05068);color:var(--w)}
+.h-scroll{display:inline-flex;align-items:center;gap:.65rem;font-size:.55rem;letter-spacing:.44em;text-transform:uppercase;color:rgba(255,255,255,.2);margin-top:.3rem;opacity:0;animation:sup .7s 1.05s var(--ease-out) forwards}
+.h-sline{width:30px;height:1px;background:rgba(255,255,255,.13)}
+.h-arr{width:17px;height:17px;border-right:1px solid var(--ca,#e05068);border-bottom:1px solid var(--ca,#e05068);transform:rotate(45deg);animation:bd 2s ease-in-out infinite}
+@keyframes bd{0%,100%{transform:rotate(45deg) translate(0,0)}50%{transform:rotate(45deg) translate(3px,3px)}}
+@keyframes sup{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+.hero-v{position:relative;z-index:2;height:calc(100vh - 60px);display:flex;align-items:flex-end;justify-content:center;overflow:hidden}
+.hero-v::before{content:'';position:absolute;inset:0;background:linear-gradient(to right,var(--bg-dk,#08030a) 0%,transparent 22%,transparent 78%,var(--bg-dk,#08030a) 100%),linear-gradient(to top,var(--bg-dk,#08030a) 0%,transparent 35%);z-index:2;transition:background .6s}
+.hero-img{position:relative;z-index:1;height:100%;width:100%;object-fit:cover;object-position:top center;opacity:0;animation:irev 1.1s .5s var(--ease-out) forwards;transition:filter .4s}
+@keyframes irev{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.hero-kanji{position:absolute;right:4%;top:8%;font-family:'Shippori Mincho',serif;font-size:clamp(5rem,10vw,9rem);font-weight:400;color:rgba(255,255,255,.04);line-height:1;z-index:1;pointer-events:none;writing-mode:vertical-rl;opacity:0;animation:sup .9s .3s var(--ease-out) forwards}
+
+/* stats */
+.stats-rib{border-top:1px solid rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.04);position:relative;z-index:3;transition:background .6s}
+.stats-in{display:grid;grid-template-columns:repeat(5,1fr);max-width:1100px;margin:0 auto;border-left:1px solid rgba(255,255,255,.04)}
+.sc{padding:clamp(.9rem,2.2vh,1.7rem) .8rem;text-align:center;border-right:1px solid rgba(255,255,255,.04);transition:background .3s;cursor:default}
+.sc:hover{background:var(--sc-hover,rgba(224,80,104,.05))}
+.sn{font-family:'Playfair Display',serif;font-size:clamp(1.4rem,2.6vw,2rem);color:var(--ca,#e05068);display:block;line-height:1;margin-bottom:.35rem;transition:color .4s}
+.sl{font-size:.52rem;letter-spacing:.4em;text-transform:uppercase;color:rgba(255,255,255,.27)}
+
+/* section */
+.sl-light{background:var(--ca-p,#fce8ed);transition:background .5s}
+.sl-dark{transition:background .5s}
+.sl-wine{transition:background .5s}
+.sp{padding:clamp(3rem,7vh,5.5rem) clamp(1.5rem,5vw,4rem)}
+.si{max-width:1100px;margin:0 auto}
+.seye{display:inline-flex;align-items:center;gap:.7rem;font-size:.58rem;letter-spacing:.56em;text-transform:uppercase;color:var(--ca,#e05068);margin-bottom:.52rem;transition:color .4s}
+.seye::before{content:'';display:block;width:20px;height:1px;background:var(--ca,#e05068);transition:background .4s}
+.stit{font-family:'Playfair Display',serif;font-size:clamp(1.7rem,3.2vw,2.6rem);font-weight:400;line-height:1.15;margin-bottom:clamp(1.2rem,2.3vh,2rem);transition:color .4s}
+.sl-light .stit{color:var(--ca-wine,#5c1526)}
+.sl-dark .stit,.sl-wine .stit{color:#fff}
+
+/* profile grid */
+.pg{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:clamp(2rem,5vw,5rem);align-items:start}
+.pif{position:relative;border-radius:8px;overflow:hidden;aspect-ratio:3/4;background:#1a0810;transition:box-shadow .5s}
+.pif img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block}
+.pif::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(6,2,9,.55) 0%,transparent 45%);pointer-events:none}
+.pif-deco{position:absolute;top:11px;left:11px;right:-11px;bottom:-11px;border:1px solid var(--pif-deco,rgba(224,80,104,.18));border-radius:8px;z-index:-1;transition:border-color .4s}
+.pcap{margin-top:.9rem;font-size:.58rem;letter-spacing:.33em;text-transform:uppercase;color:var(--ca-sub,#8a4456);text-align:center;transition:color .4s}
+.pinfo{display:flex;flex-direction:column;gap:clamp(.85rem,1.7vh,1.4rem)}
+.ilbl{font-size:.55rem;letter-spacing:.44em;text-transform:uppercase;color:var(--ca,#e05068);margin-bottom:.25rem;transition:color .4s}
+.ival{font-family:'Playfair Display',serif;font-size:clamp(.93rem,1.1vw,1.08rem);line-height:1.7}
+.sl-light .ival{color:#18080e}
+.isep{height:1px;background:rgba(0,0,0,.08);transition:background .4s}
+.dbox{display:grid;grid-template-columns:1fr 1fr;gap:.8rem 1.4rem;padding:1.3rem;border-radius:8px;border-left:3px solid var(--ca,#e05068);transition:background .4s,border-color .4s}
+.dl{font-size:.52rem;letter-spacing:.4em;text-transform:uppercase;margin-bottom:.2rem;transition:color .4s}
+.dv{font-family:'Playfair Display',serif;font-size:.95rem;transition:color .4s}
+.sl-light .dl{color:var(--ca-sub,#8a4456)}
+.sl-light .dv{color:var(--ca-wine,#5c1526)}
+
+/* quote */
+.qb{padding:clamp(2.8rem,6vh,5rem) clamp(1.5rem,5vw,4rem);text-align:center;position:relative;overflow:hidden;transition:background .5s}
+.qb::before{content:'"';position:absolute;top:-3rem;left:2vw;font-family:'Playfair Display',serif;font-size:clamp(8rem,14vw,14rem);color:rgba(255,255,255,.07);line-height:1;pointer-events:none}
+.qjp{font-family:'Shippori Mincho',serif;font-size:clamp(.9rem,1.9vw,1.25rem);color:#fff;line-height:2.4;max-width:min(680px,92%);margin:0 auto}
+.qtr{font-size:clamp(.67rem,.86vw,.78rem);letter-spacing:.13em;font-style:italic;color:rgba(255,255,255,.58);margin-top:.85rem}
+.qsrc{margin-top:.9rem;font-size:.55rem;letter-spacing:.44em;text-transform:uppercase;color:rgba(255,255,255,.35)}
+
+/* traits */
+.tg{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(.85rem,1.3vw,1.4rem)}
+.tc{padding:clamp(1.2rem,2.2vh,1.9rem) clamp(1rem,1.7vw,1.6rem);border:1px solid rgba(255,255,255,.05);border-radius:8px;background:rgba(255,255,255,.025);transition:all .35s var(--ease);position:relative;overflow:hidden;cursor:default}
+.tc::after{content:'';position:absolute;left:0;top:0;width:2px;height:0;background:var(--ca,#e05068);transition:height .4s var(--ease),background .4s}
+.tc:hover::after{height:100%}
+.tc:hover{background:rgba(var(--ca-rgb,224,80,104),.06);border-color:rgba(var(--ca-rgb,224,80,104),.2);transform:translateY(-4px)}
+.ticon{font-size:clamp(1.6rem,1.9vw,2rem);margin-bottom:.8rem;display:block}
+.tname{font-family:'Playfair Display',serif;font-size:clamp(.93rem,1.1vw,1.12rem);color:#fff;margin-bottom:.52rem}
+.tdesc{font-size:clamp(.68rem,.76vw,.77rem);line-height:1.9;color:rgba(255,255,255,.42)}
+
+/* gallery */
+.gl{display:grid;grid-template-columns:1.5fr 1fr 1fr;grid-template-rows:265px 265px;gap:clamp(.55rem,.75vw,.9rem)}
+.gp{border-radius:8px;overflow:hidden;position:relative;background:#110508;cursor:default}
+.gp.gt{grid-row:span 2}
+.gp img{width:100%;height:100%;object-fit:cover;object-position:top center;transition:transform .6s var(--ease),filter .4s;filter:brightness(.9) saturate(1.05)}
+.gp:hover img{transform:scale(1.06);filter:brightness(1.04)}
+.gov{position:absolute;inset:0;background:linear-gradient(to top,rgba(6,2,9,.88) 0%,transparent 50%);display:flex;align-items:flex-end;padding:.9rem 1rem;opacity:0;transition:opacity .35s}
+.gp:hover .gov{opacity:1}
+.glbl{font-size:.58rem;letter-spacing:.32em;text-transform:uppercase;color:var(--ca-gold,#c8919e);transition:color .4s}
+.gtp{display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.05);gap:.5rem;transition:background .5s}
+.gkj{font-family:'Shippori Mincho',serif;font-size:clamp(2.6rem,4.5vw,4rem);line-height:1;color:var(--ca,#e05068);opacity:.22;transition:color .4s,opacity .4s}
+.gtlbl{font-size:.54rem;letter-spacing:.48em;text-transform:uppercase;color:rgba(255,255,255,.2)}
+
+/* hobbies */
+.hg{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(.85rem,1.3vw,1.3rem)}
+.hc{display:flex;gap:clamp(.7rem,1.2vw,1rem);padding:clamp(1.1rem,2vh,1.6rem);border-radius:8px;transition:all .3s var(--ease);cursor:default}
+.sl-light .hc{background:var(--ca-m,#fad5de)}
+.sl-light .hc:hover{background:var(--ca-p,#fce8ed);transform:translateY(-3px)}
+.hn{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,2.6vw,2.4rem);font-weight:400;color:rgba(0,0,0,.12);line-height:1;flex-shrink:0;min-width:1.8ch}
+.httl{font-family:'Playfair Display',serif;font-size:clamp(.9rem,1vw,1.04rem);margin-bottom:.28rem;transition:color .4s}
+.sl-light .httl{color:var(--ca-wine,#5c1526)}
+.htxt{font-size:clamp(.67rem,.76vw,.76rem);line-height:1.88;transition:color .4s}
+.sl-light .htxt{color:var(--ca-sub,#8a4456)}
+
+/* timeline */
+.tlw{max-width:760px;margin:0 auto;padding-left:clamp(1.5rem,3.5vw,2.7rem);position:relative}
+.tlw::before{content:'';position:absolute;left:clamp(5px,1vw,7px);top:5px;bottom:0;width:1px;background:linear-gradient(180deg,var(--ca,#e05068) 0%,rgba(224,80,104,.08) 100%);transition:background .4s}
+.tli{margin-bottom:clamp(1.5rem,3.2vh,2.6rem);position:relative}
+.tld{position:absolute;left:calc(-1*clamp(1.5rem,3.5vw,2.7rem) + clamp(5px,1vw,7px) - 6px);top:4px;width:13px;height:13px;border-radius:50%;border:2px solid var(--ca,#e05068);background:var(--bg-dk,#08030a);box-shadow:0 0 0 4px rgba(var(--ca-rgb,224,80,104),.1),0 0 14px rgba(var(--ca-rgb,224,80,104),.28);transition:border-color .4s,background .5s}
+.tlyr{font-size:.55rem;letter-spacing:.46em;text-transform:uppercase;color:var(--ca-b,#f28fa0);margin-bottom:.36rem;transition:color .4s}
+.tlh{font-family:'Playfair Display',serif;font-size:clamp(1.02rem,1.35vw,1.24rem);color:#fff;margin-bottom:.45rem}
+.tlb{font-size:clamp(.68rem,.76vw,.77rem);line-height:1.92;color:rgba(255,255,255,.4)}
+
+/* fun facts */
+.ff-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(.8rem,1.2vw,1.1rem)}
+.ffc{border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:1.2rem 1rem;text-align:center;transition:all .3s;cursor:default}
+.ffc:hover{border-color:var(--ca,#e05068);background:rgba(var(--ca-rgb,224,80,104),.04)}
+.fficon{font-size:1.8rem;margin-bottom:.55rem;display:block}
+.fftit{font-family:'Playfair Display',serif;font-size:.88rem;color:#fff;margin-bottom:.25rem}
+.fftxt{font-size:.68rem;line-height:1.8;color:rgba(255,255,255,.38)}
+
+/* footer */
+footer{background:#030106;padding:clamp(2rem,4vh,3.2rem) clamp(1.5rem,5vw,4rem);display:flex;flex-direction:column;align-items:center;gap:.85rem;text-align:center;border-top:1px solid rgba(255,255,255,.03)}
+.fr{width:28px;height:1px;background:var(--ca,#e05068);transition:background .4s}
+.flog{font-family:'Shippori Mincho',serif;font-size:clamp(1.1rem,2vw,1.6rem);color:rgba(255,255,255,.1);letter-spacing:.35em}
+.ftxt{font-size:.56rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(255,255,255,.15)}
+.fmade{font-size:.54rem;color:rgba(255,255,255,.1);letter-spacing:.2em}
+
+/* flash overlay */
+#fov{position:fixed;inset:0;z-index:400;pointer-events:none;opacity:0;transition:opacity .2s}
+
+/* reveal */
+[data-rv]{opacity:0;transform:translateY(22px);transition:opacity .68s var(--ease),transform .68s var(--ease)}
+[data-rv].in{opacity:1;transform:none}
+[data-rv][data-d="1"]{transition-delay:.07s}[data-rv][data-d="2"]{transition-delay:.14s}[data-rv][data-d="3"]{transition-delay:.21s}[data-rv][data-d="4"]{transition-delay:.28s}[data-rv][data-d="5"]{transition-delay:.35s}[data-rv][data-d="6"]{transition-delay:.42s}
+
+/* ====== RESPONSIVE ====== */
+@media(max-width:1100px){
+  .gl{grid-template-columns:1fr 1fr;grid-template-rows:220px 220px 220px}
+  .gp.gt{grid-row:span 2}
+  .tg{grid-template-columns:1fr 1fr}
+  .ff-grid{grid-template-columns:1fr 1fr}
 }
-body.miku .hero-mesh{--hero-orb1:rgba(200,50,80,.22);--hero-orb2:rgba(100,20,40,.35)}
-body.nino .hero-mesh{--hero-orb1:rgba(100,50,200,.22);--hero-orb2:rgba(50,10,100,.35)}
-.orb{position:absolute;border-radius:50%;filter:blur(75px);pointer-events:none;z-index:0;animation:orb-drift ease-in-out infinite alternate}
-.orb1{width:clamp(280px,45vw,560px);height:clamp(280px,45vw,560px);background:radial-gradient(circle,rgba(var(--orb-rgb,224,80,104),.16),transparent 70%);top:-20%;left:-10%;animation-duration:16s}
-.orb2{width:clamp(220px,35vw,420px);height:clamp(220px,35vw,420px);background:radial-gradient(circle,rgba(var(--orb2-rgb,92,21,38),.3),transparent 70%);bottom:-15%;right:5%;animation-duration:20s;animation-delay:-6s}
-body.miku .orb1{background:radial-gradient(circle,rgba(224,80,104,.16),transparent 70%)}
-body.miku .orb2{background:radial-gradient(circle,rgba(92,21,38,.3),transparent 70%)}
-body.nino .orb1{background:radial-gradient(circle,rgba(139,92,246,.16),transparent 70%)}
-body.nino .orb2{background:radial-gradient(circle,rgba(59,7,100,.3),transparent 70%)}
-@keyframes orb-drift{from{transform:translate(0,0) scale(1)}to{transform:translate(30px,25px) scale(1.1)}}
-
-.petal{position:absolute;border-radius:50% 0 50% 50%;pointer-events:none;z-index:1;opacity:0;animation:petal-fall linear infinite}
-@keyframes petal-fall{
-  0%{transform:translateY(-30px) rotate(0deg) translateX(0);opacity:.7}
-  60%{opacity:.4;transform:translateY(55vh) rotate(220deg) translateX(28px)}
-  100%{transform:translateY(108vh) rotate(400deg) translateX(-20px);opacity:0}
-}
-
-.hero-content{
-  position:relative;z-index:3;
-  padding:clamp(2rem,5vh,4rem) clamp(1.5rem,4vw,3rem) clamp(2rem,5vh,4rem) clamp(1.5rem,5vw,5rem);
-  display:flex;flex-direction:column;gap:clamp(.7rem,1.3vh,1.3rem);
-}
-.h-eyebrow{display:inline-flex;align-items:center;gap:.8rem;font-size:.6rem;letter-spacing:.65em;text-transform:uppercase;color:var(--accent-b);opacity:0;animation:slide-up .7s .2s var(--ease-out) forwards}
-.h-eyebrow::before{content:'';display:block;width:22px;height:1px;background:var(--accent-b)}
-.h-jp{font-family:'Shippori Mincho',serif;font-size:clamp(2.6rem,7.5vw,5.8rem);font-weight:500;color:var(--w);line-height:.93;opacity:0;animation:slide-up .8s .36s var(--ease-out) forwards}
-.h-en{font-family:'Playfair Display',serif;font-size:clamp(.88rem,1.7vw,1.18rem);font-style:italic;letter-spacing:.25em;color:var(--gold);opacity:0;animation:slide-up .8s .5s var(--ease-out) forwards}
-.h-divider{width:44px;height:1px;background:linear-gradient(90deg,var(--accent),transparent);margin:clamp(.1rem,.3vh,.4rem) 0;opacity:0;animation:slide-up .7s .62s var(--ease-out) forwards}
-.h-tagline{font-size:clamp(.7rem,.88vw,.84rem);letter-spacing:.1em;color:rgba(255,255,255,.42);line-height:2.1;max-width:min(340px,90%);opacity:0;animation:slide-up .8s .74s var(--ease-out) forwards}
-.h-chips{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:.2rem;opacity:0;animation:slide-up .8s .88s var(--ease-out) forwards}
-.chip{padding:.25rem .72rem;border:1px solid rgba(var(--chip-rgb,224,80,104),.3);border-radius:100px;font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-b);background:rgba(var(--chip-rgb,224,80,104),.06);transition:all .25s;cursor:default;white-space:nowrap}
-.chip:hover{background:var(--accent);color:var(--w);border-color:var(--accent)}
-body.miku .chip{--chip-rgb:224,80,104}
-body.nino .chip{--chip-rgb:139,92,246}
-.h-scroll{display:inline-flex;align-items:center;gap:.7rem;font-size:.56rem;letter-spacing:.45em;text-transform:uppercase;color:rgba(255,255,255,.22);margin-top:.4rem;opacity:0;animation:slide-up .7s 1.08s var(--ease-out) forwards}
-.h-scroll-line{width:32px;height:1px;background:rgba(255,255,255,.14)}
-.h-arrow{width:18px;height:18px;border-right:1px solid var(--accent);border-bottom:1px solid var(--accent);transform:rotate(45deg);animation:bounce-d 2s ease-in-out infinite}
-@keyframes bounce-d{0%,100%{transform:rotate(45deg) translate(0,0)}50%{transform:rotate(45deg) translate(3px,3px)}}
-
-.hero-visual{position:relative;z-index:2;height:calc(100svh - 72px);display:flex;align-items:flex-end;justify-content:center;overflow:hidden}
-.hero-visual::before{content:'';position:absolute;inset:0;background:linear-gradient(to right,var(--dark1) 0%,transparent 22%,transparent 78%,var(--dark1) 100%),linear-gradient(to top,var(--dark1) 0%,transparent 35%);z-index:2;transition:background .8s}
-.hero-img{position:relative;z-index:1;height:100%;width:100%;object-fit:cover;object-position:top center;opacity:0;animation:img-reveal 1.1s .55s var(--ease-out) forwards;filter:drop-shadow(0 0 40px rgba(var(--img-glow,224,80,104),.3));background:linear-gradient(160deg,#2a0e18,#1a0810)}
-body.miku .hero-img{--img-glow:224,80,104;filter:drop-shadow(0 0 40px rgba(224,80,104,.3))}
-body.nino .hero-img{--img-glow:139,92,246;filter:drop-shadow(0 0 40px rgba(139,92,246,.3))}
-.hero-kanji{position:absolute;right:4%;top:8%;font-family:'Shippori Mincho',serif;font-size:clamp(5rem,10vw,10rem);font-weight:400;color:rgba(255,255,255,.04);line-height:1;z-index:1;pointer-events:none;writing-mode:vertical-rl;opacity:0;animation:slide-up .9s .35s var(--ease-out) forwards}
-
-@keyframes slide-up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-@keyframes img-reveal{from{opacity:0;transform:translateY(18px) scale(1.02)}to{opacity:1;transform:translateY(0) scale(1)}}
-
-/* ============================================================
-   STATS RIBBON
-============================================================ */
-.stats-ribbon{background:var(--dark3);border-top:1px solid rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.04);position:relative;z-index:3;transition:background .5s}
-.stats-inner{display:grid;grid-template-columns:repeat(5,1fr);max-width:1100px;margin:0 auto;border-left:1px solid rgba(255,255,255,.04)}
-.stat-cell{padding:clamp(1rem,2.5vh,1.8rem) 1rem;text-align:center;border-right:1px solid rgba(255,255,255,.04);transition:background .3s;cursor:default}
-.stat-cell:hover{background:rgba(var(--stat-rgb,224,80,104),.05)}
-body.miku .stat-cell:hover{background:rgba(224,80,104,.05)}
-body.nino .stat-cell:hover{background:rgba(139,92,246,.05)}
-.stat-n{font-family:'Playfair Display',serif;font-size:clamp(1.5rem,2.8vw,2.1rem);color:var(--accent);display:block;line-height:1;margin-bottom:.38rem;transition:color .4s}
-.stat-l{font-size:clamp(.48rem,.58rem,.58rem);letter-spacing:.4em;text-transform:uppercase;color:rgba(255,255,255,.28)}
-
-/* ============================================================
-   SECTION BASE
-============================================================ */
-.s-light{background:var(--mist);transition:background .5s}
-.s-dark{background:var(--dark2);transition:background .5s}
-.s-wine{background:var(--dark3);transition:background .5s}
-.s-pad{padding:clamp(3rem,7vh,6rem) clamp(1.5rem,5vw,4rem)}
-.s-inner{max-width:1100px;margin:0 auto}
-.s-eye{display:inline-flex;align-items:center;gap:.7rem;font-size:.58rem;letter-spacing:.58em;text-transform:uppercase;color:var(--accent);margin-bottom:.55rem;transition:color .4s}
-.s-eye::before{content:'';display:block;width:20px;height:1px;background:var(--accent);transition:background .4s}
-.s-title{font-family:'Playfair Display',serif;font-size:clamp(1.7rem,3.3vw,2.7rem);font-weight:400;line-height:1.15;color:var(--wine);margin-bottom:clamp(1.3rem,2.5vh,2.2rem);transition:color .4s}
-.s-dark .s-title,.s-wine .s-title{color:var(--w)}
-.s-light .s-title{color:var(--wine)}
-
-/* ============================================================
-   PROFILE
-============================================================ */
-.profile-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:clamp(2rem,5vw,5rem);align-items:start}
-.prof-img-frame{position:relative;border-radius:8px;overflow:hidden;box-shadow:0 20px 60px rgba(var(--shadow-rgb,92,21,38),.35);aspect-ratio:3/4;background:linear-gradient(160deg,#2a0e18,#1a0810);transition:box-shadow .5s}
-body.miku .prof-img-frame{box-shadow:0 20px 60px rgba(92,21,38,.35)}
-body.nino .prof-img-frame{box-shadow:0 20px 60px rgba(59,7,100,.35)}
-.prof-img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block}
-.prof-img-frame::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(8,2,12,.55) 0%,transparent 45%);pointer-events:none}
-.prof-deco{position:absolute;top:12px;left:12px;right:-12px;bottom:-12px;border:1px solid rgba(var(--deco-rgb,224,80,104),.18);border-radius:8px;z-index:-1;transition:border-color .4s}
-body.miku .prof-deco{border-color:rgba(224,80,104,.18)}
-body.nino .prof-deco{border-color:rgba(139,92,246,.18)}
-.prof-caption{margin-top:1rem;font-size:.58rem;letter-spacing:.35em;text-transform:uppercase;color:var(--sub);text-align:center;transition:color .4s}
-.prof-info{display:flex;flex-direction:column;gap:clamp(.9rem,1.8vh,1.5rem)}
-.info-lbl{font-size:.56rem;letter-spacing:.45em;text-transform:uppercase;color:var(--accent);margin-bottom:.28rem;transition:color .4s}
-.info-val{font-family:'Playfair Display',serif;font-size:clamp(.95rem,1.15vw,1.1rem);color:var(--ink);line-height:1.7}
-.s-light .info-val{color:var(--ink)}
-.info-sep{height:1px;background:rgba(92,21,38,.1);transition:background .4s}
-body.nino .info-sep{background:rgba(59,7,100,.1)}
-.data-box{display:grid;grid-template-columns:1fr 1fr;gap:.85rem 1.5rem;background:var(--accent-m);padding:1.3rem;border-radius:8px;border-left:3px solid var(--accent);transition:background .4s,border-color .4s}
-.db-lbl{font-size:.54rem;letter-spacing:.42em;text-transform:uppercase;color:var(--sub);margin-bottom:.22rem;transition:color .4s}
-.db-val{font-family:'Playfair Display',serif;font-size:.97rem;color:var(--wine);transition:color .4s}
-
-/* ============================================================
-   QUOTE BANNER
-============================================================ */
-.quote-band{background:var(--accent);padding:clamp(2.8rem,6vh,5rem) clamp(1.5rem,5vw,4rem);text-align:center;position:relative;overflow:hidden;transition:background .5s}
-.quote-band::before{content:'"';position:absolute;top:-3rem;left:2vw;font-family:'Playfair Display',serif;font-size:clamp(8rem,15vw,15rem);color:rgba(255,255,255,.07);line-height:1;pointer-events:none}
-.q-jp{font-family:'Shippori Mincho',serif;font-size:clamp(.9rem,2vw,1.3rem);color:var(--w);line-height:2.3;max-width:min(680px,92%);margin:0 auto}
-.q-tr{font-size:clamp(.68rem,.88vw,.8rem);letter-spacing:.14em;font-style:italic;color:rgba(255,255,255,.62);margin-top:.9rem}
-.q-src{margin-top:1rem;font-size:.56rem;letter-spacing:.44em;text-transform:uppercase;color:rgba(255,255,255,.38)}
-
-/* ============================================================
-   TRAITS
-============================================================ */
-.traits-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(.9rem,1.4vw,1.5rem)}
-.t-card{padding:clamp(1.3rem,2.3vh,2rem) clamp(1.1rem,1.8vw,1.7rem);border:1px solid rgba(255,255,255,.05);border-radius:8px;background:rgba(255,255,255,.02);transition:all .35s var(--ease);position:relative;overflow:hidden;cursor:default}
-.t-card::after{content:'';position:absolute;left:0;top:0;width:2px;height:0;background:var(--accent);transition:height .4s var(--ease),background .4s}
-.t-card:hover::after{height:100%}
-.t-card:hover{background:rgba(var(--card-rgb,224,80,104),.06);border-color:rgba(var(--card-rgb,224,80,104),.2);transform:translateY(-4px)}
-body.miku .t-card:hover{--card-rgb:224,80,104}
-body.nino .t-card:hover{--card-rgb:139,92,246}
-.t-icon{font-size:clamp(1.7rem,2vw,2.1rem);margin-bottom:.85rem;display:block}
-.t-name{font-family:'Playfair Display',serif;font-size:clamp(.95rem,1.15vw,1.15rem);color:var(--w);margin-bottom:.55rem}
-.t-desc{font-size:clamp(.7rem,.78vw,.78rem);line-height:1.9;color:rgba(255,255,255,.43)}
-
-/* ============================================================
-   GALLERY
-============================================================ */
-.gallery-layout{display:grid;grid-template-columns:1.5fr 1fr 1fr;grid-template-rows:270px 270px;gap:clamp(.6rem,.8vw,.95rem)}
-.g-panel{border-radius:8px;overflow:hidden;position:relative;background:#100508;cursor:default}
-.g-panel.g-tall{grid-row:span 2}
-.g-panel img{width:100%;height:100%;object-fit:cover;object-position:top center;transition:transform .65s var(--ease),filter .4s;filter:brightness(.9) saturate(1.05)}
-.g-panel:hover img{transform:scale(1.06);filter:brightness(1.04) saturate(1.12)}
-.g-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(6,2,9,.88) 0%,transparent 50%);display:flex;align-items:flex-end;padding:.95rem 1.1rem;opacity:0;transition:opacity .35s}
-.g-panel:hover .g-overlay{opacity:1}
-.g-lbl{font-size:.58rem;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);transition:color .4s}
-.g-text-panel{display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,#160810,#220c18);border:1px solid rgba(255,255,255,.06);gap:.55rem;transition:background .5s,border-color .5s}
-body.nino .g-text-panel{background:linear-gradient(135deg,#0e0620,#160a2e)}
-.g-kanji{font-family:'Shippori Mincho',serif;font-size:clamp(2.8rem,5vw,4.2rem);color:rgba(var(--kanji-rgb,224,80,104),.22);line-height:1;transition:color .4s}
-body.miku .g-kanji{color:rgba(224,80,104,.22)}
-body.nino .g-kanji{color:rgba(139,92,246,.22)}
-.g-text-lbl{font-size:.55rem;letter-spacing:.5em;text-transform:uppercase;color:rgba(255,255,255,.22)}
-
-/* ============================================================
-   HOBBIES
-============================================================ */
-.hobbies-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(.9rem,1.4vw,1.35rem)}
-.h-card{display:flex;gap:clamp(.75rem,1.3vw,1.1rem);padding:clamp(1.1rem,2.2vh,1.7rem);background:var(--accent-m);border-radius:8px;transition:all .3s var(--ease);cursor:default}
-.h-card:hover{background:var(--accent-p);transform:translateY(-3px);box-shadow:0 8px 28px rgba(var(--hover-rgb,200,50,80),.12)}
-body.miku .h-card:hover{--hover-rgb:200,50,80}
-body.nino .h-card:hover{--hover-rgb:100,50,200}
-.h-num{font-family:'Playfair Display',serif;font-size:clamp(1.9rem,2.8vw,2.5rem);font-weight:400;color:rgba(var(--num-rgb,92,21,38),.17);line-height:1;flex-shrink:0;min-width:1.8ch;transition:color .4s}
-body.miku .h-num{color:rgba(92,21,38,.17)}
-body.nino .h-num{color:rgba(59,7,100,.17)}
-.h-ttl{font-family:'Playfair Display',serif;font-size:clamp(.92rem,1.05vw,1.06rem);color:var(--wine);margin-bottom:.32rem;transition:color .4s}
-.h-txt{font-size:clamp(.68rem,.78vw,.77rem);line-height:1.88;color:var(--sub);transition:color .4s}
-
-/* ============================================================
-   TIMELINE
-============================================================ */
-.tl-wrap{max-width:760px;margin:0 auto;padding-left:clamp(1.6rem,3.5vw,2.8rem);position:relative}
-.tl-wrap::before{content:'';position:absolute;left:clamp(5px,1vw,7px);top:6px;bottom:0;width:1px;background:linear-gradient(180deg,var(--accent) 0%,rgba(var(--tl-rgb,224,80,104),.08) 100%);transition:background .4s}
-body.miku .tl-wrap::before{background:linear-gradient(180deg,#e05068 0%,rgba(224,80,104,.08) 100%)}
-body.nino .tl-wrap::before{background:linear-gradient(180deg,#8b5cf6 0%,rgba(139,92,246,.08) 100%)}
-.tl-item{margin-bottom:clamp(1.6rem,3.5vh,2.8rem);position:relative}
-.tl-dot{position:absolute;left:calc(-1*clamp(1.6rem,3.5vw,2.8rem) + clamp(5px,1vw,7px) - 6px);top:4px;width:13px;height:13px;border-radius:50%;border:2px solid var(--accent);background:var(--dark3);box-shadow:0 0 0 4px rgba(var(--dot-rgb,224,80,104),.1),0 0 14px rgba(var(--dot-rgb,224,80,104),.28);transition:border-color .4s,background .5s}
-body.miku .tl-dot{--dot-rgb:224,80,104}
-body.nino .tl-dot{--dot-rgb:139,92,246}
-.tl-yr{font-size:.56rem;letter-spacing:.48em;text-transform:uppercase;color:var(--accent-b);margin-bottom:.38rem;transition:color .4s}
-.tl-h{font-family:'Playfair Display',serif;font-size:clamp(1.05rem,1.4vw,1.28rem);color:var(--w);margin-bottom:.48rem}
-.tl-b{font-size:clamp(.7rem,.78vw,.78rem);line-height:1.92;color:rgba(255,255,255,.4)}
-
-/* ============================================================
-   FOOTER
-============================================================ */
-footer{background:#050103;padding:clamp(2.2rem,4.5vh,3.5rem) clamp(1.5rem,5vw,4rem);display:flex;flex-direction:column;align-items:center;gap:.9rem;text-align:center;border-top:1px solid rgba(255,255,255,.03)}
-.f-rose{width:28px;height:1px;background:var(--accent);transition:background .4s}
-.f-logo{font-family:'Shippori Mincho',serif;font-size:clamp(1.2rem,2.2vw,1.7rem);color:rgba(255,255,255,.1);letter-spacing:.35em}
-.f-txt{font-size:.58rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(255,255,255,.16)}
-.f-made{font-size:.56rem;color:rgba(255,255,255,.1);letter-spacing:.2em}
-
-/* ============================================================
-   THEME TRANSITION OVERLAY
-============================================================ */
-#theme-overlay{position:fixed;inset:0;z-index:400;pointer-events:none;opacity:0;background:var(--accent);transition:opacity .18s}
-#theme-overlay.flash{opacity:.12}
-
-/* ============================================================
-   SCROLL REVEAL
-============================================================ */
-[data-reveal]{opacity:0;transform:translateY(22px);transition:opacity .68s var(--ease),transform .68s var(--ease)}
-[data-reveal].in{opacity:1;transform:none}
-[data-reveal][data-d="1"]{transition-delay:.07s}
-[data-reveal][data-d="2"]{transition-delay:.14s}
-[data-reveal][data-d="3"]{transition-delay:.21s}
-[data-reveal][data-d="4"]{transition-delay:.28s}
-[data-reveal][data-d="5"]{transition-delay:.35s}
-[data-reveal][data-d="6"]{transition-delay:.42s}
-
-/* ============================================================
-   RESPONSIVE — TABLET ≤ 1024px
-============================================================ */
-@media(max-width:1024px){
-  .gallery-layout{grid-template-columns:1fr 1fr;grid-template-rows:220px 220px 220px}
-  .g-panel.g-tall{grid-row:span 2}
-  .traits-grid{grid-template-columns:repeat(2,1fr)}
-}
-
-/* ============================================================
-   RESPONSIVE — MOBILE ≤ 768px
-============================================================ */
 @media(max-width:768px){
-  #switcher-bar{padding:.4rem 1rem;gap:.4rem}
-  .sw-label{display:none}
-  .sw-btn{padding:.38rem .9rem .38rem .55rem;font-size:.58rem}
-  #nav{top:34px}
-  .nav-links{display:none}
-  .nav-burger{display:flex}
-  #hero{grid-template-columns:1fr;min-height:100svh}
-  .hero-visual{position:absolute;inset:0;height:100%;opacity:.32;z-index:1}
-  .hero-visual::before{background:linear-gradient(to top,var(--dark1) 0%,rgba(14,4,8,.55) 60%,rgba(14,4,8,.28) 100%)}
-  .hero-content{z-index:4;padding:6.5rem 1.5rem 3.5rem;min-height:100svh;justify-content:flex-end}
+  #hero{grid-template-columns:1fr}
+  .hero-v{position:absolute;inset:0;height:100%;opacity:.3;z-index:1}
+  .hero-v::before{background:linear-gradient(to top,var(--bg-dk,#08030a) 0%,rgba(8,3,10,.55) 60%,rgba(8,3,10,.25) 100%)}
+  .hero-c{z-index:4;padding:6rem 1.5rem 3rem;min-height:100vh;justify-content:flex-end}
   .hero-kanji{display:none}
-  .stats-inner{grid-template-columns:repeat(3,1fr)}
-  .stat-cell:nth-child(4),.stat-cell:nth-child(5){border-top:1px solid rgba(255,255,255,.04)}
-  .profile-grid{grid-template-columns:1fr}
-  .prof-img-frame{aspect-ratio:4/3;max-height:340px}
-  .hobbies-grid{grid-template-columns:1fr 1fr}
-  .gallery-layout{grid-template-columns:1fr 1fr;grid-template-rows:auto}
-  .g-panel.g-tall{grid-row:span 1;min-height:200px}
-  .data-box{grid-template-columns:1fr}
+  .stats-in{grid-template-columns:repeat(3,1fr)}
+  .sc:nth-child(4),.sc:nth-child(5){border-top:1px solid rgba(255,255,255,.04)}
+  .pg{grid-template-columns:1fr}
+  .pif{aspect-ratio:4/3;max-height:320px}
+  .hg{grid-template-columns:1fr 1fr}
+  .gl{grid-template-columns:1fr 1fr;grid-template-rows:auto}
+  .gp.gt{grid-row:span 1;min-height:190px}
+  .dbox{grid-template-columns:1fr}
+  .cards-wrap{gap:.6rem;padding:0 .8rem 2rem}
+  .char-card{width:clamp(110px,27vw,160px)}
 }
 @media(max-width:480px){
-  .stats-inner{grid-template-columns:1fr 1fr}
-  .stat-cell:last-child{grid-column:span 2}
-  .traits-grid{grid-template-columns:1fr}
-  .hobbies-grid{grid-template-columns:1fr}
-  .gallery-layout{grid-template-columns:1fr;grid-template-rows:auto}
-  .g-panel{min-height:190px}
+  .stats-in{grid-template-columns:1fr 1fr}
+  .sc:last-child{grid-column:span 2}
+  .tg,.hg{grid-template-columns:1fr}
+  .gl{grid-template-columns:1fr;grid-template-rows:auto}
+  .gp{min-height:180px}
+  .ff-grid{grid-template-columns:1fr 1fr}
+  .char-card{width:clamp(100px,42vw,145px)}
 }
 </style>
 </head>
-<body class="miku">
+<body>
 
-<!-- Flash overlay for theme switch -->
-<div id="theme-overlay"></div>
+<div id="fov"></div>
+<div id="cd"></div>
+<div id="cr"></div>
 
-<!-- Custom cursor -->
-<div id="cursor-dot"></div>
-<div id="cursor-ring"></div>
-
-<!-- ══════════════════════════════════════
-     CHARACTER SWITCHER BAR
-══════════════════════════════════════ -->
-<div id="switcher-bar">
-  <span class="sw-label">五等分の花嫁</span>
-
-  <button class="sw-btn active-miku" id="btn-miku" onclick="switchChar('miku')">
-    <div class="sw-avatar" id="av-miku">
-      <img src="miku.jpg" alt="Miku" onerror="this.style.display='none';this.parentElement.textContent='三'"/>
-    </div>
-    <div class="sw-dot"></div>
-    中野 三玖
-  </button>
-
-  <button class="sw-btn" id="btn-nino" onclick="switchChar('nino')">
-    <div class="sw-avatar" id="av-nino">
-      <img src="nino.jpg" alt="Nino" onerror="this.style.display='none';this.parentElement.textContent='二'"/>
-    </div>
-    <div class="sw-dot"></div>
-    中野 二乃
-  </button>
-</div>
-
-<!-- ══════════════════════════════════════
-     NAV
-══════════════════════════════════════ -->
+<!-- NAV -->
 <nav id="nav">
-  <a class="nav-logo" href="#" id="nav-logo">中野三玖</a>
-  <ul class="nav-links">
-    <li><a href="#profile">Profil</a></li>
-    <li><a href="#traits">Karakter</a></li>
-    <li><a href="#gallery">Galeri</a></li>
-    <li><a href="#hobbies">Hobi</a></li>
-    <li><a href="#timeline">Perjalanan</a></li>
-  </ul>
-  <button class="nav-burger" id="burger" aria-label="Menu">
-    <span></span><span></span><span></span>
+  <a class="n-logo" href="#" id="nlogo" onclick="goHome();return false">五等分の花嫁</a>
+  <button class="n-home-btn" id="homebtn" onclick="goHome()" style="display:none">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12L12 3l9 9"/><path d="M9 21V12h6v9"/></svg>
+    Home
   </button>
 </nav>
-<ul class="nav-mobile" id="mobile-menu">
-  <li><a href="#profile">Profil</a></li>
-  <li><a href="#traits">Karakter</a></li>
-  <li><a href="#gallery">Galeri</a></li>
-  <li><a href="#hobbies">Hobi</a></li>
-  <li><a href="#timeline">Perjalanan</a></li>
-</ul>
 
 <!-- ══════════════════════════════════════
-     HERO
+     HOME VIEW
 ══════════════════════════════════════ -->
-<section id="hero">
-  <div class="hero-mesh"></div>
-  <div class="orb orb1"></div>
-  <div class="orb orb2"></div>
-  <div class="hero-kanji" id="hero-kanji" aria-hidden="true">三玖</div>
+<div id="home-view">
+  <div class="home-bg"></div>
+  <div class="h-orb" style="width:500px;height:500px;background:radial-gradient(circle,rgba(201,144,42,.12),transparent 70%);top:-15%;left:-10%;animation-duration:18s"></div>
+  <div class="h-orb" style="width:400px;height:400px;background:radial-gradient(circle,rgba(124,58,237,.1),transparent 70%);bottom:-10%;right:-5%;animation-duration:14s;animation-delay:-5s"></div>
+  <div class="h-orb" style="width:300px;height:300px;background:radial-gradient(circle,rgba(224,80,104,.1),transparent 70%);top:50%;left:45%;animation-duration:11s;animation-delay:-3s"></div>
 
-  <div class="hero-content">
-    <span class="h-eyebrow" id="h-series">五等分の花嫁 · Quintessential Quintuplets</span>
-    <h1 class="h-jp" id="h-jp">中野<br>三玖</h1>
-    <p class="h-en" id="h-en">Nakano Miku</p>
-    <div class="h-divider"></div>
-    <p class="h-tagline" id="h-tagline">Putri ketiga dari lima bersaudara kembar —<br>pemalu, tenang, namun berani dalam cinta.</p>
-    <div class="h-chips" id="h-chips">
-      <span class="chip">Sengoku Fan</span>
-      <span class="chip">🎧 Headphone Merah</span>
-      <span class="chip">Capricorn ♑</span>
-      <span class="chip">Blood Type A</span>
-    </div>
-    <div class="h-scroll" aria-hidden="true">
-      <div class="h-scroll-line"></div>
-      Scroll untuk mengenal lebih
-      <div class="h-arrow"></div>
-    </div>
+  <div class="home-top">
+    <div class="home-series">五等分の花嫁 · The Quintessential Quintuplets</div>
+    <h1 class="home-headline">中野 五姉妹</h1>
+    <p class="home-sub">Nakano Quintuplets — Lima Saudari Kembar</p>
   </div>
 
-  <div class="hero-visual">
-    <img class="hero-img" id="hero-img" src="miku.jpg" alt="Miku Nakano"/>
-  </div>
-</section>
-
-<!-- ══════════════════════════════════════
-     STATS RIBBON
-══════════════════════════════════════ -->
-<div class="stats-ribbon">
-  <div class="stats-inner" data-reveal>
-    <div class="stat-cell"><span class="stat-n" id="s-order">3rd</span><span class="stat-l">Urutan Lahir</span></div>
-    <div class="stat-cell"><span class="stat-n" id="s-height">159<span style="font-size:.75em">cm</span></span><span class="stat-l">Tinggi</span></div>
-    <div class="stat-cell"><span class="stat-n" id="s-weight">49<span style="font-size:.75em">kg</span></span><span class="stat-l">Berat</span></div>
-    <div class="stat-cell"><span class="stat-n" id="s-bday">5 Mei</span><span class="stat-l">Ulang Tahun</span></div>
-    <div class="stat-cell"><span class="stat-n" id="s-zodiac">♑</span><span class="stat-l" id="s-zodiac-lbl">Capricorn</span></div>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════
-     PROFILE
-══════════════════════════════════════ -->
-<section class="s-light s-pad" id="profile">
-  <div class="s-inner">
-    <div class="profile-grid">
-      <div data-reveal>
-        <div class="prof-img-frame">
-          <img class="prof-img" id="prof-img" src="miku.jpg" alt="Portrait"/>
-        </div>
-        <div class="prof-deco"></div>
-        <p class="prof-caption" id="prof-caption">中野 三玖 · Nakano Miku · © Negi Haruba / Kodansha</p>
-      </div>
-      <div class="prof-info">
-        <div>
-          <p class="s-eye" data-reveal>Tentang</p>
-          <h2 class="s-title" data-reveal id="prof-title">Putri Ketiga<br><em style="font-style:italic;font-size:.74em;color:var(--sub)">yang Berani Mencintai Pertama</em></h2>
-        </div>
-        <div class="info-sep" data-reveal></div>
-        <div data-reveal>
-          <p class="info-lbl">Deskripsi</p>
-          <p class="info-val" id="prof-desc">Miku Nakano adalah karakter utama dalam manga/anime <em>Go-Toubun no Hanayome</em> karya Negi Haruba. Ia dikenal sebagai sosok yang tenang dan pemalu, namun menyimpan tekad dan keberanian luar biasa — terutama dalam hal perasaannya kepada Fuutarou Uesugi.</p>
-        </div>
-        <div class="data-box" data-reveal id="data-box">
-          <!-- filled by JS -->
-        </div>
-        <div class="h-chips" data-reveal id="prof-chips" style="opacity:1;animation:none;margin-top:.2rem">
-          <!-- filled by JS -->
+  <div class="cards-wrap">
+    <!-- Ichika -->
+    <div class="char-card cc-1" onclick="openChar('ichika')" tabindex="0">
+      <img src="ichika.jpg" alt="Ichika" onerror="this.style.opacity='.1'"/>
+      <div class="card-glow"></div>
+      <div class="card-info">
+        <div class="card-num">First · 一女</div>
+        <div class="card-jp">中野 一花</div>
+        <div class="card-en">Nakano Ichika</div>
+        <div class="card-btn">
+          Lihat Biodata
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </div>
       </div>
     </div>
-  </div>
-</section>
 
-<!-- QUOTE -->
-<div class="quote-band" data-reveal>
-  <p class="q-jp" id="q-jp">「好きです。中野三玖は、あなたのことが好きです。」</p>
-  <p class="q-tr" id="q-tr">"Aku menyukaimu. Miku Nakano menyukaimu."</p>
-  <p class="q-src" id="q-src">— Miku Nakano kepada Fuutarou Uesugi · Pengakuan Pertama</p>
+    <!-- Nino -->
+    <div class="char-card cc-2" onclick="openChar('nino')" tabindex="0">
+      <img src="nino.jpg" alt="Nino" onerror="this.style.opacity='.1'"/>
+      <div class="card-glow"></div>
+      <div class="card-info">
+        <div class="card-num">Second · 二女</div>
+        <div class="card-jp">中野 二乃</div>
+        <div class="card-en">Nakano Nino</div>
+        <div class="card-btn">
+          Lihat Biodata
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Miku — center/tallest -->
+    <div class="char-card cc-3" onclick="openChar('miku')" tabindex="0" style="transform:translateY(-20px)">
+      <img src="miku.jpg" alt="Miku" onerror="this.style.opacity='.1'"/>
+      <div class="card-glow"></div>
+      <div class="card-info">
+        <div class="card-num">Third · 三女</div>
+        <div class="card-jp">中野 三玖</div>
+        <div class="card-en">Nakano Miku</div>
+        <div class="card-btn">
+          Lihat Biodata
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Yotsuba -->
+    <div class="char-card cc-4" onclick="openChar('yotsuba')" tabindex="0">
+      <img src="yotsuba.jpg" alt="Yotsuba" onerror="this.style.opacity='.1'"/>
+      <div class="card-glow"></div>
+      <div class="card-info">
+        <div class="card-num">Fourth · 四女</div>
+        <div class="card-jp">中野 四葉</div>
+        <div class="card-en">Nakano Yotsuba</div>
+        <div class="card-btn">
+          Lihat Biodata
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Itsuki -->
+    <div class="char-card cc-5" onclick="openChar('itsuki')" tabindex="0">
+      <img src="itsuki.jpg" alt="Itsuki" onerror="this.style.opacity='.1'"/>
+      <div class="card-glow"></div>
+      <div class="card-info">
+        <div class="card-num">Fifth · 五女</div>
+        <div class="card-jp">中野 五月</div>
+        <div class="card-en">Nakano Itsuki</div>
+        <div class="card-btn">
+          Lihat Biodata
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="home-footer-txt">© Negi Haruba / Kodansha · made by kazu</div>
 </div>
 
-<!-- TRAITS -->
-<section class="s-dark s-pad" id="traits">
-  <div class="s-inner">
-    <p class="s-eye" data-reveal>Kepribadian</p>
-    <h2 class="s-title" data-reveal id="traits-title">Sisi-Sisi Miku</h2>
-    <div class="traits-grid" id="traits-grid"><!-- filled by JS --></div>
-  </div>
-</section>
+<!-- ══════════════════════════════════════
+     CHARACTER VIEW
+══════════════════════════════════════ -->
+<div id="char-view">
 
-<!-- GALLERY -->
-<section class="s-wine s-pad" id="gallery">
-  <div class="s-inner">
-    <p class="s-eye" data-reveal style="color:var(--accent-b)" id="gallery-eye">Galeri</p>
-    <h2 class="s-title" data-reveal id="gallery-title">Ekspresi Miku</h2>
-    <div class="gallery-layout" data-reveal id="gallery-grid"><!-- filled by JS --></div>
-  </div>
-</section>
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-mesh" id="hmesh"></div>
+    <div class="orb orb1" id="orb1"></div>
+    <div class="orb orb2" id="orb2"></div>
+    <div class="hero-kanji" id="hkanji"></div>
 
-<!-- HOBBIES -->
-<section class="s-light s-pad" id="hobbies">
-  <div class="s-inner">
-    <p class="s-eye" data-reveal>Minat & Hobi</p>
-    <h2 class="s-title" data-reveal id="hobbies-title">Hal yang Miku Cintai</h2>
-    <div class="hobbies-grid" id="hobbies-grid"><!-- filled by JS --></div>
-  </div>
-</section>
+    <div class="hero-c">
+      <span class="h-eye" id="heye"></span>
+      <h1 class="h-jp" id="hjp"></h1>
+      <p class="h-en" id="hen"></p>
+      <div class="h-div" id="hdiv"></div>
+      <p class="h-tag" id="htag"></p>
+      <div class="h-chips" id="hchips"></div>
+      <div class="h-scroll" aria-hidden="true"><div class="h-sline"></div>Scroll untuk mengenal<div class="h-arr" id="harr"></div></div>
+    </div>
 
-<!-- TIMELINE -->
-<section class="s-wine s-pad" id="timeline">
-  <div class="s-inner">
-    <p class="s-eye" data-reveal style="color:var(--accent-b)">Perjalanan</p>
-    <h2 class="s-title" data-reveal id="timeline-title">Kisah Miku</h2>
-    <div class="tl-wrap" id="tl-wrap"><!-- filled by JS --></div>
-  </div>
-</section>
+    <div class="hero-v">
+      <img class="hero-img" id="himg" src="" alt=""/>
+    </div>
+  </section>
 
-<!-- FOOTER -->
-<footer>
-  <div class="f-rose"></div>
-  <p class="f-logo" id="f-logo">中野 三玖</p>
-  <p class="f-txt">Go-Toubun no Hanayome · © Negi Haruba / Kodansha</p>
-  <p class="f-made">made by kazu</p>
-</footer>
+  <!-- STATS -->
+  <div class="stats-rib" id="strib">
+    <div class="stats-in" data-rv>
+      <div class="sc"><span class="sn" id="s-ord"></span><span class="sl">Urutan Lahir</span></div>
+      <div class="sc"><span class="sn" id="s-ht"></span><span class="sl">Tinggi</span></div>
+      <div class="sc"><span class="sn" id="s-wt"></span><span class="sl">Berat</span></div>
+      <div class="sc"><span class="sn" id="s-bd"></span><span class="sl">Ulang Tahun</span></div>
+      <div class="sc"><span class="sn" id="s-zo"></span><span class="sl" id="s-zol"></span></div>
+    </div>
+  </div>
+
+  <!-- PROFILE -->
+  <section class="sl-light sp" id="sec-profile">
+    <div class="si">
+      <div class="pg">
+        <div data-rv>
+          <div class="pif" id="pif"><img id="pimg" src="" alt=""/></div>
+          <div class="pif-deco" id="pifdeco"></div>
+          <p class="pcap" id="pcap"></p>
+        </div>
+        <div class="pinfo">
+          <div>
+            <p class="seye" data-rv>Tentang</p>
+            <h2 class="stit" data-rv id="ptit"></h2>
+          </div>
+          <div class="isep" data-rv></div>
+          <div data-rv>
+            <p class="ilbl">Deskripsi</p>
+            <p class="ival" id="pdesc"></p>
+          </div>
+          <div class="dbox" data-rv id="dbox"></div>
+          <div class="h-chips" data-rv id="pchips" style="opacity:1;animation:none;margin-top:.15rem"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUOTE -->
+  <div class="qb" data-rv id="qband">
+    <p class="qjp" id="qqjp"></p>
+    <p class="qtr" id="qqtr"></p>
+    <p class="qsrc" id="qqsrc"></p>
+  </div>
+
+  <!-- TRAITS -->
+  <section class="sl-dark sp" id="sec-traits">
+    <div class="si">
+      <p class="seye" data-rv>Kepribadian</p>
+      <h2 class="stit" data-rv id="trtit"></h2>
+      <div class="tg" id="trgrid"></div>
+    </div>
+  </section>
+
+  <!-- GALLERY -->
+  <section class="sl-wine sp" id="sec-gallery">
+    <div class="si">
+      <p class="seye" data-rv id="geye"></p>
+      <h2 class="stit" data-rv id="gtit"></h2>
+      <div class="gl" data-rv id="ggrid"></div>
+    </div>
+  </section>
+
+  <!-- HOBBIES -->
+  <section class="sl-light sp" id="sec-hobbies">
+    <div class="si">
+      <p class="seye" data-rv>Minat & Hobi</p>
+      <h2 class="stit" data-rv id="hhtit"></h2>
+      <div class="hg" id="hhgrid"></div>
+    </div>
+  </section>
+
+  <!-- FUN FACTS -->
+  <section class="sl-dark sp" id="sec-facts">
+    <div class="si">
+      <p class="seye" data-rv>Fun Facts</p>
+      <h2 class="stit" data-rv id="fftit"></h2>
+      <div class="ff-grid" id="ffgrid"></div>
+    </div>
+  </section>
+
+  <!-- TIMELINE -->
+  <section class="sl-wine sp" id="sec-tl">
+    <div class="si">
+      <p class="seye" data-rv id="tleye"></p>
+      <h2 class="stit" data-rv id="tltit"></h2>
+      <div class="tlw" id="tlwrap"></div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="fr" id="fr"></div>
+    <p class="flog" id="flog"></p>
+    <p class="ftxt">Go-Toubun no Hanayome · © Negi Haruba / Kodansha</p>
+    <p class="fmade">made by kazu</p>
+  </footer>
+</div>
 
 <!-- ══════════════════════════════════════
-     DATA & SCRIPTS
+     DATA
 ══════════════════════════════════════ -->
 <script>
-/* ============================================================
-   CHARACTER DATA
-============================================================ */
-const CHARS = {
-  miku: {
-    /* nav / hero */
-    navLogo: '中野三玖',
-    heroKanji: '三玖',
-    heroJP: '中野<br>三玖',
-    heroEN: 'Nakano Miku',
-    tagline: 'Putri ketiga dari lima bersaudara kembar —<br>pemalu, tenang, namun berani dalam cinta.',
-    chips: ['Sengoku Fan','🎧 Headphone Merah','Capricorn ♑','Blood Type A'],
-    heroImg: 'miku.jpg',
+const DB = {
+  ichika:{
+    id:'ichika',
+    /* theme */
+    ca:'#c9902a', cab:'#f5c06e', cap:'#fef3e2', cam:'#fde8c0',
+    caRgb:'201,144,42', caWine:'#7c4a0a', caSub:'#a06820', caGold:'#e8b87a',
+    bgDk:'#0d0804', dark1:'#100a05', dark2:'#0d0804', dark3:'#0a0603',
+    scHover:'rgba(201,144,42,.05)', pifDeco:'rgba(201,144,42,.18)',
+    orb1:'radial-gradient(circle,rgba(201,144,42,.16),transparent 70%)',
+    orb2:'radial-gradient(circle,rgba(120,64,8,.28),transparent 70%)',
+    mesh:`radial-gradient(ellipse 65% 55% at 80% 40%,rgba(180,120,30,.2) 0%,transparent 65%),radial-gradient(ellipse 50% 50% at 10% 80%,rgba(100,60,8,.3) 0%,transparent 60%),radial-gradient(ellipse 80% 100% at 50% 100%,rgba(13,8,4,1) 0%,transparent 50%),#0d0804`,
+    /* hero */
+    navLogo:'中野一花', heroKanji:'一花',
+    heroJP:'中野<br>一花', heroEN:'Nakano Ichika',
+    eyebrow:'五等分の花嫁 · The First Sister',
+    tagline:'Putri pertama, aktris berbakat —<br>hangat, periang, namun menyimpan sisi misterius.',
+    chips:['🎭 Aktris','Kakak Sulung','Virgo ♍','Blood Type A'],
+    heroImg:'ichika.jpg',
     /* stats */
-    order:'3rd', height:'159cm', weight:'49kg', bday:'5 Mei', zodiac:'♑', zodiacLbl:'Capricorn',
+    order:'1st', height:'158cm', weight:'48kg', bday:'7 Sep', zodiac:'♍', zodiacLbl:'Virgo',
     /* profile */
-    profImg: 'miku.jpg',
-    profCaption: '中野 三玖 · Nakano Miku · © Negi Haruba / Kodansha',
-    profTitle: 'Putri Ketiga<br><em style="font-style:italic;font-size:.74em;color:var(--sub)">yang Berani Mencintai Pertama</em>',
-    profDesc: 'Miku Nakano adalah karakter utama dalam manga/anime <em>Go-Toubun no Hanayome</em> karya Negi Haruba. Ia dikenal sebagai sosok yang tenang dan pemalu, namun menyimpan tekad dan keberanian luar biasa — terutama dalam hal perasaannya kepada Fuutarou Uesugi.',
-    dataBox: [
-      ['Nama','中野 三玖'],['Usia','17–22 tahun'],
-      ['Tinggi','159 → 165 cm'],['Golongan Darah','A'],
-      ['Sekolah','Asahiyama High'],['Pekerjaan','Bakery (Komugiya)'],
-      ['Warna Rambut','Coklat / Pearl Pink'],['Warna Mata','Biru'],
+    profImg:'ichika.jpg',
+    profCaption:'中野 一花 · Nakano Ichika · © Negi Haruba / Kodansha',
+    profTitle:'Putri Pertama<br><em style="font-style:italic;font-size:.74em">Si Aktris yang Misterius</em>',
+    profDesc:'Ichika Nakano adalah putri pertama dari lima bersaudara kembar dalam <em>Go-Toubun no Hanayome</em>. Sebagai kakak sulung, ia memiliki sifat periang dan dewasa, namun menyembunyikan banyak hal — termasuk perasaannya kepada Fuutarou. Ia bekerja keras mengejar karir sebagai aktris profesional.',
+    dataBox:[['Nama','中野 一花'],['Usia','17–22 tahun'],['Tinggi','158 cm'],['Golongan Darah','A'],['Zodiak','Virgo (7 Sep)'],['Pekerjaan','Aktris / Idol'],['Rambut','Coklat Pendek'],['Mata','Biru']],
+    profChips:['Aktris Profesional','Kakak Sulung','Periang','Misterius'],
+    quoteJP:'「大丈夫だよ、任せておいて。お姉ちゃんがいるから。」',
+    quoteTR:'"Tidak apa-apa, percayakan padaku. Karena ada kakak."',
+    quoteSRC:'— Ichika Nakano kepada saudarinya',
+    traitsTitle:'Sisi-Sisi Ichika',
+    traits:[
+      {icon:'🎭',name:'Aktris Berbakat',desc:'Ichika memiliki bakat akting alami. Ia bisa menyembunyikan perasaan dan memainkan peran dengan sangat meyakinkan — bahkan di dunia nyata.'},
+      {icon:'😊',name:'Periang & Hangat',desc:'Sebagai kakak sulung, Ichika selalu mencoba membuat suasana menjadi ceria. Senyumnya yang menular membuat semua orang merasa nyaman.'},
+      {icon:'🤫',name:'Menyimpan Rahasia',desc:'Di balik sifatnya yang terbuka, Ichika sangat pandai menyembunyikan perasaannya yang sesungguhnya, termasuk rasa cintanya.'},
+      {icon:'🌟',name:'Ambisi Tinggi',desc:'Ichika sangat serius mengejar karir sebagai aktris. Ia rela bekerja keras dan berkorban demi mewujudkan mimpinya di dunia hiburan.'},
+      {icon:'👭',name:'Protektif terhadap Keluarga',desc:'Meski terkesan santai, Ichika sangat peduli dengan keempat saudarinya dan bersedia melakukan apa saja demi kebaikan mereka.'},
+      {icon:'💛',name:'Jatuh Cinta Diam-diam',desc:'Ichika menyukai Fuutarou namun lama memendam perasaannya. Ketika akhirnya ia mengakui, semua berubah dengan cara yang tak terduga.'},
     ],
-    profChips: ['Sejarah Sengoku','Kopi & Teh','Headphones Merah','Introvert'],
-    /* quote */
-    quoteJP: '「好きです。中野三玖は、あなたのことが好きです。」',
-    quoteTR: '"Aku menyukaimu. Miku Nakano menyukaimu."',
-    quoteSRC: '— Miku Nakano kepada Fuutarou Uesugi · Pengakuan Pertama',
-    /* traits */
-    traitsTitle: 'Sisi-Sisi Miku',
-    traits: [
-      {icon:'🎧', name:'Introvert & Tenang', desc:'Headphone merahnya bagai pelindung dari dunia luar. Di balik sikapnya yang pendiam tersimpan pikiran yang dalam dan penuh pertimbangan.'},
-      {icon:'🏯', name:'Penggemar Sejarah Sengoku', desc:'Ketika membahas era Sengoku, Miku berubah total — matanya berbinar dan semangat mengalir deras. Ini satu-satunya saat ia paling ekspresif.'},
-      {icon:'💌', name:'Berani dalam Cinta', desc:'Meski pemalu, Miku adalah saudari pertama yang mengakui perasaannya secara langsung. Sebuah keberanian yang mengejutkan semua orang.'},
-      {icon:'☕', name:'Tekun & Pantang Menyerah', desc:'Ia berlatih keras meracik kopi sempurna demi seseorang istimewa — tak berhenti hingga setiap tegukan terasa seperti ungkapan perasaan.'},
-      {icon:'📚', name:'Rendah Hati', desc:'Miku sadar akan kelemahannya dan memperbaikinya diam-diam, tanpa meminta perhatian atau pengakuan dari siapapun.'},
-      {icon:'🌸', name:'Tulus & Loyal', desc:'Miku sangat menyayangi keluarganya. Di tengah persaingan cinta, ia tidak pernah melukai saudarinya dan selalu menjaga kepercayaan.'},
+    gallery:[
+      {src:'ichika.jpg',lbl:'中野一花 · Main Visual',tall:true},
+      {src:'ichika2.jpg',lbl:'Season 1'},{src:'ichika3.jpg',lbl:'Season 2'},
+      {src:'ichika4.jpg',lbl:'The Movie'},{kanji:'一',lbl:'First Sister · 一女'},
     ],
-    /* gallery */
-    galleryTitle: 'Ekspresi Miku',
-    galleryEye: 'Galeri · Miku',
-    gallery: [
-      {src:'miku.jpg', lbl:'中野三玖 · Main Visual', tall:true},
-      {src:'s1.jpg',   lbl:'Season 1'},
-      {src:'s2.jpg',   lbl:'Season 2'},
-      {src:'movie.jpg',lbl:'The Movie'},
-      {kanji:'三',     lbl:'Third Sister · 三女'},
+    galleryTitle:'Ekspresi Ichika', galleryEye:'Galeri · Ichika',
+    hobbiesTitle:'Hal yang Ichika Cintai',
+    hobbies:[
+      {n:'01',t:'Akting & Dunia Hiburan',d:'Ichika bercita-cita menjadi aktris profesional sejak kecil. Ia mengikuti audisi dan menerima berbagai tawaran peran demi membangun karirnya.'},
+      {n:'02',t:'Merawat Saudari',d:'Sebagai kakak sulung, Ichika senang merawat adik-adiknya. Ia yang paling sering menjadi penengah dan pemberi semangat saat konflik terjadi.'},
+      {n:'03',t:'Tidur & Bersantai',d:'Di sela jadwal padat, Ichika sangat menghargai waktu istirahat. Tidur siang di sembarang tempat adalah kebiasaannya yang terkenal.'},
+      {n:'04',t:'Bernyanyi',d:'Ichika memiliki suara yang merdu. Ia pernah terlibat dalam proyek musik dan menikmati bernyanyi sebagai cara mengekspresikan diri.'},
+      {n:'05',t:'Mengamati Orang',d:'Instingnya sebagai aktris membuatnya jago membaca perasaan orang lain — kemampuan yang sering ia gunakan dalam kehidupan sehari-hari.'},
+      {n:'06',t:'Masak Sederhana',d:'Meski bukan yang terbaik, Ichika menyukai memasak makanan sederhana — terutama sarapan untuk saudari-saudarinya di pagi hari.'},
     ],
-    /* hobbies */
-    hobbiesTitle: 'Hal yang Miku Cintai',
-    hobbies: [
-      {n:'01', t:'Sejarah Era Sengoku', d:'Miku hafal detail para daimyo, pertempuran besar, dan strategi perang era Sengoku Jepang — bahkan melebihi pelajaran sejarah sekolah.'},
-      {n:'02', t:'Headphone & Musik', d:'Headphone merah ikoniknya adalah cara menenangkan pikiran dan menciptakan dunianya sendiri yang damai dari keramaian sekitar.'},
-      {n:'03', t:'Meracik Kopi & Teh', d:'Miku berlatih keras meracik minuman sempurna — percaya bahwa secangkir kopi buatan sendiri mampu menyampaikan perasaan terdalam.'},
-      {n:'04', t:'Tokugawa Ieyasu', d:'Ia mengagumi ketekunan dan strategi jangka panjang Tokugawa dalam menyatukan Jepang setelah puluhan tahun perang saudara.'},
-      {n:'05', t:'Membaca & Belajar', d:'Meski nilai akademiknya tidak cemerlang, Miku rajin membaca buku sejarah dan cerita tentang kesetiaan serta tekad hidup.'},
-      {n:'06', t:'Bekerja di Bakery', d:'Miku bekerja paruh waktu di toko roti Komugiya untuk melatih kemampuan memasaknya — sisi rajin dan mandirinya yang tersembunyi.'},
+    facts:[
+      {icon:'🎬',title:'Debut Akting',text:'Ichika adalah yang pertama memulai karir profesional di antara kelima saudari.'},
+      {icon:'😴',title:'Ratu Tidur',text:'Dikenal bisa tertidur di mana saja dan kapan saja — bahkan saat belajar.'},
+      {icon:'🎤',title:'Suara Merdu',text:'Selain akting, Ichika memiliki bakat bernyanyi yang tidak kalah dari karir aktingnya.'},
+      {icon:'💄',title:'Natural Look',text:'Berbeda dari Nino, Ichika memilih penampilan natural dan tidak terlalu menonjol.'},
     ],
-    /* timeline */
-    timelineTitle: 'Kisah Miku',
-    timeline: [
-      {yr:'Pertemuan Pertama', h:'Fuutarou Uesugi, Sang Tutor', b:'Miku bertemu Fuutarou saat ditugaskan menjadi tutor les privat. Kesan pertamanya biasa saja — bahkan sempat menolak kehadirannya.'},
-      {yr:'Percikan Pertama', h:'Dunia Sengoku yang Sama', b:'Saat Fuutarou membahas sejarah Sengoku dengan semangat yang sama, Miku mulai melihatnya berbeda. Benih perasaan mulai tumbuh diam-diam.'},
-      {yr:'Keberanian Terbesar', h:'Pengakuan Cinta Pertama', b:'Miku menjadi saudari pertama yang secara terang-terangan mengakui perasaannya — momen paling berani dalam hidupnya yang pemalu.'},
-      {yr:'Perjuangan', h:'Tumbuh Menjadi Lebih Kuat', b:'Miku berjuang keras di bidang akademik dan memasak. Ia tidak menyerah — terus berusaha menjadi versi terbaik dirinya sendiri.'},
-      {yr:'Akhir Cerita', h:'Bukan Pemenang, tapi Terkuat', b:'Meski jalan cintanya tidak berakhir seperti harapan, Miku tumbuh menjadi pribadi yang jauh lebih matang, mandiri, dan berani.'},
+    timelineTitle:'Kisah Ichika', timelineSub:'Perjalanan',
+    timeline:[
+      {yr:'Awal Cerita',h:'Kakak yang Diandalkan',b:'Ichika adalah yang pertama menunjukkan sikap terbuka kepada Fuutarou. Sebagai kakak sulung, ia mencoba menjadi jembatan antara tutor dan keempat adiknya.'},
+      {yr:'Karir Melonjak',h:'Tawaran Akting Besar',b:'Di tengah proses belajar bersama Fuutarou, Ichika mendapat tawaran peran besar yang memaksanya membagi waktu antara karir dan keluarga.'},
+      {yr:'Konflik Batin',h:'Perasaan yang Tersembunyi',b:'Ichika menyadari ia menyukai Fuutarou namun memilih menyembunyikannya — bahkan sempat berusaha menghalangi perasaan saudarinya.'},
+      {yr:'Titik Balik',h:'Kejujuran yang Terlambat',b:'Ketika Ichika akhirnya memutuskan untuk jujur pada perasaannya, situasi sudah berubah. Ia harus belajar menerima dan melepaskan dengan dewasa.'},
+      {yr:'Akhir Cerita',h:'Aktris yang Sesungguhnya',b:'Ichika tumbuh menjadi aktris dan pribadi yang lebih matang. Pengalamannya bersama Fuutarou menjadi bagian penting dari perjalanan hidupnya.'},
     ],
-    footerLogo: '中野 三玖',
+    footerLogo:'中野 一花',
   },
 
-  nino: {
-    navLogo: '中野二乃',
-    heroKanji: '二乃',
-    heroJP: '中野<br>二乃',
-    heroEN: 'Nakano Nino',
-    tagline: 'Putri kedua yang tegas, stylish, dan penuh semangat —<br>penjaga keluarga yang paling keras kepala.',
-    chips: ['Masak & Parfum','💄 Fashion Queen','Aquarius ♒','Blood Type B'],
-    heroImg: 'nino.jpg',
+  nino:{
+    id:'nino',
+    ca:'#7c3aed', cab:'#a78bfa', cap:'#ede9fe', cam:'#ddd6fe',
+    caRgb:'124,58,237', caWine:'#3b0764', caSub:'#6d28d9', caGold:'#c4b5fd',
+    bgDk:'#06030f', dark1:'#08040f', dark2:'#0a0514', dark3:'#070310',
+    scHover:'rgba(124,58,237,.05)', pifDeco:'rgba(124,58,237,.18)',
+    orb1:'radial-gradient(circle,rgba(124,58,237,.16),transparent 70%)',
+    orb2:'radial-gradient(circle,rgba(59,7,100,.3),transparent 70%)',
+    mesh:`radial-gradient(ellipse 65% 55% at 80% 40%,rgba(100,50,200,.2) 0%,transparent 65%),radial-gradient(ellipse 50% 50% at 10% 80%,rgba(50,10,100,.3) 0%,transparent 60%),radial-gradient(ellipse 80% 100% at 50% 100%,rgba(6,3,15,1) 0%,transparent 50%),#06030f`,
+    navLogo:'中野二乃', heroKanji:'二乃',
+    heroJP:'中野<br>二乃', heroEN:'Nakano Nino',
+    eyebrow:'五等分の花嫁 · The Second Sister',
+    tagline:'Putri kedua yang tegas, stylish, dan berani —<br>penjaga keluarga yang keras kepala namun penuh cinta.',
+    chips:['💜 Fashion Queen','Chef Keluarga','Aquarius ♒','Blood Type B'],
+    heroImg:'nino.jpg',
     order:'2nd', height:'159cm', weight:'49kg', bday:'19 Jan', zodiac:'♒', zodiacLbl:'Aquarius',
-    profImg: 'nino.jpg',
-    profCaption: '中野 二乃 · Nakano Nino · © Negi Haruba / Kodansha',
-    profTitle: 'Putri Kedua<br><em style="font-style:italic;font-size:.74em;color:var(--sub)">Si Tegas yang Setia pada Perasaannya</em>',
-    profDesc: 'Nino Nakano adalah putri kedua dari lima bersaudara kembar dalam manga/anime <em>Go-Toubun no Hanayome</em>. Dikenal sebagai yang paling tegas, berani, dan keras kepala — namun di balik semua itu tersimpan kasih sayang yang besar untuk keluarganya dan tekad yang kuat dalam cinta.',
-    dataBox: [
-      ['Nama','中野 二乃'],['Usia','17–22 tahun'],
-      ['Tinggi','159 cm'],['Golongan Darah','B'],
-      ['Sekolah','Asahiyama High'],['Hobi Utama','Memasak & Parfum'],
-      ['Warna Rambut','Pink / Coklat'],['Warna Mata','Biru'],
+    profImg:'nino.jpg',
+    profCaption:'中野 二乃 · Nakano Nino · © Negi Haruba / Kodansha',
+    profTitle:'Putri Kedua<br><em style="font-style:italic;font-size:.74em">Si Tegas yang Setia pada Cintanya</em>',
+    profDesc:'Nino Nakano adalah putri kedua dari lima bersaudara kembar. Dikenal sebagai yang paling tegas, berani, dan keras kepala — namun di balik semua itu tersimpan kasih sayang besar untuk keluarga dan tekad kuat dalam hal cinta. Ia bermimpi membuka restoran sendiri.',
+    dataBox:[['Nama','中野 二乃'],['Usia','17–22 tahun'],['Tinggi','159 cm'],['Golongan Darah','B'],['Zodiak','Aquarius (19 Jan)'],['Hobi','Memasak & Parfum'],['Rambut','Pink / Coklat'],['Mata','Biru']],
+    profChips:['Memasak','Parfum Buatan','Fashion','Tegas & Berani'],
+    quoteJP:'「あなたが好きよ。二乃はFūtarōのことが好き。」',
+    quoteTR:'"Aku mencintaimu. Nino mencintai Fuutarou."',
+    quoteSRC:'— Nino Nakano kepada Fuutarou Uesugi',
+    traitsTitle:'Sisi-Sisi Nino',
+    traits:[
+      {icon:'💜',name:'Tegas & Blak-blakan',desc:'Nino tidak segan mengungkapkan pikirannya. Ia adalah yang paling jujur dan langsung di antara kelima saudarinya, tanpa basa-basi.'},
+      {icon:'👨‍🍳',name:'Ahli Memasak',desc:'Memasak adalah passion terbesar Nino. Ia berlatih keras dan terus berinovasi, terutama saat memasak untuk orang yang ia cintai.'},
+      {icon:'🌸',name:'Penjaga Keluarga',desc:'Di balik sifat kerasnya, Nino sangat protektif. Ia rela melakukan apa saja demi menjaga keharmonisan dan keselamatan keluarga Nakano.'},
+      {icon:'❤️',name:'Setia dalam Cinta',desc:'Ketika Nino jatuh cinta, ia all-in. Ia mengungkapkan perasaan dengan berani berkali-kali, tanpa menyerah meski sempat ditolak.'},
+      {icon:'🎨',name:'Pecinta Fashion & Parfum',desc:'Nino memiliki selera fashion tinggi dan senang meracik parfum sendiri — cara mengekspresikan kepribadiannya yang kuat dan unik.'},
+      {icon:'✨',name:'Transformasi Karakter',desc:'Nino mengalami salah satu arc karakter terbaik — dari yang membenci Fuutarou menjadi yang paling tulus dan berani mencintainya.'},
     ],
-    profChips: ['Memasak','Parfum Buatan','Fashion Stylish','Tegas & Berani'],
-    quoteJP: '「あなたが好きよ。二乃がFūtarōのことが好き。」',
-    quoteTR: '"Aku mencintaimu. Nino mencintai Fuutarou."',
-    quoteSRC: '— Nino Nakano kepada Fuutarou Uesugi · Ungkapan Tulus',
-    traitsTitle: 'Sisi-Sisi Nino',
-    traits: [
-      {icon:'💄', name:'Tegas & Berani', desc:'Nino tidak segan mengungkapkan pikirannya. Ia adalah yang paling blak-blakan di antara kelima saudarinya dan tidak takut konflik.'},
-      {icon:'👨‍🍳', name:'Ahli Memasak', desc:'Memasak adalah passion terbesar Nino. Ia berlatih keras membuat hidangan lezat, terutama ketika memasak untuk orang yang ia cintai.'},
-      {icon:'🌸', name:'Penjaga Keluarga', desc:'Di balik sifat kerasnya, Nino sangat protektif terhadap saudarinya. Ia rela melakukan apa saja demi menjaga keharmonisan keluarga Nakano.'},
-      {icon:'💜', name:'Setia pada Cinta', desc:'Ketika Nino jatuh cinta, ia all-in. Ia mengungkapkan perasaannya dengan berani dan tidak menyembunyikan rasa sukanya meski berkali-kali ditolak.'},
-      {icon:'🎨', name:'Pecinta Fashion & Parfum', desc:'Nino memiliki selera fashion yang tinggi dan suka meracik parfum sendiri — ekspresi diri yang mencerminkan kepribadiannya yang kuat.'},
-      {icon:'✨', name:'Transformasi Karakter', desc:'Nino mengalami salah satu transformasi karakter terbesar — dari orang yang membenci Fuutarou menjadi yang paling tulus mencintainya.'},
+    gallery:[
+      {src:'nino.jpg',lbl:'中野二乃 · Main Visual',tall:true},
+      {src:'nino2.jpg',lbl:'Season 1'},{src:'nino3.jpg',lbl:'Season 2'},
+      {src:'nino4.jpg',lbl:'The Movie'},{kanji:'二',lbl:'Second Sister · 二女'},
     ],
-    galleryTitle: 'Ekspresi Nino',
-    galleryEye: 'Galeri · Nino',
-    gallery: [
-      {src:'nino.jpg',  lbl:'中野二乃 · Main Visual', tall:true},
-      {src:'s1.jpg', lbl:'Season 1'},
-      {src:'s2.jpg', lbl:'Season 2'},
-      {src:'movie.jpg', lbl:'The Movie'},
-      {kanji:'二',      lbl:'Second Sister · 二女'},
+    galleryTitle:'Ekspresi Nino', galleryEye:'Galeri · Nino',
+    hobbiesTitle:'Hal yang Nino Cintai',
+    hobbies:[
+      {n:'01',t:'Memasak',d:'Nino sangat berbakat memasak. Ia terus berlatih dan menciptakan hidangan baru, terutama untuk orang-orang tersayang yang ingin ia bahagiakan.'},
+      {n:'02',t:'Parfum Buatan Sendiri',d:'Nino suka meracik parfum dengan tangan sendiri. Setiap aroma memiliki makna — termasuk parfum khusus yang ia buat untuk Fuutarou.'},
+      {n:'03',t:'Fashion & Gaya',d:'Nino memiliki selera busana yang tinggi. Ia selalu tampil stylish dan memperhatikan setiap detail penampilannya dengan penuh kesungguhan.'},
+      {n:'04',t:'Menjaga Saudari',d:'Meski terkesan otoriter, Nino melakukannya karena cinta. Ia ingin semua saudarinya baik-baik saja dan selalu dalam kondisi terbaik.'},
+      {n:'05',t:'Mengekspresikan Diri',d:'Nino percaya ekspresi diri yang jujur adalah cara terbaik menjalani hidup. Ia tidak menyembunyikan perasaan atau pikirannya dari siapapun.'},
+      {n:'06',t:'Impian Restoran',d:'Nino bermimpi membuka restoran sendiri suatu hari nanti. Setiap hidangan yang ia masak adalah langkah kecil menuju impian besar itu.'},
     ],
-    hobbiesTitle: 'Hal yang Nino Cintai',
-    hobbies: [
-      {n:'01', t:'Memasak', d:'Nino sangat berbakat memasak. Ia terus berlatih menciptakan hidangan baru, terutama untuk orang-orang tersayang yang ingin ia bahagiakan.'},
-      {n:'02', t:'Parfum Buatan Sendiri', d:'Nino suka meracik parfum sendiri. Setiap aroma yang ia ciptakan memiliki makna tersendiri — termasuk parfum khusus yang ia buat untuk Fuutarou.'},
-      {n:'03', t:'Fashion & Gaya Hidup', d:'Nino memiliki selera busana yang tinggi. Ia selalu tampil stylish dan memperhatikan setiap detail penampilannya dengan seksama.'},
-      {n:'04', t:'Menjaga Saudari', d:'Meski kadang terkesan otoriter, Nino melakukannya karena ia sangat mencintai keempat saudarinya dan ingin semua berjalan baik.'},
-      {n:'05', t:'Mengekspresikan Diri', d:'Nino tidak menyembunyikan perasaannya. Ia percaya ekspresi diri yang jujur adalah cara terbaik menjalani hidup yang bermakna.'},
-      {n:'06', t:'Mempersiapkan Masa Depan', d:'Nino punya ambisi besar — ia ingin membuka restoran sendiri dan membuktikan bahwa kemampuan memasaknya bisa menjadi karirnya.'},
+    facts:[
+      {icon:'🧪',title:'Ahli Parfum',text:'Nino bisa meracik parfum dari bahan-bahan alami dengan akurasi aroma yang sangat tinggi.'},
+      {icon:'🎭',title:'Penyamaran Berani',text:'Nino pernah menyamar sebagai Itsuki untuk mendekati Fuutarou — keberanian yang mengejutkan semua orang.'},
+      {icon:'💇',title:'Potong Rambut',text:'Momen Nino memotong rambutnya adalah salah satu turning point paling ikonik dalam cerita.'},
+      {icon:'🍳',title:'Masak Terbaik',text:'Di antara kelima saudari, Nino diakui sebagai yang paling mahir memasak makanan lezat.'},
     ],
-    timelineTitle: 'Kisah Nino',
-    timeline: [
-      {yr:'Awal Cerita', h:'Menolak Sang Tutor', b:'Nino adalah yang paling keras menolak Fuutarou sebagai tutor. Ia membuat segalanya sulit dan tidak menyembunyikan rasa tidak sukanya.'},
-      {yr:'Titik Balik', h:'Bertemu "Kintoki"', b:'Nino bertemu pria misterius bernama Kintoki di bus dan mulai jatuh hati — tidak tahu bahwa itu adalah Fuutarou yang menyamar.'},
-      {yr:'Kesadaran', h:'Menyadari Perasaan Sebenarnya', b:'Saat Nino mengetahui Kintoki adalah Fuutarou, ia tidak menarik perasaannya. Inilah momen transformasinya yang paling dramatis.'},
-      {yr:'Keberanian', h:'Pengakuan yang Berulang', b:'Nino mengungkapkan perasaannya kepada Fuutarou berkali-kali meski ditolak — ia bertekad tidak akan menyerah pada cintanya.'},
-      {yr:'Akhir Cerita', h:'Menerima dengan Lapang Hati', b:'Meski Fuutarou memilih orang lain, Nino tumbuh menjadi wanita yang lebih matang, mandiri, dan siap membuka lembaran baru.'},
+    timelineTitle:'Kisah Nino', timelineSub:'Perjalanan',
+    timeline:[
+      {yr:'Awal Cerita',h:'Penolakan Keras',b:'Nino adalah yang paling keras menolak Fuutarou sebagai tutor. Ia membuat segalanya sulit dan tidak menyembunyikan rasa tidak sukanya sama sekali.'},
+      {yr:'Titik Balik',h:'Bertemu "Kintoki"',b:'Nino bertemu pria misterius bernama Kintoki di bus dan mulai jatuh hati — tidak menyadari bahwa itu adalah Fuutarou yang sedang menyamar.'},
+      {yr:'Kesadaran Besar',h:'Identitas yang Terungkap',b:'Saat mengetahui Kintoki adalah Fuutarou, Nino tidak menarik perasaannya. Inilah momen transformasinya yang paling dramatis dan mengejutkan.'},
+      {yr:'Keberanian',h:'Pengakuan Berulang',b:'Nino mengungkapkan perasaannya berkali-kali meski mendapat penolakan — ia bertekad tidak akan menyerah pada cintanya.'},
+      {yr:'Akhir Cerita',h:'Menerima dengan Lapang',b:'Meski Fuutarou memilih orang lain, Nino tumbuh menjadi wanita yang lebih matang dan siap membuka lembaran baru kehidupan.'},
     ],
-    footerLogo: '中野 二乃',
-  }
+    footerLogo:'中野 二乃',
+  },
+
+  miku:{
+    id:'miku',
+    ca:'#e05068', cab:'#f28fa0', cap:'#fce8ed', cam:'#fad5de',
+    caRgb:'224,80,104', caWine:'#5c1526', caSub:'#8a4456', caGold:'#c8919e',
+    bgDk:'#0e0408', dark1:'#0e0408', dark2:'#0c0308', dark3:'#0a0205',
+    scHover:'rgba(224,80,104,.05)', pifDeco:'rgba(224,80,104,.18)',
+    orb1:'radial-gradient(circle,rgba(224,80,104,.16),transparent 70%)',
+    orb2:'radial-gradient(circle,rgba(92,21,38,.3),transparent 70%)',
+    mesh:`radial-gradient(ellipse 65% 55% at 80% 40%,rgba(200,50,80,.22) 0%,transparent 65%),radial-gradient(ellipse 50% 50% at 10% 80%,rgba(100,20,40,.35) 0%,transparent 60%),radial-gradient(ellipse 80% 100% at 50% 100%,rgba(14,4,8,1) 0%,transparent 50%),#0e0408`,
+    navLogo:'中野三玖', heroKanji:'三玖',
+    heroJP:'中野<br>三玖', heroEN:'Nakano Miku',
+    eyebrow:'五等分の花嫁 · The Third Sister',
+    tagline:'Putri ketiga dari lima bersaudara kembar —<br>pemalu, tenang, namun berani dalam cinta.',
+    chips:['🎧 Headphone Merah','Sengoku Fan','Capricorn ♑','Blood Type A'],
+    heroImg:'miku.jpg',
+    order:'3rd', height:'159cm', weight:'49kg', bday:'5 Des', zodiac:'♑', zodiacLbl:'Capricorn',
+    profImg:'miku.jpg',
+    profCaption:'中野 三玖 · Nakano Miku · © Negi Haruba / Kodansha',
+    profTitle:'Putri Ketiga<br><em style="font-style:italic;font-size:.74em">yang Berani Mencintai Pertama</em>',
+    profDesc:'Miku Nakano adalah karakter utama dalam manga/anime <em>Go-Toubun no Hanayome</em>. Dikenal sebagai sosok yang tenang dan pemalu, namun menyimpan tekad dan keberanian luar biasa — terutama dalam hal perasaannya kepada Fuutarou Uesugi.',
+    dataBox:[['Nama','中野 三玖'],['Usia','17–22 tahun'],['Tinggi','159 cm'],['Golongan Darah','A'],['Zodiak','Capricorn (5 Des)'],['Pekerjaan','Bakery (Komugiya)'],['Rambut','Coklat / Pearl Pink'],['Mata','Biru']],
+    profChips:['Sejarah Sengoku','Kopi & Teh','Headphones Merah','Introvert'],
+    quoteJP:'「好きです。中野三玖は、あなたのことが好きです。」',
+    quoteTR:'"Aku menyukaimu. Miku Nakano menyukaimu."',
+    quoteSRC:'— Miku Nakano kepada Fuutarou Uesugi · Pengakuan Pertama',
+    traitsTitle:'Sisi-Sisi Miku',
+    traits:[
+      {icon:'🎧',name:'Introvert & Tenang',desc:'Headphone merahnya bagai pelindung dari dunia luar. Di balik sikapnya yang pendiam tersimpan pikiran yang dalam dan penuh pertimbangan.'},
+      {icon:'🏯',name:'Penggemar Sejarah Sengoku',desc:'Ketika membahas era Sengoku, Miku berubah total — matanya berbinar dan semangat mengalir deras. Ini satu-satunya saat ia paling ekspresif.'},
+      {icon:'💌',name:'Berani dalam Cinta',desc:'Meski pemalu, Miku adalah saudari pertama yang mengakui perasaannya secara langsung. Sebuah keberanian yang mengejutkan semua orang.'},
+      {icon:'☕',name:'Tekun & Pantang Menyerah',desc:'Ia berlatih keras meracik kopi sempurna demi seseorang istimewa — tak berhenti hingga setiap tegukan terasa seperti ungkapan perasaan.'},
+      {icon:'📚',name:'Rendah Hati',desc:'Miku sadar akan kelemahannya dan memperbaikinya diam-diam, tanpa meminta perhatian atau pengakuan dari siapapun.'},
+      {icon:'🌸',name:'Tulus & Loyal',desc:'Miku sangat menyayangi keluarganya. Di tengah persaingan cinta, ia tidak pernah melukai saudarinya dan selalu menjaga kepercayaan.'},
+    ],
+    gallery:[
+      {src:'miku.jpg',lbl:'中野三玖 · Main Visual',tall:true},
+      {src:'s1.jpg',lbl:'Season 1'},{src:'s2.jpg',lbl:'Season 2'},
+      {src:'movie.jpg',lbl:'The Movie'},{kanji:'三',lbl:'Third Sister · 三女'},
+    ],
+    galleryTitle:'Ekspresi Miku', galleryEye:'Galeri · Miku',
+    hobbiesTitle:'Hal yang Miku Cintai',
+    hobbies:[
+      {n:'01',t:'Sejarah Era Sengoku',d:'Miku hafal detail para daimyo, pertempuran besar, dan strategi perang era Sengoku Jepang — bahkan melebihi pelajaran sejarah sekolah manapun.'},
+      {n:'02',t:'Headphone & Musik',d:'Headphone merah ikoniknya adalah cara menenangkan pikiran dan menciptakan dunianya sendiri yang damai dari keramaian sekitar.'},
+      {n:'03',t:'Meracik Kopi & Teh',d:'Miku berlatih keras meracik minuman sempurna — percaya bahwa secangkir kopi buatan sendiri mampu menyampaikan perasaan terdalam.'},
+      {n:'04',t:'Tokugawa Ieyasu',d:'Ia mengagumi ketekunan dan strategi jangka panjang Tokugawa dalam menyatukan Jepang setelah puluhan tahun perang saudara.'},
+      {n:'05',t:'Membaca & Belajar',d:'Meski nilai akademiknya tidak cemerlang, Miku rajin membaca buku sejarah dan cerita tentang kesetiaan serta tekad hidup.'},
+      {n:'06',t:'Bekerja di Bakery',d:'Miku bekerja paruh waktu di toko roti Komugiya untuk melatih kemampuan memasaknya — sisi rajin dan mandirinya yang tersembunyi.'},
+    ],
+    facts:[
+      {icon:'🎧',title:'Headphone Ikonik',text:'Headphone merahnya adalah ciri khas paling terkenal — ia hampir tidak pernah terlihat tanpanya.'},
+      {icon:'⚔️',title:'Pertama Mengakui',text:'Miku adalah saudari pertama yang secara terbuka mengakui perasaannya kepada Fuutarou.'},
+      {icon:'☕',title:'Barista Otodidak',text:'Miku belajar membuat kopi sendiri dari nol demi menyiapkan minuman sempurna untuk Fuutarou.'},
+      {icon:'🏯',title:'Fakta Sengoku',text:'Miku bisa bercerita berjam-jam tentang sejarah Sengoku tanpa henti — ini passion terbesarnya.'},
+    ],
+    timelineTitle:'Kisah Miku', timelineSub:'Perjalanan',
+    timeline:[
+      {yr:'Pertemuan Pertama',h:'Fuutarou, Sang Tutor',b:'Miku bertemu Fuutarou saat ditugaskan menjadi tutor les privat. Kesan pertamanya biasa saja — bahkan sempat menolak kehadirannya.'},
+      {yr:'Percikan Pertama',h:'Dunia Sengoku yang Sama',b:'Saat Fuutarou membahas sejarah Sengoku dengan semangat yang sama, Miku mulai melihatnya berbeda. Benih perasaan mulai tumbuh diam-diam.'},
+      {yr:'Keberanian Terbesar',h:'Pengakuan Cinta Pertama',b:'Miku menjadi saudari pertama yang secara terang-terangan mengakui perasaannya — momen paling berani dalam hidupnya yang pemalu.'},
+      {yr:'Perjuangan',h:'Tumbuh Menjadi Lebih Kuat',b:'Miku berjuang keras di bidang akademik dan memasak. Ia tidak menyerah — terus berusaha menjadi versi terbaik dirinya sendiri.'},
+      {yr:'Akhir Cerita',h:'Bukan Pemenang, tapi Terkuat',b:'Meski jalan cintanya tidak berakhir seperti harapan, Miku tumbuh menjadi pribadi yang jauh lebih matang, mandiri, dan berani.'},
+    ],
+    footerLogo:'中野 三玖',
+  },
+
+  yotsuba:{
+    id:'yotsuba',
+    ca:'#16a34a', cab:'#4ade80', cap:'#f0fdf4', cam:'#dcfce7',
+    caRgb:'22,163,74', caWine:'#14532d', caSub:'#15803d', caGold:'#86efac',
+    bgDk:'#030d06', dark1:'#041008', dark2:'#031008', dark3:'#020b05',
+    scHover:'rgba(22,163,74,.05)', pifDeco:'rgba(22,163,74,.18)',
+    orb1:'radial-gradient(circle,rgba(22,163,74,.16),transparent 70%)',
+    orb2:'radial-gradient(circle,rgba(5,70,20,.28),transparent 70%)',
+    mesh:`radial-gradient(ellipse 65% 55% at 80% 40%,rgba(20,140,60,.18) 0%,transparent 65%),radial-gradient(ellipse 50% 50% at 10% 80%,rgba(5,70,20,.28) 0%,transparent 60%),radial-gradient(ellipse 80% 100% at 50% 100%,rgba(3,13,6,1) 0%,transparent 50%),#030d06`,
+    navLogo:'中野四葉', heroKanji:'四葉',
+    heroJP:'中野<br>四葉', heroEN:'Nakano Yotsuba',
+    eyebrow:'五等分の花嫁 · The Fourth Sister',
+    tagline:'Putri keempat yang penuh semangat dan ceria —<br>selalu hadir memberi dukungan untuk semua orang.',
+    chips:['🍀 Si Semangat','Atlet Lari','Cancer ♋','Blood Type O'],
+    heroImg:'yotsuba.jpg',
+    order:'4th', height:'160cm', weight:'52kg', bday:'10 Jul', zodiac:'♋', zodiacLbl:'Cancer',
+    profImg:'yotsuba.jpg',
+    profCaption:'中野 四葉 · Nakano Yotsuba · © Negi Haruba / Kodansha',
+    profTitle:'Putri Keempat<br><em style="font-style:italic;font-size:.74em">Si Ceria yang Menyimpan Pengorbanan</em>',
+    profDesc:'Yotsuba Nakano adalah putri keempat dari lima bersaudara kembar. Dengan kepribadiannya yang ceria, energik, dan selalu positif, ia menjadi penyemangat keluarga. Di balik senyumnya yang tak pernah pudar, Yotsuba menyimpan pengorbanan besar yang tidak semua orang tahu.',
+    dataBox:[['Nama','中野 四葉'],['Usia','17–22 tahun'],['Tinggi','160 cm'],['Golongan Darah','O'],['Zodiak','Cancer (10 Jul)'],['Klub','Atletik / Track & Field'],['Ciri Khas','Bando Hijau Daun'],['Rambut','Oranye / Coklat']],
+    profChips:['Atletik','Selalu Ceria','Si Penyemangat','Selfless'],
+    quoteJP:'「みんなを笑顔にするのが、四葉の役目だよ！」',
+    quoteTR:'"Membuat semua orang tersenyum adalah tugas Yotsuba!"',
+    quoteSRC:'— Yotsuba Nakano kepada saudarinya',
+    traitsTitle:'Sisi-Sisi Yotsuba',
+    traits:[
+      {icon:'🌟',name:'Selalu Ceria & Energik',desc:'Yotsuba adalah sumber energi positif keluarga Nakano. Senyumnya yang selalu ada membuat suasana menjadi lebih hangat dan bersemangat.'},
+      {icon:'🤝',name:'Rela Berkorban',desc:'Di balik keceriaannya, Yotsuba menyimpan pengorbanan besar — ia pernah merelakan kebahagiaannya sendiri demi kebahagiaan saudarinya.'},
+      {icon:'🏃',name:'Atlet Berbakat',desc:'Yotsuba sangat berbakat dalam atletik, khususnya lari. Ia adalah anggota aktif klub atletik sekolah dan berprestasi dalam kompetisi.'},
+      {icon:'💚',name:'Penyemangat Tulus',desc:'Yotsuba selalu mendukung orang-orang di sekitarnya dengan tulus — tidak pernah iri atau bersaing dengan cara yang tidak sehat.'},
+      {icon:'😄',name:'Spontan & Polos',desc:'Reaksi spontan dan kejujurannya yang polos sering menjadi sumber tawa dan kehangatan dalam setiap situasi.'},
+      {icon:'🍀',name:'Simbol Keberuntungan',desc:'Bando daun semanggi hijaunya adalah identitasnya. Yotsuba percaya keberuntungan datang bagi mereka yang selalu berusaha dan bersemangat.'},
+    ],
+    gallery:[
+      {src:'yotsuba.jpg',lbl:'中野四葉 · Main Visual',tall:true},
+      {src:'yotsuba2.jpg',lbl:'Season 1'},{src:'yotsuba3.jpg',lbl:'Season 2'},
+      {src:'yotsuba4.jpg',lbl:'The Movie'},{kanji:'四',lbl:'Fourth Sister · 四女'},
+    ],
+    galleryTitle:'Ekspresi Yotsuba', galleryEye:'Galeri · Yotsuba',
+    hobbiesTitle:'Hal yang Yotsuba Cintai',
+    hobbies:[
+      {n:'01',t:'Atletik & Lari',d:'Yotsuba berlatih lari setiap hari dengan penuh semangat. Ia adalah salah satu atlet terbaik di sekolahnya dan bangga mewakili tim.'},
+      {n:'02',t:'Mendukung Saudari',d:'Yotsuba selalu hadir saat saudarinya butuh dukungan. Memberi semangat dan menjadi cheerleader terbaik adalah kebahagiaannya.'},
+      {n:'03',t:'Olahraga Kelompok',d:'Selain atletik, Yotsuba menikmati berbagai olahraga kelompok. Ia percaya kebersamaan dalam tim adalah kunci keberhasilan.'},
+      {n:'04',t:'Makan Enak',d:'Yotsuba punya nafsu makan yang besar dan tidak pilih-pilih makanan. Ini salah satu alasan tenaganya selalu berlimpah sepanjang hari.'},
+      {n:'05',t:'Membuat Orang Tertawa',d:'Yotsuba punya bakat alami membuat suasana jadi menyenangkan dengan komentar polos dan tindakan spontannya yang menggemaskan.'},
+      {n:'06',t:'Membantu Sesama',d:'Tanpa diminta, Yotsuba selalu siap membantu siapapun yang membutuhkan. Sifat altruistiknya ini membuat banyak orang menyukainya.'},
+    ],
+    facts:[
+      {icon:'🍀',title:'Bando Ikonik',text:'Bando daun semanggi hijau adalah aksesori paling ikonik Yotsuba yang tidak pernah ia lepas.'},
+      {icon:'🏅',title:'Atlet Berprestasi',text:'Yotsuba meraih berbagai penghargaan atletik di tingkat sekolah dan regional.'},
+      {icon:'🤫',title:'Rahasia Besar',text:'Yotsuba menyimpan satu rahasia besar terkait masa lalu Fuutarou yang tidak semua orang tahu di awal cerita.'},
+      {icon:'😂',title:'Comic Relief Terbaik',text:'Reaksi spontan dan ekspresif Yotsuba selalu menjadi momen paling menghibur dalam cerita.'},
+    ],
+    timelineTitle:'Kisah Yotsuba', timelineSub:'Perjalanan',
+    timeline:[
+      {yr:'Awal Cerita',h:'Si Pendukung Setia',b:'Yotsuba adalah yang paling antusias menyambut Fuutarou sebagai tutor. Energinya yang positif membuat suasana belajar lebih menyenangkan.'},
+      {yr:'Rahasia Terungkap',h:'Gadis dari Masa Lalu',b:'Perlahan terungkap bahwa Yotsuba memiliki hubungan spesial dengan Fuutarou di masa lalu — sebuah rahasia yang ia jaga sendirian selama ini.'},
+      {yr:'Pengorbanan Besar',h:'Merelakan Kebahagiaannya',b:'Yotsuba pernah merelakan impian dan kebahagiaannya sendiri demi saudarinya. Pengorbanan yang tidak terlihat namun sangat dalam.'},
+      {yr:'Kejujuran',h:'Akhirnya Berbicara',b:'Saat kebenaran tentang masa lalunya terungkap, Yotsuba akhirnya berani berbicara jujur tentang perasaan dan pengorbanannya selama ini.'},
+      {yr:'Akhir Cerita',h:'Pilihan Fuutarou',b:'Fuutarou memilih Yotsuba sebagai pasangan hidupnya. Gadis ceria dengan pengorbanan terbesar akhirnya mendapatkan kebahagiaan yang sesungguhnya.'},
+    ],
+    footerLogo:'中野 四葉',
+  },
+
+  itsuki:{
+    id:'itsuki',
+    ca:'#dc2626', cab:'#f87171', cap:'#fef2f2', cam:'#fecaca',
+    caRgb:'220,38,38', caWine:'#7f1d1d', caSub:'#b91c1c', caGold:'#fca5a5',
+    bgDk:'#0d0202', dark1:'#100202', dark2:'#0d0202', dark3:'#0a0202',
+    scHover:'rgba(220,38,38,.05)', pifDeco:'rgba(220,38,38,.18)',
+    orb1:'radial-gradient(circle,rgba(220,38,38,.16),transparent 70%)',
+    orb2:'radial-gradient(circle,rgba(127,29,29,.28),transparent 70%)',
+    mesh:`radial-gradient(ellipse 65% 55% at 80% 40%,rgba(200,30,30,.2) 0%,transparent 65%),radial-gradient(ellipse 50% 50% at 10% 80%,rgba(100,10,10,.3) 0%,transparent 60%),radial-gradient(ellipse 80% 100% at 50% 100%,rgba(13,2,2,1) 0%,transparent 50%),#0d0202`,
+    navLogo:'中野五月', heroKanji:'五月',
+    heroJP:'中野<br>五月', heroEN:'Nakano Itsuki',
+    eyebrow:'五等分の花嫁 · The Fifth Sister',
+    tagline:'Putri kelima yang serius, cerdas, dan penuh dedikasi —<br>paling gigih belajar demi menjadi guru.',
+    chips:['📚 Si Rajin','Calon Guru','Scorpio ♏','Blood Type AB'],
+    heroImg:'itsuki.jpg',
+    order:'5th', height:'159cm', weight:'50kg', bday:'5 Mei', zodiac:'♏', zodiacLbl:'Scorpio',
+    profImg:'itsuki.jpg',
+    profCaption:'中野 五月 · Nakano Itsuki · © Negi Haruba / Kodansha',
+    profTitle:'Putri Kelima<br><em style="font-style:italic;font-size:.74em">Calon Guru yang Penuh Dedikasi</em>',
+    profDesc:'Itsuki Nakano adalah putri kelima dari lima bersaudara kembar. Ia adalah yang paling serius dan berdedikasi dalam hal akademik, dengan mimpi menjadi guru seperti ayah mereka. Meski terkesan kaku, Itsuki sangat peduli dengan saudarinya dan selalu berusaha berbuat yang benar.',
+    dataBox:[['Nama','中野 五月'],['Usia','17–22 tahun'],['Tinggi','159 cm'],['Golongan Darah','AB'],['Zodiak','Scorpio (5 Mei)'],['Cita-cita','Menjadi Guru'],['Rambut','Merah / Auburn'],['Mata','Hijau / Biru']],
+    profChips:['Akademik Terbaik','Calon Guru','Suka Makan','Serius & Tekun'],
+    quoteJP:'「私は先生になりたい。みんなの夢を支えられる先生に。」',
+    quoteTR:'"Aku ingin menjadi guru. Guru yang bisa menopang mimpi semua orang."',
+    quoteSRC:'— Itsuki Nakano tentang cita-citanya',
+    traitsTitle:'Sisi-Sisi Itsuki',
+    traits:[
+      {icon:'📚',name:'Serius & Berdedikasi',desc:'Itsuki adalah yang paling serius soal akademik. Ia belajar keras karena punya tujuan jelas — menjadi guru yang bisa menginspirasi murid-muridnya.'},
+      {icon:'🍜',name:'Cinta Makan',desc:'Itsuki punya nafsu makan yang luar biasa dan sangat suka makanan lezat. Ini salah satu sisi paling menggemaskan dari kepribadiannya.'},
+      {icon:'⚖️',name:'Adil & Berprinsip',desc:'Itsuki berpegang teguh pada nilai keadilan dan kejujuran. Ia tidak suka kecurangan dan selalu berusaha melakukan hal yang benar.'},
+      {icon:'❤️',name:'Peduli Saudari',desc:'Di balik sikapnya yang kaku, Itsuki sangat menyayangi keempat kakaknya. Ia selalu hadir saat saudarinya membutuhkan.'},
+      {icon:'🎯',name:'Punya Tujuan Jelas',desc:'Berbeda dari saudarinya, Itsuki tahu betul apa yang ia inginkan — menjadi guru terbaik yang bisa menginspirasi generasi muda.'},
+      {icon:'🦋',name:'Transformasi Bertahap',desc:'Itsuki mengalami perkembangan karakter yang bertahap namun bermakna — dari gadis kaku menjadi pribadi yang lebih terbuka dan hangat.'},
+    ],
+    gallery:[
+      {src:'itsuki.jpg',lbl:'中野五月 · Main Visual',tall:true},
+      {src:'itsuki2.jpg',lbl:'Season 1'},{src:'itsuki3.jpg',lbl:'Season 2'},
+      {src:'itsuki4.jpg',lbl:'The Movie'},{kanji:'五',lbl:'Fifth Sister · 五女'},
+    ],
+    galleryTitle:'Ekspresi Itsuki', galleryEye:'Galeri · Itsuki',
+    hobbiesTitle:'Hal yang Itsuki Cintai',
+    hobbies:[
+      {n:'01',t:'Belajar & Akademik',d:'Itsuki menghabiskan banyak waktu belajar. Baginya, pengetahuan adalah investasi terbaik demi mewujudkan cita-citanya menjadi guru.'},
+      {n:'02',t:'Makan Enak',d:'Itsuki sangat menikmati makanan lezat dan tidak pernah menolak ajakan makan. Antusiasmenya soal makanan adalah sisi terlucu darinya.'},
+      {n:'03',t:'Mengajar & Berbagi',d:'Itsuki suka menjelaskan pelajaran kepada saudarinya. Momen mengajar adalah saat ia paling bersemangat dan penuh gairah.'},
+      {n:'04',t:'Kenangan Ayah',d:'Itsuki sangat menyimpan kenangan bersama ayahnya yang seorang guru. Mimpinya menjadi guru adalah cara menghormati dan melanjutkan jejak ayah.'},
+      {n:'05',t:'Membaca Buku Pelajaran',d:'Itsuki tidak hanya membaca buku wajib sekolah — ia juga gemar membaca buku referensi tambahan untuk memperluas wawasannya.'},
+      {n:'06',t:'Jalan-jalan Santai',d:'Di waktu senggang, Itsuki menikmati jalan-jalan sambil mencicipi berbagai kuliner lokal — cara terbaiknya meredakan stres belajar.'},
+    ],
+    facts:[
+      {icon:'🍜',title:'Food Enthusiast',text:'Itsuki terkenal sebagai yang paling antusias soal makanan — ekspresi kegembiraannya saat makan sangat ikonik.'},
+      {icon:'👩‍🏫',title:'Calon Guru',text:'Satu-satunya dari kelima saudari yang memiliki cita-cita spesifik dan jelas sejak awal cerita.'},
+      {icon:'👥',title:'Paling Mirip Ayah',text:'Dari semua saudari, karakter Itsuki paling banyak mencerminkan kepribadian ayah mereka.'},
+      {icon:'🎭',title:'Pernah Menyamar',text:'Itsuki pernah menyamar sebagai Miku untuk membantu saudarinya — menunjukkan betapa ia peduli pada keluarga.'},
+    ],
+    timelineTitle:'Kisah Itsuki', timelineSub:'Perjalanan',
+    timeline:[
+      {yr:'Awal Cerita',h:'Yang Paling Keras Kepala',b:'Itsuki awalnya paling gigih menolak bantuan Fuutarou. Ia merasa bisa belajar sendiri dan tidak ingin bergantung pada orang asing.'},
+      {yr:'Perubahan Sikap',h:'Mulai Menerima Fuutarou',b:'Seiring waktu, Itsuki mulai melihat kesungguhan Fuutarou dalam membantu keluarga Nakano. Ia perlahan membuka diri dan menerima bantuannya.'},
+      {yr:'Warisan Ayah',h:'Mimpi Menjadi Guru',b:'Terungkap bahwa mimpi Itsuki menjadi guru terinspirasi langsung dari ayahnya. Fuutarou membantu memperkuat tekad ini dengan caranya sendiri.'},
+      {yr:'Perkembangan',h:'Tumbuh Menjadi Lebih Terbuka',b:'Itsuki perlahan melepas kekakuannya. Ia belajar bahwa menerima bantuan bukan kelemahan, melainkan kekuatan yang sesungguhnya.'},
+      {yr:'Akhir Cerita',h:'Melanjutkan Jejak Ayah',b:'Itsuki memantapkan langkah menuju cita-citanya menjadi guru. Perjalanannya bersama Fuutarou menjadi fondasi penting dalam hidupnya ke depan.'},
+    ],
+    footerLogo:'中野 五月',
+  },
 };
 
 /* ============================================================
-   RENDER FUNCTIONS
+   RENDER HELPERS
 ============================================================ */
-function renderDataBox(items){
-  return items.map(([l,v])=>`<div><p class="db-lbl">${l}</p><p class="db-val">${v}</p></div>`).join('');
-}
-function renderChips(items, style=''){
-  return items.map(c=>`<span class="chip" style="${style}">${c}</span>`).join('');
-}
-function renderTraits(items){
-  return items.map((t,i)=>`
-    <div class="t-card" data-reveal data-d="${i+1}">
-      <span class="t-icon">${t.icon}</span>
-      <p class="t-name">${t.name}</p>
-      <p class="t-desc">${t.desc}</p>
-    </div>`).join('');
-}
-function renderGallery(items){
-  return items.map(g=>{
-    if(g.kanji){
-      return `<div class="g-panel g-text-panel">
-        <div class="g-kanji">${g.kanji}</div>
-        <div class="g-text-lbl">${g.lbl}</div>
-      </div>`;
-    }
-    return `<div class="g-panel${g.tall?' g-tall':''}">
-      <img src="${g.src}" alt="${g.lbl}" loading="lazy" onerror="this.style.opacity='.15'"/>
-      <div class="g-overlay"><span class="g-lbl">${g.lbl}</span></div>
-    </div>`;
-  }).join('');
-}
-function renderHobbies(items){
-  return items.map((h,i)=>`
-    <div class="h-card" data-reveal data-d="${i+1}">
-      <div class="h-num">${h.n}</div>
-      <div>
-        <p class="h-ttl">${h.t}</p>
-        <p class="h-txt">${h.d}</p>
-      </div>
-    </div>`).join('');
-}
-function renderTimeline(items){
-  return items.map(t=>`
-    <div class="tl-item" data-reveal>
-      <div class="tl-dot"></div>
-      <p class="tl-yr">${t.yr}</p>
-      <h3 class="tl-h">${t.h}</h3>
-      <p class="tl-b">${t.b}</p>
-    </div>`).join('');
+function rChips(arr,st=''){return arr.map(c=>`<span class="chip" style="${st}">${c}</span>`).join('')}
+function rDataBox(arr){return arr.map(([l,v])=>`<div><p class="dl">${l}</p><p class="dv">${v}</p></div>`).join('')}
+function rTraits(arr){return arr.map((t,i)=>`<div class="tc" data-rv data-d="${i+1}"><span class="ticon">${t.icon}</span><p class="tname">${t.name}</p><p class="tdesc">${t.desc}</p></div>`).join('')}
+function rGallery(arr){return arr.map(g=>g.kanji?`<div class="gp gtp"><div class="gkj">${g.kanji}</div><div class="gtlbl">${g.lbl}</div></div>`:
+  `<div class="gp${g.tall?' gt':''}"><img src="${g.src}" alt="${g.lbl}" loading="lazy" onerror="this.style.opacity='.08'"/><div class="gov"><span class="glbl">${g.lbl}</span></div></div>`).join('')}
+function rHobbies(arr){return arr.map((h,i)=>`<div class="hc" data-rv data-d="${i+1}"><div class="hn">${h.n}</div><div><p class="httl">${h.t}</p><p class="htxt">${h.d}</p></div></div>`).join('')}
+function rFacts(arr){return arr.map((f,i)=>`<div class="ffc" data-rv data-d="${i+1}"><span class="fficon">${f.icon}</span><p class="fftit">${f.title}</p><p class="fftxt">${f.text}</p></div>`).join('')}
+function rTimeline(arr){return arr.map(t=>`<div class="tli" data-rv><div class="tld"></div><p class="tlyr">${t.yr}</p><h3 class="tlh">${t.h}</h3><p class="tlb">${t.b}</p></div>`).join('')}
+
+/* ============================================================
+   APPLY THEME CSS VARS
+============================================================ */
+function applyTheme(d){
+  const root=document.documentElement;
+  root.style.setProperty('--ca',d.ca);
+  root.style.setProperty('--ca-b',d.cab);
+  root.style.setProperty('--ca-p',d.cap);
+  root.style.setProperty('--ca-m',d.cam);
+  root.style.setProperty('--ca-rgb',d.caRgb);
+  root.style.setProperty('--ca-wine',d.caWine);
+  root.style.setProperty('--ca-sub',d.caSub);
+  root.style.setProperty('--ca-gold',d.caGold);
+  root.style.setProperty('--bg-dk',d.bgDk);
+  root.style.setProperty('--chip-border',`rgba(${d.caRgb},.3)`);
+  root.style.setProperty('--chip-bg',`rgba(${d.caRgb},.06)`);
+  root.style.setProperty('--cur-accent',d.ca);
+  document.getElementById('cd').style.background=d.ca;
+  document.getElementById('cr').style.borderColor=`rgba(${d.caRgb},.4)`;
+  /* sections */
+  document.getElementById('sec-traits').style.background=d.dark2;
+  document.getElementById('sec-gallery').style.background=d.dark3;
+  document.getElementById('sec-facts').style.background=d.dark2;
+  document.getElementById('sec-tl').style.background=d.dark3;
+  document.getElementById('strib').style.background=d.dark3;
+  document.getElementById('qband').style.background=d.ca;
+  document.querySelector('footer').style.background='#030106';
+  /* gradient text-panel in gallery */
+  document.querySelectorAll('.gtp').forEach(g=>{
+    g.style.background=`linear-gradient(135deg,${d.dark2},${d.dark3})`;
+  });
+  /* orbs */
+  document.getElementById('orb1').style.background=d.orb1;
+  document.getElementById('orb2').style.background=d.orb2;
+  document.getElementById('hmesh').style.background=d.mesh;
+  /* tl dots bg */
+  document.querySelectorAll('.tld').forEach(el=>el.style.background=d.bgDk);
+  /* pif-deco */
+  document.getElementById('pifdeco').style.borderColor=d.pifDeco;
+  /* hero visual overlay */
+  document.querySelector('.hero-v').style.setProperty('--bg-dk',d.bgDk);
 }
 
 /* ============================================================
-   SWITCH CHARACTER
+   OPEN CHARACTER PAGE
 ============================================================ */
-let current = 'miku';
+function openChar(id){
+  const d=DB[id];
+  /* flash */
+  const fov=document.getElementById('fov');
+  fov.style.background=d.ca;
+  fov.style.opacity='.12';
+  setTimeout(()=>fov.style.opacity='0',300);
 
-function switchChar(id){
-  if(id === current) return;
-  current = id;
-  const d = CHARS[id];
+  /* swap views */
+  document.getElementById('home-view').style.display='none';
+  document.getElementById('char-view').style.display='block';
+  document.getElementById('homebtn').style.display='flex';
+  document.getElementById('nav').classList.remove('solid');
 
-  /* flash overlay */
-  const ov = document.getElementById('theme-overlay');
-  ov.classList.add('flash');
-  setTimeout(()=>ov.classList.remove('flash'), 300);
+  /* scroll to top */
+  window.scrollTo({top:0,behavior:'instant'});
 
-  /* body class → CSS theme */
-  document.body.classList.remove('miku','nino');
-  document.body.classList.add(id);
-
-  /* switcher button states */
-  document.getElementById('btn-miku').className = 'sw-btn' + (id==='miku'?' active-miku':'');
-  document.getElementById('btn-nino').className = 'sw-btn' + (id==='nino'?' active-nino':'');
-
-  /* scroll to top smoothly */
-  window.scrollTo({top:0, behavior:'smooth'});
+  /* apply theme */
+  applyTheme(d);
 
   /* hero */
-  document.getElementById('nav-logo').textContent = d.navLogo;
-  document.getElementById('hero-kanji').textContent = d.heroKanji;
-  document.getElementById('h-jp').innerHTML = d.heroJP;
-  document.getElementById('h-en').textContent = d.heroEN;
-  document.getElementById('h-tagline').innerHTML = d.tagline;
-  document.getElementById('h-chips').innerHTML = renderChips(d.chips);
-  const hImg = document.getElementById('hero-img');
-  hImg.style.opacity='0';
-  hImg.src = d.heroImg;
-  hImg.onload = ()=>{ hImg.style.transition='opacity .6s'; hImg.style.opacity='1'; };
-  hImg.onerror = ()=>{ hImg.style.opacity='.08'; };
+  document.getElementById('nlogo').textContent=d.navLogo;
+  document.getElementById('hkanji').textContent=d.heroKanji;
+  document.getElementById('hjp').innerHTML=d.heroJP;
+  document.getElementById('hen').textContent=d.heroEN;
+  document.getElementById('heye').textContent=d.eyebrow;
+  document.getElementById('htag').innerHTML=d.tagline;
+  document.getElementById('hchips').innerHTML=rChips(d.chips);
+  const hi=document.getElementById('himg');
+  hi.style.opacity='0';hi.src=d.heroImg;
+  hi.onload=()=>{hi.style.transition='opacity .7s';hi.style.opacity='1'};
+  hi.onerror=()=>{hi.style.opacity='.08'};
+  hi.style.filter=`drop-shadow(0 0 40px rgba(${d.caRgb},.3))`;
 
   /* stats */
-  document.getElementById('s-order').innerHTML = d.order;
-  document.getElementById('s-height').innerHTML = d.height+'<span style="font-size:.75em">cm</span>';
-  document.getElementById('s-weight').innerHTML = d.weight+'<span style="font-size:.75em">kg</span>';
-  document.getElementById('s-bday').textContent = d.bday;
-  document.getElementById('s-zodiac').textContent = d.zodiac;
-  document.getElementById('s-zodiac-lbl').textContent = d.zodiacLbl;
+  document.getElementById('s-ord').innerHTML=d.order;
+  document.getElementById('s-ht').innerHTML=d.height+'<span style="font-size:.75em">cm</span>';
+  document.getElementById('s-wt').innerHTML=d.weight+'<span style="font-size:.75em">kg</span>';
+  document.getElementById('s-bd').textContent=d.bday;
+  document.getElementById('s-zo').textContent=d.zodiac;
+  document.getElementById('s-zol').textContent=d.zodiacLbl;
 
   /* profile */
-  const pImg = document.getElementById('prof-img');
-  pImg.style.opacity='0';
-  pImg.src = d.profImg;
-  pImg.onload = ()=>{ pImg.style.transition='opacity .6s'; pImg.style.opacity='1'; };
-  pImg.onerror = ()=>{ pImg.style.opacity='.1'; };
-  document.getElementById('prof-caption').textContent = d.profCaption;
-  document.getElementById('prof-title').innerHTML = d.profTitle;
-  document.getElementById('prof-desc').innerHTML = d.profDesc;
-  document.getElementById('data-box').innerHTML = renderDataBox(d.dataBox);
-  document.getElementById('prof-chips').innerHTML = renderChips(d.profChips, 'border-color:rgba(var(--chip-rgb),0.25);color:var(--wine)');
+  const pi=document.getElementById('pimg');
+  pi.style.opacity='0';pi.src=d.profImg;
+  pi.onload=()=>{pi.style.transition='opacity .6s';pi.style.opacity='1'};
+  pi.onerror=()=>{pi.style.opacity='.08'};
+  document.getElementById('pcap').textContent=d.profCaption;
+  document.getElementById('ptit').innerHTML=d.profTitle;
+  document.getElementById('pdesc').innerHTML=d.profDesc;
+  document.getElementById('dbox').innerHTML=rDataBox(d.dataBox);
+  document.getElementById('dbox').style.background=d.cam;
+  document.getElementById('pchips').innerHTML=rChips(d.profChips,`border-color:rgba(${d.caRgb},.22);color:${d.caWine}`);
 
   /* quote */
-  document.getElementById('q-jp').textContent = d.quoteJP;
-  document.getElementById('q-tr').textContent = d.quoteTR;
-  document.getElementById('q-src').textContent = d.quoteSRC;
+  document.getElementById('qqjp').textContent=d.quoteJP;
+  document.getElementById('qqtr').textContent=d.quoteTR;
+  document.getElementById('qqsrc').textContent=d.quoteSRC;
 
   /* traits */
-  document.getElementById('traits-title').textContent = d.traitsTitle;
-  document.getElementById('traits-grid').innerHTML = renderTraits(d.traits);
+  document.getElementById('trtit').textContent=d.traitsTitle;
+  document.getElementById('trgrid').innerHTML=rTraits(d.traits);
 
   /* gallery */
-  document.getElementById('gallery-eye').textContent = d.galleryEye;
-  document.getElementById('gallery-title').textContent = d.galleryTitle;
-  document.getElementById('gallery-grid').innerHTML = renderGallery(d.gallery);
+  document.getElementById('geye').textContent=d.galleryEye;
+  document.getElementById('gtit').textContent=d.galleryTitle;
+  document.getElementById('ggrid').innerHTML=rGallery(d.gallery);
+  document.querySelectorAll('.gtp').forEach(g=>g.style.background=`linear-gradient(135deg,${d.dark2},${d.dark3})`);
 
   /* hobbies */
-  document.getElementById('hobbies-title').textContent = d.hobbiesTitle;
-  document.getElementById('hobbies-grid').innerHTML = renderHobbies(d.hobbies);
+  document.getElementById('hhtit').textContent=d.hobbiesTitle;
+  document.getElementById('hhgrid').innerHTML=rHobbies(d.hobbies);
+  document.getElementById('sec-hobbies').style.background=d.cap;
+
+  /* facts */
+  document.getElementById('fftit').textContent=d.traitsTitle.replace('Sisi-Sisi','Fun Facts');
+  document.getElementById('ffgrid').innerHTML=rFacts(d.facts||[]);
 
   /* timeline */
-  document.getElementById('timeline-title').textContent = d.timelineTitle;
-  document.getElementById('tl-wrap').innerHTML = renderTimeline(d.timeline);
+  document.getElementById('tleye').textContent=d.timelineSub||'Perjalanan';
+  document.getElementById('tltit').textContent=d.timelineTitle;
+  document.getElementById('tlwrap').innerHTML=rTimeline(d.timeline);
 
   /* footer */
-  document.getElementById('f-logo').textContent = d.footerLogo;
+  document.getElementById('fr').style.background=d.ca;
+  document.getElementById('flog').textContent=d.footerLogo;
+  document.title=d.navLogo+' — 五等分の花嫁';
 
-  /* page title */
-  document.title = id==='miku' ? 'Miku Nakano — 中野三玖' : 'Nino Nakano — 中野二乃';
-
-  /* re-observe newly rendered elements */
+  /* re-run reveal on new elements */
   setTimeout(()=>{
-    document.querySelectorAll('[data-reveal]:not(.in)').forEach(el=>{
-      revObserver.observe(el);
-    });
-  }, 80);
+    document.querySelectorAll('[data-rv]:not(.in)').forEach(el=>rvObs.observe(el));
+  },100);
 }
 
 /* ============================================================
-   INITIAL RENDER (Miku default)
+   GO HOME
 ============================================================ */
-(function initMiku(){
-  const d = CHARS.miku;
-  document.getElementById('data-box').innerHTML = renderDataBox(d.dataBox);
-  document.getElementById('prof-chips').innerHTML = renderChips(d.profChips, 'border-color:rgba(92,21,38,.22);color:var(--wine)');
-  document.getElementById('traits-grid').innerHTML = renderTraits(d.traits);
-  document.getElementById('gallery-grid').innerHTML = renderGallery(d.gallery);
-  document.getElementById('hobbies-grid').innerHTML = renderHobbies(d.hobbies);
-  document.getElementById('tl-wrap').innerHTML = renderTimeline(d.timeline);
-})();
+function goHome(){
+  const fov=document.getElementById('fov');
+  fov.style.background='#fff';fov.style.opacity='.06';
+  setTimeout(()=>fov.style.opacity='0',250);
+  document.getElementById('home-view').style.display='block';
+  document.getElementById('char-view').style.display='none';
+  document.getElementById('homebtn').style.display='none';
+  document.getElementById('nlogo').textContent='五等分の花嫁';
+  document.title='五等分の花嫁 — Nakano Sisters';
+  window.scrollTo({top:0,behavior:'instant'});
+  document.getElementById('nav').classList.remove('solid');
+}
 
 /* ============================================================
-   CUSTOM CURSOR
+   CURSOR
 ============================================================ */
-const dot = document.getElementById('cursor-dot');
-const ring = document.getElementById('cursor-ring');
+const cd=document.getElementById('cd'),cr=document.getElementById('cr');
 if(window.matchMedia('(hover:hover)').matches){
   let mx=0,my=0,rx=0,ry=0;
   document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
   (function loop(){
-    dot.style.left=mx+'px'; dot.style.top=my+'px';
-    rx+=(mx-rx)*.12; ry+=(my-ry)*.12;
-    ring.style.left=rx+'px'; ring.style.top=ry+'px';
+    cd.style.left=mx+'px';cd.style.top=my+'px';
+    rx+=(mx-rx)*.12;ry+=(my-ry)*.12;
+    cr.style.left=rx+'px';cr.style.top=ry+'px';
     requestAnimationFrame(loop);
   })();
-  document.querySelectorAll('a,button,.t-card,.h-card,.sw-btn,.g-panel,.stat-cell').forEach(el=>{
-    el.addEventListener('mouseenter',()=>document.body.classList.add('cur-big'));
-    el.addEventListener('mouseleave',()=>document.body.classList.remove('cur-big'));
+  document.addEventListener('mouseover',e=>{
+    if(e.target.closest('a,button,.char-card,.tc,.hc,.gp,.ffc,.sc'))
+      document.body.classList.add('cur-big');
+    else document.body.classList.remove('cur-big');
   });
 }
 
 /* ============================================================
-   NAV SOLID ON SCROLL
+   NAV SOLID
 ============================================================ */
-const nav = document.getElementById('nav');
+const nav=document.getElementById('nav');
 window.addEventListener('scroll',()=>nav.classList.toggle('solid',window.scrollY>55),{passive:true});
 
 /* ============================================================
-   HAMBURGER
+   KEYBOARD nav on cards
 ============================================================ */
-const burger = document.getElementById('burger');
-const mMenu = document.getElementById('mobile-menu');
-burger.addEventListener('click',()=>{
-  burger.classList.toggle('open');
-  mMenu.classList.toggle('open');
-  document.body.style.overflow = mMenu.classList.contains('open')?'hidden':'';
+document.querySelectorAll('.char-card').forEach(card=>{
+  card.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' ')card.click()});
 });
-mMenu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{
-  burger.classList.remove('open');
-  mMenu.classList.remove('open');
-  document.body.style.overflow='';
-}));
 
 /* ============================================================
-   SAKURA PETALS
+   SAKURA on hero
 ============================================================ */
-const hero = document.getElementById('hero');
-const petalColors = ['#f28fa0','#e05068','rgba(255,255,255,.55)','#fad5de'];
-for(let i=0;i<24;i++){
-  const p = document.createElement('div');
-  p.className='petal';
-  const sz = 4+Math.random()*9;
-  p.style.cssText=`left:${Math.random()*100}%;width:${sz}px;height:${sz*1.25}px;background:${petalColors[i%petalColors.length]};animation-duration:${9+Math.random()*12}s;animation-delay:${Math.random()*14}s;filter:blur(${Math.random()>.6?'1px':'0'});transform:rotate(${Math.random()*360}deg)`;
-  hero.appendChild(p);
+function spawnPetals(accent){
+  const hero=document.getElementById('hero');
+  document.querySelectorAll('.petal').forEach(p=>p.remove());
+  const colors=[accent,'rgba(255,255,255,.5)','rgba(255,255,255,.3)'];
+  for(let i=0;i<22;i++){
+    const p=document.createElement('div');p.className='petal';
+    const sz=4+Math.random()*9;
+    p.style.cssText=`left:${Math.random()*100}%;width:${sz}px;height:${sz*1.25}px;background:${colors[i%colors.length]};animation-duration:${9+Math.random()*12}s;animation-delay:${Math.random()*14}s;transform:rotate(${Math.random()*360}deg)`;
+    hero.appendChild(p);
+  }
 }
 
 /* ============================================================
    SCROLL REVEAL
 ============================================================ */
-const revObserver = new IntersectionObserver(entries=>{
-  entries.forEach(e=>{
-    if(e.isIntersecting){ e.target.classList.add('in'); revObserver.unobserve(e.target); }
-  });
-},{threshold:.1,rootMargin:'0px 0px -35px 0px'});
-document.querySelectorAll('[data-reveal]').forEach(el=>revObserver.observe(el));
+const rvObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');rvObs.unobserve(e.target)}});
+},{threshold:.1,rootMargin:'0px 0px -30px 0px'});
 
 /* ============================================================
-   HERO PARALLAX (desktop)
+   HERO PARALLAX
 ============================================================ */
 if(window.matchMedia('(hover:hover) and (min-width:769px)').matches){
-  const hv = document.querySelector('.hero-visual');
-  let tick=false;
+  let tk=false;
   window.addEventListener('scroll',()=>{
-    if(!tick){
-      requestAnimationFrame(()=>{ if(hv) hv.style.transform=`translateY(${window.scrollY*.07}px)`; tick=false; });
-      tick=true;
-    }
+    if(!tk){requestAnimationFrame(()=>{
+      const hv=document.querySelector('.hero-v');
+      if(hv&&document.getElementById('char-view').style.display!=='none')
+        hv.style.transform=`translateY(${window.scrollY*.07}px)`;
+      tk=false;
+    });tk=true;}
   },{passive:true});
 }
+
+/* initial reveal scan */
+document.querySelectorAll('[data-rv]').forEach(el=>rvObs.observe(el));
 </script>
 </body>
 </html>
