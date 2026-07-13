@@ -2,15 +2,16 @@
 <html lang="id" data-theme="dark">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
 <title>五等分の花嫁 — Complete Encyclopedia</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='12' fill='%23e05068'/><text x='32' y='46' text-anchor='middle' font-size='40' font-family='serif' fill='white'>五</text></svg>"/>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%25' stop-color='%23f28fa0'/><stop offset='55%25' stop-color='%23e05068'/><stop offset='100%25' stop-color='%23a72a45'/></linearGradient></defs><rect width='64' height='64' rx='16' fill='url(%23g)'/><circle cx='32' cy='32' r='26' fill='none' stroke='white' stroke-opacity='.22' stroke-width='1.4'/><text x='32' y='45' text-anchor='middle' font-size='36' font-family='serif' fill='white'>五</text></svg>"/>
 <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%}
 img{display:block;max-width:100%}
 button{font-family:inherit;border:none;background:none}
+::selection{background:rgba(var(--ca-rgb),.32);color:#fff}
 :root{
   --ease:cubic-bezier(.25,.46,.45,.94);
   --eout:cubic-bezier(0,0,.2,1);
@@ -38,26 +39,64 @@ button{font-family:inherit;border:none;background:none}
 }
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;cursor:none;transition:background .4s,color .4s}
 @media(hover:none){body{cursor:auto}}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+  html{scroll-behavior:auto}
+}
 
 /* ── CURSOR ── */
+#cglow{
+  position:fixed;top:0;left:0;width:120px;height:120px;border-radius:50%;
+  pointer-events:none;z-index:9997;transform:translate(-50%,-50%);
+  background:radial-gradient(circle,rgba(var(--ca-rgb),.16) 0%,transparent 68%);
+  opacity:0;transition:opacity .5s;will-change:transform;filter:blur(2px);
+}
+body.cur-move #cglow{opacity:1}
 #cd,#cr{
   position:fixed;top:0;left:0;border-radius:50%;
   pointer-events:none;z-index:9999;
   transform:translate(-50%,-50%);will-change:transform;
 }
-#cd{width:7px;height:7px;background:var(--ca);transition:background .4s,width .2s,height .2s}
+#cd{width:7px;height:7px;background:var(--ca);transition:background .4s,width .2s,height .2s;box-shadow:0 0 8px rgba(var(--ca-rgb),.7)}
 #cr{
   width:36px;height:36px;
   border:1.5px solid rgba(224,80,104,.4);
   background:transparent;
-  transition:width .28s,height .28s,border-color .4s;
+  transition:width .3s var(--spring),height .3s var(--spring),border-color .4s,opacity .3s,transform .3s var(--spring);
 }
-body.hov #cr{width:54px;height:54px;border-color:var(--ca)}
-body.hov #cd{width:5px;height:5px}
-@media(hover:none){#cd,#cr{display:none}}
+#cr::before,#cr::after{
+  content:'';position:absolute;inset:-6px;border-radius:50%;
+  border:1px dashed rgba(var(--ca-rgb),0);
+  transition:border-color .4s;
+}
+body.hov #cr{width:58px;height:58px;border-color:var(--ca);transform:translate(-50%,-50%) rotate(45deg)}
+body.hov #cr::before{border-color:rgba(var(--ca-rgb),.28);animation:cspin 5s linear infinite}
+body.hov #cd{width:4px;height:4px}
+body.cur-down #cr{transform:translate(-50%,-50%) scale(.82)}
+body.cur-down #cd{transform:translate(-50%,-50%) scale(1.4)}
+@keyframes cspin{to{transform:rotate(360deg)}}
+@keyframes cripple{from{width:8px;height:8px;opacity:.55}to{width:70px;height:70px;opacity:0}}
+.cur-ripple{
+  position:fixed;top:0;left:0;border-radius:50%;pointer-events:none;z-index:9998;
+  transform:translate(-50%,-50%);border:1.5px solid var(--ca);
+  animation:cripple .55s var(--eout) forwards;
+}
+@media(hover:none){#cd,#cr,#cglow{display:none}}
 
 /* ── FLASH ── */
 #fov{position:fixed;inset:0;z-index:600;pointer-events:none;opacity:0;transition:opacity .25s}
+
+/* ── TOAST ── */
+#toast-wrap{position:fixed;left:50%;bottom:1.4rem;transform:translateX(-50%);z-index:1200;display:flex;flex-direction:column;gap:.5rem;align-items:center;pointer-events:none;width:100%;padding:0 1rem}
+.toast{
+  background:var(--nav-bg);border:1px solid var(--border2);color:var(--text);
+  padding:.62rem 1.1rem;border-radius:100px;font-size:.72rem;letter-spacing:.03em;
+  box-shadow:0 10px 30px var(--shadow);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  display:flex;align-items:center;gap:.5rem;opacity:0;transform:translateY(10px) scale(.96);
+  transition:opacity .3s var(--eout),transform .3s var(--eout);max-width:92vw;
+}
+.toast.show{opacity:1;transform:none}
+.toast .tdot{width:6px;height:6px;border-radius:50%;background:var(--ca);flex-shrink:0}
 
 /* ── NAV ── */
 #nav{
@@ -74,11 +113,19 @@ body.hov #cd{width:5px;height:5px}
 }
 .n-logo:hover{color:var(--text)}
 .n-logo-dot{
-  width:24px;height:24px;border-radius:6px;
-  background:var(--ca);display:flex;align-items:center;justify-content:center;
+  position:relative;width:24px;height:24px;border-radius:7px;
+  background:linear-gradient(135deg,var(--cab),var(--ca));display:flex;align-items:center;justify-content:center;
   font-size:.85rem;color:#fff;font-family:'Shippori Mincho',serif;
-  flex-shrink:0;transition:background .4s;
+  flex-shrink:0;transition:background .4s,transform .35s var(--spring),box-shadow .4s;
+  box-shadow:0 2px 10px rgba(var(--ca-rgb),.35);
 }
+.n-logo-dot::after{
+  content:'';position:absolute;inset:-4px;border-radius:10px;
+  border:1px solid rgba(var(--ca-rgb),.35);opacity:0;
+  animation:logoPulse 2.6s ease-in-out infinite;
+}
+.n-logo:hover .n-logo-dot{transform:rotate(-8deg) scale(1.08);box-shadow:0 4px 16px rgba(var(--ca-rgb),.5)}
+@keyframes logoPulse{0%{opacity:.55;transform:scale(1)}70%,100%{opacity:0;transform:scale(1.35)}}
 .n-right{display:flex;align-items:center;gap:.5rem}
 .n-home{
   display:none;align-items:center;gap:.45rem;
@@ -94,19 +141,22 @@ body.hov #cd{width:5px;height:5px}
   width:34px;height:34px;border-radius:50%;
   border:1px solid var(--border2);background:var(--surface);
   color:var(--text3);display:flex;align-items:center;justify-content:center;
-  cursor:pointer;transition:all .25s;flex-shrink:0;
+  cursor:pointer;transition:all .25s;flex-shrink:0;position:relative;
 }
 .n-btn:hover{background:var(--surface2);color:var(--text)}
 .n-btn svg{width:15px;height:15px;transition:transform .3s}
 .n-btn:hover svg{transform:rotate(18deg)}
 #search-btn:hover{background:var(--ca);color:#fff;border-color:var(--ca)}
+#quiz-nav-btn{display:none}
+#quiz-nav-btn.show{display:flex}
+@media(min-width:640px){#quiz-nav-btn{display:flex}}
 
 /* ── SEARCH ── */
 #search-ov{
   position:fixed;inset:0;z-index:800;
   background:rgba(0,0,0,.85);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
   display:none;flex-direction:column;align-items:center;
-  padding:clamp(4rem,12vh,8rem) 1.5rem 2rem;
+  padding:clamp(4rem,12vh,8rem) 1.5rem 2rem;overflow-y:auto;-webkit-overflow-scrolling:touch;
 }
 #search-ov.open{display:flex}
 .s-box{
@@ -126,6 +176,9 @@ body.hov #cd{width:5px;height:5px}
 }
 .s-close:hover{background:rgba(255,255,255,.2);color:#fff}
 .s-close svg{width:13px;height:13px}
+.s-tabs{display:flex;gap:.4rem;width:100%;max-width:540px;margin-bottom:1rem;flex-wrap:wrap}
+.s-tab{padding:.32rem .85rem;border-radius:100px;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;border:1px solid rgba(255,255,255,.14);color:rgba(255,255,255,.5);cursor:pointer;transition:all .2s;background:rgba(255,255,255,.03)}
+.s-tab.active,.s-tab:hover{background:var(--ca);border-color:var(--ca);color:#fff}
 #s-res{width:100%;max-width:540px;display:flex;flex-direction:column;gap:.45rem}
 .s-item{
   display:flex;align-items:center;gap:.8rem;
@@ -137,6 +190,7 @@ body.hov #cd{width:5px;height:5px}
 .s-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
 .s-name{font-size:.88rem;color:#fff;font-weight:500}
 .s-desc{font-size:.72rem;color:rgba(255,255,255,.42);margin-top:.08rem}
+.s-empty{color:rgba(255,255,255,.35);font-size:.78rem;text-align:center;padding:2rem 0;width:100%}
 
 /* ── VIEWS ── */
 #home-view{min-height:100vh;position:relative;overflow:hidden}
@@ -159,6 +213,7 @@ body.hov #cd{width:5px;height:5px}
 .star{position:absolute;border-radius:50%;background:#fff;pointer-events:none;animation:twk ease-in-out infinite alternate}
 @keyframes twk{from{opacity:.04}to{opacity:.38}}
 [data-theme="light"] .star{background:var(--ca);opacity:.2}
+@media(max-width:640px){.h-orb{filter:blur(55px)}}
 
 /* ── HOME HERO ── */
 .home-hero{position:relative;z-index:2;text-align:center;padding:clamp(4.5rem,10vh,7rem) 1rem clamp(1.5rem,2.5vh,2rem)}
@@ -166,20 +221,58 @@ body.hov #cd{width:5px;height:5px}
   display:inline-flex;align-items:center;gap:.75rem;
   font-size:.57rem;letter-spacing:.65em;text-transform:uppercase;
   color:var(--text4);margin-bottom:1.2rem;
+  opacity:0;animation:aup .7s .1s var(--eout) forwards;
 }
 .home-badge::before,.home-badge::after{content:'';display:block;width:26px;height:1px;background:var(--text4)}
 .home-title{
   font-family:'Shippori Mincho',serif;
   font-size:clamp(3rem,9vw,7.5rem);font-weight:600;line-height:.88;
-  background:linear-gradient(135deg,var(--text) 20%,var(--ca));
+  background:linear-gradient(115deg,var(--text) 15%,var(--ca) 45%,var(--cab) 55%,var(--text) 85%);
+  background-size:250% 100%;
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
   margin-bottom:.6rem;
+  opacity:0;animation:aup .8s .22s var(--eout) forwards,htShine 7s ease-in-out .9s infinite;
 }
+@keyframes htShine{0%{background-position:100% 0}50%{background-position:0% 0}100%{background-position:100% 0}}
 .home-sub{
   font-family:'Playfair Display',serif;
   font-size:clamp(.9rem,1.6vw,1.15rem);font-style:italic;
   color:var(--text3);letter-spacing:.1em;
+  opacity:0;animation:aup .7s .38s var(--eout) forwards;
 }
+
+/* ── STATS BAR ── */
+.stats-bar{position:relative;z-index:2;max-width:900px;margin:clamp(1.6rem,3vh,2.4rem) auto 0;padding:0 1.2rem;display:flex;justify-content:center;gap:clamp(1.4rem,4vw,3.2rem);flex-wrap:wrap}
+.stat-item{text-align:center;transition:transform .3s var(--spring),cursor .2s}
+.stat-item:hover{transform:translateY(-4px)}
+.stat-num{font-family:'Playfair Display',serif;font-size:clamp(1.5rem,3vw,2.3rem);color:var(--ca);line-height:1}
+.stat-lbl{font-size:.5rem;letter-spacing:.35em;text-transform:uppercase;color:var(--text4);margin-top:.35rem}
+
+/* ── QUIZ CTA ── */
+.quiz-cta-wrap{position:relative;z-index:2;max-width:1240px;margin:clamp(2rem,4vh,3.2rem) auto 0;padding:0 clamp(1rem,4vw,3rem)}
+.quiz-cta{
+  position:relative;overflow:hidden;border-radius:20px;border:1px solid var(--border2);
+  background:linear-gradient(120deg,rgba(var(--ca-rgb),.14),rgba(124,58,237,.08));
+  padding:clamp(1.6rem,4vw,2.6rem);display:flex;align-items:center;justify-content:space-between;gap:1.4rem;flex-wrap:wrap;
+  cursor:pointer;transition:transform .4s var(--ease),box-shadow .4s,border-color .4s;
+}
+.quiz-cta::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.12) 50%,transparent 70%);
+  background-size:220% 100%;background-position:140% 0;transition:background-position 1s var(--eout);
+}
+.quiz-cta:hover::before{background-position:-40% 0}
+.quiz-cta:hover{transform:translateY(-4px);box-shadow:0 20px 50px var(--shadow);border-color:rgba(var(--ca-rgb),.4)}
+.quiz-cta-txt{max-width:520px}
+.quiz-cta-eye{font-size:.55rem;letter-spacing:.5em;text-transform:uppercase;color:var(--ca);margin-bottom:.5rem}
+.quiz-cta-h{font-family:'Playfair Display',serif;font-size:clamp(1.25rem,2.6vw,1.85rem);color:var(--text);margin-bottom:.5rem}
+.quiz-cta-p{font-size:.76rem;line-height:1.7;color:var(--text3)}
+.quiz-cta-btn{flex-shrink:0;display:inline-flex;align-items:center;gap:.6rem;padding:.75rem 1.5rem;border-radius:100px;background:linear-gradient(120deg,var(--cab),var(--ca));color:#fff;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;white-space:nowrap;transition:transform .3s var(--spring),box-shadow .3s;position:relative;z-index:1}
+.quiz-cta:hover .quiz-cta-btn{transform:translateX(3px);box-shadow:0 8px 20px rgba(var(--ca-rgb),.35)}
+.quiz-cta-btn svg{width:13px;height:13px}
+.quiz-mini-avatars{position:absolute;right:-10px;bottom:-18px;display:flex;opacity:.16;pointer-events:none}
+.quiz-mini-avatars span{font-family:'Shippori Mincho',serif;font-size:5rem;line-height:1}
+
 /* ── SECTION LABEL ── */
 .sec-label-row{
   position:relative;z-index:2;
@@ -218,11 +311,11 @@ body.hov #cd{width:5px;height:5px}
 
 /* ── CHAR CARDS ── */
 .cards-section{position:relative;z-index:2;max-width:1240px;margin:0 auto;padding:0 clamp(.8rem,3vw,2.5rem)}
-.cards-wrap{display:flex;justify-content:center;align-items:flex-end;gap:clamp(.45rem,1.1vw,.9rem);flex-wrap:nowrap;overflow-x:auto;padding-bottom:.5rem;scrollbar-width:none}
+.cards-wrap{display:flex;justify-content:center;align-items:flex-end;gap:clamp(.45rem,1.1vw,.9rem);flex-wrap:nowrap;overflow-x:auto;padding-bottom:.5rem;scrollbar-width:none;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch}
 .cards-wrap::-webkit-scrollbar{display:none}
 .char-card{
   position:relative;width:clamp(120px,13vw,175px);aspect-ratio:2/3;
-  border-radius:16px;overflow:hidden;cursor:pointer;flex-shrink:0;
+  border-radius:16px;overflow:hidden;cursor:pointer;flex-shrink:0;scroll-snap-align:center;
   border:1px solid var(--border);background:var(--card-bg);
   transition:transform .45s var(--spring),box-shadow .4s;
 }
@@ -236,7 +329,9 @@ body.hov #cd{width:5px;height:5px}
 .char-card:hover .card-glow,.char-card.featured .card-glow{opacity:.7}
 .card-roman{position:absolute;top:.65rem;left:.65rem;z-index:3;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.42rem;border:1px solid rgba(255,255,255,.22);background:rgba(0,0,0,.5);backdrop-filter:blur(8px);color:rgba(255,255,255,.7)}
 .card-fav{position:absolute;top:.65rem;right:.65rem;z-index:3;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;border:1px solid rgba(255,255,255,.15);background:rgba(0,0,0,.45);backdrop-filter:blur(8px);cursor:pointer;transition:all .25s;line-height:1}
-.card-fav:hover,.card-fav.active{background:rgba(220,38,38,.35);border-color:rgba(220,38,38,.6)}
+.card-fav:hover{transform:scale(1.15)}
+.card-fav.active{background:rgba(220,38,38,.35);border-color:rgba(220,38,38,.6);animation:favBeat .4s var(--spring)}
+@keyframes favBeat{0%{transform:scale(1)}35%{transform:scale(1.45)}60%{transform:scale(.9)}100%{transform:scale(1)}}
 .card-info{position:absolute;bottom:0;left:0;right:0;z-index:2;padding:.85rem .8rem .8rem}
 .cn{font-size:.47rem;letter-spacing:.55em;text-transform:uppercase;margin-bottom:.26rem;opacity:.65}
 .cjp{font-family:'Shippori Mincho',serif;font-size:clamp(.82rem,1.25vw,1rem);font-weight:500;line-height:1.1;margin-bottom:.1rem}
@@ -340,8 +435,12 @@ body.hov #cd{width:5px;height:5px}
 .fav-item{display:flex;align-items:center;gap:.65rem;padding:.6rem 1rem;border-bottom:1px solid var(--border);cursor:pointer;transition:background .2s}
 .fav-item:hover{background:var(--surface2)}
 .fav-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.fav-name{font-size:.75rem;color:var(--text2)}
+.fav-name{font-size:.75rem;color:var(--text2);flex:1}
+.fav-rm{color:var(--text4);font-size:.65rem;cursor:pointer;padding:.2rem}
 .fav-empty{padding:1.2rem 1rem;font-size:.7rem;color:var(--text4);text-align:center}
+.fav-foot{display:flex;gap:.4rem;padding:.55rem .7rem;border-top:1px solid var(--border)}
+.fav-foot button{flex:1;font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;padding:.4rem;border-radius:8px;background:var(--surface);color:var(--text3);cursor:pointer;transition:all .2s;border:1px solid var(--border)}
+.fav-foot button:hover{background:var(--surface2);color:var(--text)}
 
 /* ── ANIMATIONS ── */
 @keyframes aup{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
@@ -349,6 +448,28 @@ body.hov #cd{width:5px;height:5px}
 @keyframes orbf2{from{transform:translate(0,0)}to{transform:translate(36px,26px)}}
 @keyframes pfall{0%{transform:translateY(-28px) rotate(0deg);opacity:.62}60%{opacity:.3}100%{transform:translateY(110vh) rotate(430deg) translateX(-22px);opacity:0}}
 @keyframes bn{0%,100%{transform:rotate(45deg) translate(0,0)}50%{transform:rotate(45deg) translate(3px,3px)}}
+@keyframes popin{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── CHAR PREV/NEXT NAV ── */
+.char-nav-arrow{
+  position:fixed;top:50%;transform:translateY(-50%);z-index:250;
+  width:44px;height:44px;border-radius:50%;
+  background:var(--nav-bg);border:1px solid var(--border2);color:var(--text2);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  transition:all .25s;opacity:.75;
+}
+.char-nav-arrow:hover{opacity:1;background:var(--ca);color:#fff;border-color:var(--ca)}
+.char-nav-arrow svg{width:16px;height:16px}
+#char-prev{left:1rem}
+#char-next{right:1rem}
+.char-nav-arrow.hide{display:none}
+@media(max-width:640px){.char-nav-arrow{width:36px;height:36px;opacity:.55}#char-prev{left:.5rem}#char-next{right:.5rem}}
+.char-dots{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);z-index:250;display:flex;gap:.4rem;background:var(--nav-bg);padding:.4rem .6rem;border-radius:100px;border:1px solid var(--border2);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.char-dot{width:6px;height:6px;border-radius:50%;background:var(--text4);cursor:pointer;transition:all .25s}
+.char-dot.active{background:var(--ca);width:16px;border-radius:4px}
+@media(max-width:900px){.char-dots{display:none}}
 
 /* ── SERIES DETAIL ── */
 .sv-hero{min-height:100vh;padding-top:56px;display:grid;grid-template-columns:1fr 1fr;position:relative;overflow:hidden;align-items:center}
@@ -398,7 +519,10 @@ body.hov #cd{width:5px;height:5px}
 .sv-ival{font-family:'Playfair Display',serif;font-size:clamp(.9rem,1.08vw,1.06rem);line-height:1.72;color:var(--text)}
 .ssl .sv-ival{color:var(--ca-wine)}
 .sv-isep{height:1px;background:var(--border)}
-.sv-dbox{display:grid;grid-template-columns:1fr 1fr;gap:.75rem 1.35rem;padding:1.22rem;border-radius:8px;border-left:3px solid var(--ca);background:var(--cam)}
+.sv-dbox{display:grid;grid-template-columns:1fr 1fr;gap:.75rem 1.35rem;padding:1.22rem;border-radius:8px;border-left:3px solid var(--ca);background:var(--cam);transition:box-shadow .4s}
+.sv-dbox:hover{box-shadow:0 10px 30px rgba(var(--ca-rgb),.14)}
+.sv-dbox>div{transition:transform .25s var(--eout)}
+.sv-dbox>div:hover{transform:translateX(3px)}
 .sv-dl{font-size:.5rem;letter-spacing:.4em;text-transform:uppercase;margin-bottom:.18rem;color:var(--ca-sub)}
 .sv-dv{font-family:'Playfair Display',serif;font-size:.93rem;color:var(--ca-wine)}
 .sv-qb{padding:clamp(2.7rem,5.8vh,4.8rem) clamp(1.5rem,5vw,4rem);text-align:center;position:relative;overflow:hidden}
@@ -425,7 +549,7 @@ body.hov #cd{width:5px;height:5px}
 .ch-title{font-size:.58rem;color:var(--text3);line-height:1.5}
 
 /* ── CHARACTER HERO ── */
-#chero{min-height:100vh;padding-top:56px;display:grid;grid-template-columns:1fr 1fr;position:relative;overflow:hidden;align-items:center}
+#chero{min-height:100vh;padding-top:56px;display:grid;grid-template-columns:1fr 1fr;position:relative;overflow:hidden;align-items:center;touch-action:pan-y}
 .hmesh{position:absolute;inset:0;z-index:0;transition:background .75s}
 .horb{position:absolute;border-radius:50%;filter:blur(85px);pointer-events:none;z-index:0;animation:orbf2 ease-in-out infinite alternate}
 .ho1{width:clamp(300px,48vw,580px);height:clamp(300px,48vw,580px);top:-22%;left:-12%;animation-duration:17s}
@@ -448,9 +572,13 @@ body.hov #cd{width:5px;height:5px}
 .himg{position:relative;z-index:1;width:100%;height:100%;object-fit:cover;object-position:top center;opacity:0;animation:imgup 1.1s .55s var(--eout) forwards}
 .strib{border-top:1px solid var(--border);border-bottom:1px solid var(--border);position:relative;z-index:3;transition:background .6s}
 .stin{display:grid;grid-template-columns:repeat(5,1fr);max-width:1100px;margin:0 auto;border-left:1px solid var(--border)}
-.stc{padding:clamp(.85rem,2.1vh,1.6rem) .8rem;text-align:center;border-right:1px solid var(--border);transition:background .3s;cursor:default}
-.stc:hover{background:rgba(var(--ca-rgb),.05)}
-.stn{font-family:'Playfair Display',serif;font-size:clamp(1.4rem,2.5vw,2rem);color:var(--ca);display:block;line-height:1;margin-bottom:.32rem}
+.stc{padding:clamp(.85rem,2.1vh,1.6rem) .8rem;text-align:center;border-right:1px solid var(--border);transition:background .3s,transform .3s var(--eout);cursor:default;position:relative;overflow:hidden}
+.stc::after{content:'';position:absolute;left:50%;bottom:0;width:0;height:2px;background:var(--ca);transition:width .35s var(--eout),left .35s var(--eout)}
+.stc:hover{background:rgba(var(--ca-rgb),.06);transform:translateY(-3px)}
+.stc:hover::after{width:60%;left:20%}
+.stn{font-family:'Playfair Display',serif;font-size:clamp(1.4rem,2.5vw,2rem);color:var(--ca);display:block;line-height:1;margin-bottom:.32rem;opacity:0;animation:statPop .5s var(--spring) forwards}
+.stc:nth-child(1) .stn{animation-delay:.05s}.stc:nth-child(2) .stn{animation-delay:.11s}.stc:nth-child(3) .stn{animation-delay:.17s}.stc:nth-child(4) .stn{animation-delay:.23s}.stc:nth-child(5) .stn{animation-delay:.29s}
+@keyframes statPop{from{opacity:0;transform:translateY(8px) scale(.85)}to{opacity:1;transform:translateY(0) scale(1)}}
 .stl{font-size:.5rem;letter-spacing:.4em;text-transform:uppercase;color:var(--text3)}
 .sl,.sd,.sw{transition:background .5s}
 .sp{padding:clamp(2.8rem,6.5vh,5.5rem) clamp(1.5rem,5vw,4rem)}
@@ -470,9 +598,17 @@ body.hov #cd{width:5px;height:5px}
 .ival{font-family:'Playfair Display',serif;font-size:clamp(.9rem,1.08vw,1.06rem);line-height:1.72;color:var(--text)}
 .sl .ival{color:var(--ca-wine)}
 .isep{height:1px;background:var(--border)}
-.dbox{display:grid;grid-template-columns:1fr 1fr;gap:.75rem 1.35rem;padding:1.22rem;border-radius:8px;border-left:3px solid var(--ca);background:var(--cam)}
+.dbox{display:grid;grid-template-columns:1fr 1fr;gap:.75rem 1.35rem;padding:1.22rem;border-radius:8px;border-left:3px solid var(--ca);background:var(--cam);transition:box-shadow .4s}
+.dbox:hover{box-shadow:0 10px 30px rgba(var(--ca-rgb),.14)}
+.dbox>div{transition:transform .25s var(--eout)}
+.dbox>div:hover{transform:translateX(3px)}
 .dl{font-size:.5rem;letter-spacing:.4em;text-transform:uppercase;margin-bottom:.18rem;color:var(--ca-sub)}
 .dv{font-family:'Playfair Display',serif;font-size:.93rem;color:var(--ca-wine)}
+.pinf-actions{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.15rem}
+.pa-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1rem;border-radius:100px;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;border:1px solid var(--border2);background:var(--surface);color:var(--text2);cursor:pointer;transition:all .25s}
+.pa-btn:hover{background:var(--ca);border-color:var(--ca);color:#fff;transform:translateY(-2px)}
+.pa-btn.beat{animation:favBeat .4s var(--spring)}
+.pa-btn svg{width:12px;height:12px}
 .qb{padding:clamp(2.7rem,5.8vh,4.8rem) clamp(1.5rem,5vw,4rem);text-align:center;position:relative;overflow:hidden}
 .qb::before{content:'"';position:absolute;top:-3.5rem;left:2vw;font-family:'Playfair Display',serif;font-size:clamp(8rem,14vw,15rem);color:rgba(255,255,255,.07);line-height:1;pointer-events:none}
 .qjp{font-family:'Shippori Mincho',serif;font-size:clamp(.88rem,1.9vw,1.22rem);color:#fff;line-height:2.4;max-width:min(680px,92%);margin:0 auto}
@@ -487,13 +623,18 @@ body.hov #cd{width:5px;height:5px}
 .tname{font-family:'Playfair Display',serif;font-size:clamp(.9rem,1.08vw,1.1rem);color:var(--text);margin-bottom:.5rem}
 .tdesc{font-size:clamp(.66rem,.74vw,.75rem);line-height:1.92;color:var(--text3)}
 .gl{display:grid;grid-template-columns:1.55fr 1fr 1fr;grid-template-rows:262px 262px;gap:clamp(.52rem,.72vw,.88rem)}
-.gp{border-radius:10px;overflow:hidden;position:relative;background:var(--bg3);cursor:default}
+.gp{border-radius:10px;overflow:hidden;position:relative;background:var(--bg3);cursor:pointer}
 .gp.gt{grid-row:span 2}
 .gp img{width:100%;height:100%;object-fit:cover;object-position:top center;transition:transform .6s var(--ease),filter .4s;filter:brightness(.88) saturate(1.05)}
 .gp:hover img{transform:scale(1.07);filter:brightness(1.04)}
 .gov{position:absolute;inset:0;background:linear-gradient(to top,rgba(4,1,7,.9) 0%,transparent 50%);display:flex;align-items:flex-end;padding:.85rem 1rem;opacity:0;transition:opacity .35s}
 .gp:hover .gov{opacity:1}
+.gzoom{position:absolute;top:.7rem;right:.7rem;width:26px;height:26px;border-radius:50%;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .3s;color:#fff}
+.gp:hover .gzoom{opacity:1}
+.gzoom svg{width:12px;height:12px}
 .glbl{font-size:.56rem;letter-spacing:.3em;text-transform:uppercase;color:var(--ca-gold)}
+.gtp{cursor:default}
+.gtp:hover .gov{display:none}
 .gtp{display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px solid var(--border);gap:.5rem}
 .gkj{font-family:'Shippori Mincho',serif;font-size:clamp(2.5rem,4.3vw,3.9rem);line-height:1;color:var(--ca);opacity:.22}
 .gtlbl{font-size:.52rem;letter-spacing:.48em;text-transform:uppercase;color:var(--text4)}
@@ -526,17 +667,129 @@ footer{background:var(--bg);padding:clamp(1.8rem,3.8vh,3rem) clamp(1.5rem,5vw,4r
 [data-rv].in{opacity:1;transform:none}
 [data-rv][data-d="1"]{transition-delay:.07s}[data-rv][data-d="2"]{transition-delay:.14s}[data-rv][data-d="3"]{transition-delay:.21s}[data-rv][data-d="4"]{transition-delay:.28s}[data-rv][data-d="5"]{transition-delay:.35s}[data-rv][data-d="6"]{transition-delay:.42s}
 
+/* ── LIGHTBOX ── */
+#lightbox{position:fixed;inset:0;z-index:1000;background:rgba(2,0,3,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;padding:3rem 1rem;touch-action:pan-y}
+#lightbox.open{display:flex}
+.lb-inner{position:relative;max-width:min(90vw,780px);max-height:82vh;width:100%;display:flex;flex-direction:column;align-items:center;animation:popin .35s var(--eout)}
+.lb-inner img{max-width:100%;max-height:70vh;border-radius:10px;object-fit:contain;margin:0 auto;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.lb-cap{color:rgba(255,255,255,.6);font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;margin-top:1rem;text-align:center}
+.lb-close{position:absolute;top:-2.6rem;right:0;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.lb-close svg{width:15px;height:15px}
+.lb-arrow{position:fixed;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s}
+.lb-arrow:hover{background:var(--ca);border-color:var(--ca)}
+.lb-arrow svg{width:16px;height:16px}
+#lb-prev{left:1rem}#lb-next{right:1rem}
+@media(max-width:640px){.lb-arrow{width:36px;height:36px}#lb-prev{left:.4rem}#lb-next{right:.4rem}.lb-close{top:-2.2rem}}
+
+/* ── QUIZ MODAL ── */
+#quiz-ov{position:fixed;inset:0;z-index:1100;background:rgba(2,0,3,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);display:none;align-items:center;justify-content:center;padding:1.2rem;overflow-y:auto;-webkit-overflow-scrolling:touch}
+#quiz-ov.open{display:flex}
+@keyframes qbGlow{0%,100%{box-shadow:0 30px 90px rgba(0,0,0,.5),0 0 0 1px rgba(var(--ca-rgb),.12)}50%{box-shadow:0 30px 90px rgba(0,0,0,.5),0 0 0 1px rgba(var(--ca-rgb),.32)}}
+.quiz-box{
+  position:relative;width:100%;max-width:620px;background:var(--card-bg);border:1px solid var(--border2);
+  border-radius:22px;padding:clamp(1.6rem,4vw,2.6rem);box-shadow:0 30px 90px rgba(0,0,0,.5);
+  animation:popin .45s var(--spring),qbGlow 4s ease-in-out infinite 1s;
+  max-height:88vh;overflow-y:auto;-webkit-overflow-scrolling:touch;overflow-x:hidden;
+}
+.quiz-box::before{
+  content:'';position:absolute;top:0;left:12%;right:12%;height:2px;border-radius:0 0 6px 6px;
+  background:linear-gradient(90deg,transparent,var(--ca),transparent);opacity:.7;
+}
+.quiz-close{position:absolute;top:1rem;right:1rem;width:32px;height:32px;border-radius:50%;background:var(--surface);border:1px solid var(--border2);color:var(--text3);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:2;transition:all .25s}
+.quiz-close:hover{background:var(--ca);color:#fff;border-color:var(--ca);transform:rotate(90deg)}
+.quiz-close svg{width:13px;height:13px}
+.quiz-progress-wrap{height:6px;border-radius:100px;background:var(--surface2);overflow:hidden;margin-bottom:1.6rem;position:relative}
+.quiz-progress-bar{height:100%;background:linear-gradient(90deg,var(--cab),var(--ca));border-radius:100px;transition:width .5s var(--spring);width:0%;position:relative;overflow:hidden}
+.quiz-progress-bar::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.55) 50%,transparent 70%);
+  background-size:200% 100%;animation:qshine 1.8s ease-in-out infinite;
+}
+@keyframes qshine{0%{background-position:180% 0}100%{background-position:-40% 0}}
+.quiz-progress-dots{display:flex;gap:3px;margin-bottom:.5rem;flex-wrap:wrap}
+.qp-dot{flex:1;min-width:4px;height:3px;border-radius:2px;background:var(--surface2);transition:background .3s}
+.qp-dot.done{background:var(--ca)}
+.quiz-step{font-size:.55rem;letter-spacing:.4em;text-transform:uppercase;color:var(--ca);margin-bottom:.6rem;display:flex;align-items:center;gap:.5rem}
+.quiz-step::before{content:'✿';font-size:.9em;animation:qspin 3s linear infinite}
+@keyframes qspin{to{transform:rotate(360deg)}}
+.quiz-q-wrap{animation:qslidein .4s var(--eout)}
+@keyframes qslidein{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:translateX(0)}}
+@keyframes qslideout{from{opacity:1;transform:translateX(0)}to{opacity:0;transform:translateX(-18px)}}
+.quiz-q-wrap.out{animation:qslideout .22s var(--eout) forwards}
+.quiz-q{font-family:'Playfair Display',serif;font-size:clamp(1.15rem,2.6vw,1.55rem);color:var(--text);margin-bottom:1.5rem;line-height:1.35}
+.quiz-opts{display:flex;flex-direction:column;gap:.6rem}
+.quiz-opt{
+  text-align:left;padding:.9rem 1.1rem;border-radius:12px;border:1px solid var(--border2);
+  background:var(--surface);color:var(--text2);font-size:.82rem;cursor:pointer;position:relative;overflow:hidden;
+  transition:all .22s var(--eout);display:flex;align-items:center;gap:.7rem;opacity:0;animation:qoptin .45s var(--eout) forwards;
+}
+.quiz-opt:nth-child(1){animation-delay:.03s}.quiz-opt:nth-child(2){animation-delay:.08s}.quiz-opt:nth-child(3){animation-delay:.13s}.quiz-opt:nth-child(4){animation-delay:.18s}.quiz-opt:nth-child(5){animation-delay:.23s}
+@keyframes qoptin{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.quiz-opt::before{content:'';position:absolute;inset:0;background:rgba(var(--ca-rgb),.1);transform:scaleX(0);transform-origin:left;transition:transform .3s var(--eout);z-index:0}
+.quiz-opt:hover::before{transform:scaleX(1)}
+.quiz-opt:hover{border-color:var(--ca);color:var(--text);transform:translateX(4px)}
+.quiz-opt.selected{border-color:var(--ca);background:rgba(var(--ca-rgb),.14);transform:translateX(2px) scale(.98)}
+.quiz-opt .qo-let,.quiz-opt span:not(.qo-let){position:relative;z-index:1}
+.quiz-opt .qo-let{width:22px;height:22px;border-radius:50%;border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:.62rem;flex-shrink:0;color:var(--text3);transition:all .25s}
+.quiz-opt:hover .qo-let{background:var(--ca);border-color:var(--ca);color:#fff;transform:scale(1.1)}
+.quiz-opt.selected .qo-let{background:var(--ca);border-color:var(--ca);color:#fff}
+.quiz-intro{text-align:center;padding:.5rem 0 0}
+.quiz-intro-icon{font-family:'Shippori Mincho',serif;font-size:3rem;color:var(--ca);margin-bottom:1rem;display:inline-block;animation:qfloat 3.2s ease-in-out infinite;text-shadow:0 8px 30px rgba(var(--ca-rgb),.35)}
+@keyframes qfloat{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-8px) rotate(2deg)}}
+.quiz-intro h3{font-family:'Playfair Display',serif;font-size:clamp(1.3rem,3vw,1.75rem);margin-bottom:.7rem}
+.quiz-intro p{font-size:.8rem;color:var(--text3);line-height:1.8;max-width:420px;margin:0 auto 1.6rem}
+.quiz-intro-avatars{display:flex;justify-content:center;gap:-8px;margin-bottom:1.2rem}
+.qia{width:40px;height:40px;border-radius:50%;border:2px solid var(--card-bg);margin-left:-10px;overflow:hidden;box-shadow:0 4px 14px rgba(0,0,0,.25);transition:transform .3s var(--spring)}
+.qia:first-child{margin-left:0}
+.qia:hover{transform:translateY(-6px) scale(1.08);z-index:2}
+.qia img{width:100%;height:100%;object-fit:cover;object-position:top center}
+.quiz-start-btn{display:inline-flex;align-items:center;gap:.6rem;padding:.85rem 1.8rem;border-radius:100px;background:linear-gradient(120deg,var(--cab),var(--ca));color:#fff;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;transition:all .25s;box-shadow:0 10px 28px rgba(var(--ca-rgb),.28)}
+.quiz-start-btn:hover{transform:translateY(-3px) scale(1.03);box-shadow:0 16px 36px rgba(var(--ca-rgb),.4)}
+.quiz-result{text-align:center;position:relative}
+.qr-confetti{position:absolute;top:-1rem;left:0;right:0;height:0;overflow:visible;pointer-events:none;z-index:0}
+.confetto{position:absolute;top:0;border-radius:2px;opacity:0;animation:confFall 1.6s ease-in forwards}
+@keyframes confFall{0%{opacity:1;transform:translateY(0) rotate(0deg)}100%{opacity:0;transform:translateY(220px) rotate(540deg)}}
+.qr-eye{font-size:.55rem;letter-spacing:.5em;text-transform:uppercase;color:var(--ca);margin-bottom:.8rem;opacity:0;animation:aup .5s .05s var(--eout) forwards;position:relative;z-index:1}
+.qr-img-wrap{width:130px;height:174px;margin:0 auto 1.2rem;border-radius:16px;overflow:hidden;border:2px solid var(--ca);box-shadow:0 16px 40px rgba(var(--ca-rgb),.3);opacity:0;animation:qrimgin .6s .15s var(--spring) forwards;position:relative;z-index:1}
+@keyframes qrimgin{from{opacity:0;transform:scale(.7) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.qr-img-wrap img{width:100%;height:100%;object-fit:cover;object-position:top center}
+.qr-jp{font-family:'Shippori Mincho',serif;font-size:clamp(1.5rem,4vw,2.1rem);color:var(--text);margin-bottom:.2rem;opacity:0;animation:aup .5s .3s var(--eout) forwards}
+.qr-en{font-family:'Playfair Display',serif;font-style:italic;font-size:.85rem;color:var(--ca-gold);letter-spacing:.12em;margin-bottom:1rem;opacity:0;animation:aup .5s .38s var(--eout) forwards}
+.qr-desc{font-size:.78rem;line-height:1.85;color:var(--text3);max-width:440px;margin:0 auto 1.2rem;opacity:0;animation:aup .5s .46s var(--eout) forwards}
+.qr-bars{display:flex;flex-direction:column;gap:.5rem;max-width:340px;margin:0 auto 1.5rem;text-align:left;opacity:0;animation:aup .5s .54s var(--eout) forwards}
+.qr-bar-row{display:flex;align-items:center;gap:.6rem;font-size:.6rem}
+.qr-bar-name{width:64px;flex-shrink:0;color:var(--text3);letter-spacing:.05em}
+.qr-bar-track{flex:1;height:6px;border-radius:100px;background:var(--surface2);overflow:hidden}
+.qr-bar-fill{height:100%;border-radius:100px;width:0;transition:width 1s .1s var(--spring)}
+.qr-bar-pct{width:28px;text-align:right;color:var(--text4);flex-shrink:0}
+.quiz-result-actions{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;opacity:0;animation:aup .5s .62s var(--eout) forwards}
+.qra-btn{display:inline-flex;align-items:center;gap:.5rem;padding:.75rem 1.4rem;border-radius:100px;font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;transition:all .25s;border:1px solid var(--border2)}
+.qra-btn.primary{background:linear-gradient(120deg,var(--cab),var(--ca));color:#fff;border-color:var(--ca)}
+.qra-btn.primary:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(var(--ca-rgb),.3)}
+.qra-btn.ghost{background:var(--surface);color:var(--text2)}
+.qra-btn.ghost:hover{background:var(--surface2);transform:translateY(-2px)}
+.qra-btn svg{width:12px;height:12px}
+@media(max-width:640px){.quiz-box{padding:1.4rem;border-radius:16px}}
+
 @media(max-width:1100px){.gl{grid-template-columns:1fr 1fr;grid-template-rows:215px 215px 215px}.gp.gt{grid-row:span 2}.tg{grid-template-columns:1fr 1fr}.ff{grid-template-columns:1fr 1fr}.series-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:820px){.sv-hero{grid-template-columns:1fr}.sv-vis{position:absolute;inset:0;height:100%;opacity:.28;z-index:1}.sv-vis::before{background:linear-gradient(to top,var(--bg-dk) 0%,rgba(8,3,10,.58) 65%,rgba(8,3,10,.22) 100%)}.sv-col{z-index:4;padding:6rem 1.4rem 3rem;min-height:100vh;justify-content:flex-end}.sv-kj{display:none}.sv-rib-in{grid-template-columns:1fr 1fr 1fr!important}.sv-info-g{grid-template-columns:1fr}}
 @media(max-width:768px){#chero{grid-template-columns:1fr}.hvis{position:absolute;inset:0;height:100%;opacity:.28;z-index:1}.hvis::before{background:linear-gradient(to top,var(--bg-dk) 0%,rgba(8,3,10,.58) 65%,rgba(8,3,10,.22) 100%)}.hcol{z-index:4;padding:6rem 1.4rem 3rem;min-height:100vh;justify-content:flex-end}.hkj{display:none}.stin{grid-template-columns:repeat(3,1fr)}.stc:nth-child(4),.stc:nth-child(5){border-top:1px solid var(--border)}.pg{grid-template-columns:1fr}.pif{aspect-ratio:4/3;max-height:300px}.hg{grid-template-columns:1fr 1fr}.gl{grid-template-columns:1fr 1fr;grid-template-rows:auto}.gp.gt{grid-row:span 1;min-height:185px}.dbox{grid-template-columns:1fr}.series-grid{grid-template-columns:1fr}}
 @media(max-width:600px){.ep-item{grid-template-columns:2.5rem 1fr;grid-template-rows:auto auto}.ep-right{grid-column:2}}
 @media(max-width:540px){.stin{grid-template-columns:1fr 1fr}.stc:last-child{grid-column:span 2}.tg,.hg{grid-template-columns:1fr}.gl{grid-template-columns:1fr;grid-template-rows:auto}.gp{min-height:175px}.ff{grid-template-columns:1fr 1fr}.cards-wrap{flex-wrap:wrap;justify-content:center}.char-card{width:clamp(95px,40vw,138px)}.sv-dbox{grid-template-columns:1fr}}
+
+/* mobile perf: reduce heavy blur & orb sizes on small/low-power screens */
+@media(max-width:640px){
+  .horb,.sv-orb{filter:blur(50px)}
+  .quiz-mini-avatars{display:none}
+}
 </style>
 </head>
 <body>
 <div id="fov"></div>
+<div id="cglow"></div>
 <div id="cd"></div>
 <div id="cr"></div>
+<div id="toast-wrap"></div>
 
 <!-- SEARCH OVERLAY -->
 <div id="search-ov">
@@ -547,7 +800,31 @@ footer{background:var(--bg);padding:clamp(1.8rem,3.8vh,3rem) clamp(1.5rem,5vw,4r
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
     </button>
   </div>
+  <div class="s-tabs" id="s-tabs">
+    <div class="s-tab active" data-f="all">Semua</div>
+    <div class="s-tab" data-f="char">Karakter</div>
+    <div class="s-tab" data-f="series">Series</div>
+  </div>
   <div id="s-res"></div>
+</div>
+
+<!-- LIGHTBOX -->
+<div id="lightbox">
+  <div class="lb-close" id="lb-close-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></div>
+  <div class="lb-arrow" id="lb-prev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg></div>
+  <div class="lb-inner">
+    <img id="lb-img" src="" alt=""/>
+    <p class="lb-cap" id="lb-cap"></p>
+  </div>
+  <div class="lb-arrow" id="lb-next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 18l6-6-6-6"/></svg></div>
+</div>
+
+<!-- QUIZ MODAL -->
+<div id="quiz-ov">
+  <div class="quiz-box" id="quiz-box">
+    <button class="quiz-close" id="quiz-close-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+    <div id="quiz-content"></div>
+  </div>
 </div>
 
 <!-- NAV -->
@@ -560,6 +837,12 @@ footer{background:var(--bg);padding:clamp(1.8rem,3.8vh,3rem) clamp(1.5rem,5vw,4r
     <button class="n-home" id="nhome" onclick="goHome()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12L12 3l9 9"/><path d="M9 21V12h6v9"/></svg>
       Home
+    </button>
+    <button class="n-btn" id="quiz-nav-btn" title="Kuis Kepribadian" onclick="openQuiz()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.5 9a2.5 2.5 0 015 0c0 1.5-2 2-2 3.5"/><circle cx="12" cy="17" r=".6" fill="currentColor" stroke="none"/></svg>
+    </button>
+    <button class="n-btn" id="shuffle-btn" title="Karakter Acak">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5"/><path d="M4 20L21 3"/><path d="M21 16v5h-5"/><path d="M15 15l6 6"/><path d="M4 4l5 5"/></svg>
     </button>
     <button class="n-btn" id="search-btn" title="Cari (Ctrl+K)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
@@ -583,6 +866,26 @@ footer{background:var(--bg);padding:clamp(1.8rem,3.8vh,3rem) clamp(1.5rem,5vw,4r
     <div class="home-badge">五等分の花嫁 · The Quintessential Quintuplets</div>
     <h1 class="home-title">中野 五姉妹</h1>
     <p class="home-sub">Nakano Quintuplets — Lima Saudari Kembar</p>
+  </div>
+
+  <div class="stats-bar" data-rv>
+    <div class="stat-item"><div class="stat-num" data-count="6">0</div><div class="stat-lbl">Karakter</div></div>
+    <div class="stat-item"><div class="stat-num" data-count="27">0</div><div class="stat-lbl">Episode Anime</div></div>
+    <div class="stat-item"><div class="stat-num" data-count="122">0</div><div class="stat-lbl">Chapter Manga</div></div>
+    <div class="stat-item"><div class="stat-num" data-count="5">0</div><div class="stat-lbl">Adaptasi Media</div></div>
+    <div class="stat-item"><div class="stat-num" id="stat-favs" data-count="0">0</div><div class="stat-lbl">Favoritmu</div></div>
+  </div>
+
+  <div class="quiz-cta-wrap">
+    <div class="quiz-cta" onclick="openQuiz()" role="button" tabindex="0">
+      <div class="quiz-mini-avatars"><span>五</span></div>
+      <div class="quiz-cta-txt">
+        <div class="quiz-cta-eye">✿ Kuis Kepribadian</div>
+        <h3 class="quiz-cta-h">Kamu Nakano yang Mana?</h3>
+        <p class="quiz-cta-p">Jawab beberapa pertanyaan singkat dan temukan saudari Nakano mana yang paling mirip dengan kepribadianmu.</p>
+      </div>
+      <div class="quiz-cta-btn">Mulai Kuis <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+    </div>
   </div>
 
   <div class="sec-label-row"><div class="sec-label">✿ Tutor · 家庭教師 ✿</div></div>
@@ -718,6 +1021,9 @@ footer{background:var(--bg);padding:clamp(1.8rem,3.8vh,3rem) clamp(1.5rem,5vw,4r
 
 <!-- ════ CHAR VIEW ════ -->
 <div id="char-view">
+  <div class="char-nav-arrow" id="char-prev" title="Karakter sebelumnya"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg></div>
+  <div class="char-nav-arrow" id="char-next" title="Karakter berikutnya"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 18l6-6-6-6"/></svg></div>
+  <div class="char-dots" id="char-dots"></div>
   <section id="chero">
     <div class="hmesh" id="hmesh"></div>
     <div class="horb ho1" id="ho1"></div>
@@ -757,6 +1063,10 @@ footer{background:var(--bg);padding:clamp(1.8rem,3.8vh,3rem) clamp(1.5rem,5vw,4r
           <div data-rv><p class="ilbl">Deskripsi</p><p class="ival" id="pdesc"></p></div>
           <div class="dbox" data-rv id="dbox"></div>
           <div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.12rem" data-rv id="pchips"></div>
+          <div class="pinf-actions" data-rv>
+            <div class="pa-btn" id="fav-toggle-btn" onclick="toggleFavCurrent()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.6l-1-1a5.5 5.5 0 00-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 000-7.8z"/></svg><span id="fav-toggle-txt">Favoritkan</span></div>
+            <div class="pa-btn" onclick="shareChar()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 10.6l6.8-3.8M8.6 13.4l6.8 3.8"/></svg>Bagikan</div>
+          </div>
         </div>
       </div>
     </div>
@@ -777,6 +1087,7 @@ footer{background:var(--bg);padding:clamp(1.8rem,3.8vh,3rem) clamp(1.5rem,5vw,4r
 <div id="fav-panel">
   <div class="fav-head"><span>Favorit ✿</span><button onclick="toggleFavPanel()">✕</button></div>
   <div class="fav-list" id="fav-list"></div>
+  <div class="fav-foot"><button onclick="shareFavs()">Bagikan</button><button onclick="clearFavs()">Hapus Semua</button></div>
 </div>
 
 <script>
@@ -956,6 +1267,9 @@ const DB={
   flog:'中野 五月'}
 };
 
+const CHAR_ORDER=['fuutaro','ichika','nino','miku','yotsuba','itsuki'];
+let CURRENT_CHAR=null;
+
 // ════════════════════════════════
 // RENDERER
 // ════════════════════════════════
@@ -964,9 +1278,9 @@ const R={
   db:(a)=>a.map(([l,v])=>`<div><p class="dl">${l}</p><p class="dv">${v}</p></div>`).join(''),
   svdb:(a)=>a.map(([l,v])=>`<div><p class="sv-dl">${l}</p><p class="sv-dv">${v}</p></div>`).join(''),
   tr:(a)=>a.map((t,i)=>`<div class="tc" data-rv data-d="${(i%6)+1}"><span class="ticon">${t.i}</span><p class="tname">${t.n}</p><p class="tdesc">${t.d}</p></div>`).join(''),
-  gal:(a)=>a.map(g=>g.k
+  gal:(a,charId)=>a.map((g,i)=>g.k
     ?`<div class="gp gtp"><div class="gkj">${g.k}</div><div class="gtlbl">${g.l}</div></div>`
-    :`<div class="gp${g.t?' gt':''}"><img src="${g.s}" alt="${g.l}" loading="lazy" onerror="this.style.opacity='.06'"/><div class="gov"><span class="glbl">${g.l}</span></div></div>`
+    :`<div class="gp${g.t?' gt':''}" onclick="openLightbox('${charId}',${i})"><img src="${g.s}" alt="${g.l}" loading="lazy" onerror="this.style.opacity='.06'"/><div class="gzoom"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-3.8-3.8"/><path d="M11 8v6M8 11h6"/></svg></div><div class="gov"><span class="glbl">${g.l}</span></div></div>`
   ).join(''),
   hob:(a)=>a.map((h,i)=>`<div class="hc" data-rv data-d="${(i%6)+1}"><div class="hn">${h.n}</div><div><p class="httl">${h.t}</p><p class="htxt">${h.d}</p></div></div>`).join(''),
   ff:(a)=>a.map((f,i)=>`<div class="ffc" data-rv data-d="${(i%4)+1}"><span class="fficon">${f.i}</span><p class="fftit">${f.t}</p><p class="fftxt">${f.d}</p></div>`).join(''),
@@ -975,6 +1289,19 @@ const R={
   eps:(a)=>`<div class="ep-list">${a.map(e=>`<div class="ep-item" data-rv><div class="ep-num">${e.n}</div><div class="ep-info"><p class="ep-title">${e.t}</p><p class="ep-desc">${e.d}</p></div><div class="ep-right"><span class="ep-rating">${e.r}</span><span class="ep-dur">IMDb</span></div></div>`).join('')}</div>`,
   chapters:(a)=>`<div class="ch-grid-wrap">${a.map((c,i)=>`<div class="ch-item" data-rv data-d="${(i%6)+1}"><span class="ch-num">Ch.${c[0]}</span><span class="ch-title">${c[1]}</span></div>`).join('')}</div>`
 };
+
+// ════════════════════════════════
+// TOAST
+// ════════════════════════════════
+function showToast(msg){
+  const wrap=document.getElementById('toast-wrap');
+  const t=document.createElement('div');
+  t.className='toast';
+  t.innerHTML='<span class="tdot"></span>'+msg;
+  wrap.appendChild(t);
+  requestAnimationFrame(()=>t.classList.add('show'));
+  setTimeout(()=>{t.classList.remove('show');setTimeout(()=>t.remove(),320)},2400);
+}
 
 // ════════════════════════════════
 // THEME
@@ -1010,14 +1337,24 @@ const SITEMS=[
   {id:'manga',type:'series',name:'Manga Original',jp:'五等分の花嫁 漫画',desc:'Manga · 122 chapter',color:'#16a34a'},
   {id:'ova',type:'series',name:'OVA & Special',jp:'五等分の花嫁 OVA',desc:'OVA · 3 episode',color:'#0ea5e9'}
 ];
+let SFILTER='all';
 function renderSearch(q){
-  const items=q?SITEMS.filter(i=>i.name.toLowerCase().includes(q.toLowerCase())||i.jp.includes(q)||i.desc.toLowerCase().includes(q.toLowerCase())):SITEMS;
+  let items=SFILTER==='all'?SITEMS:SITEMS.filter(i=>i.type===SFILTER);
+  items=q?items.filter(i=>i.name.toLowerCase().includes(q.toLowerCase())||i.jp.includes(q)||i.desc.toLowerCase().includes(q.toLowerCase())):items;
+  if(!items.length){document.getElementById('s-res').innerHTML='<div class="s-empty">Tidak ada hasil ditemukan ✿</div>';return}
   document.getElementById('s-res').innerHTML=items.map(i=>`
     <div class="s-item" onclick="${i.type==='char'?`openChar('${i.id}')`:`openSeries('${i.id}')`};closeSearch()">
       <div class="s-dot" style="background:${i.color}"></div>
       <div><div class="s-name">${i.name} <span style="opacity:.45;font-size:.78rem">· ${i.jp}</span></div><div class="s-desc">${i.desc}</div></div>
     </div>`).join('');
 }
+document.querySelectorAll('.s-tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.s-tab').forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');SFILTER=tab.dataset.f;
+    renderSearch(document.getElementById('s-inp').value);
+  });
+});
 function openSearch(){
   document.getElementById('search-ov').classList.add('open');
   renderSearch('');
@@ -1028,7 +1365,27 @@ document.getElementById('s-inp').addEventListener('input',e=>renderSearch(e.targ
 document.getElementById('search-btn').addEventListener('click',openSearch);
 document.getElementById('s-close-btn').addEventListener('click',closeSearch);
 document.getElementById('search-ov').addEventListener('click',e=>{if(e.target===e.currentTarget)closeSearch()});
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSearch();if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();openSearch()}});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){closeSearch();closeLightbox();closeQuiz()}
+  if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();openSearch()}
+  if(document.getElementById('char-view').style.display!=='none'){
+    if(e.key==='ArrowLeft')navChar(-1);
+    if(e.key==='ArrowRight')navChar(1);
+  }
+  if(document.getElementById('lightbox').classList.contains('open')){
+    if(e.key==='ArrowLeft')lbNav(-1);
+    if(e.key==='ArrowRight')lbNav(1);
+  }
+});
+
+// ════════════════════════════════
+// SHUFFLE
+// ════════════════════════════════
+document.getElementById('shuffle-btn').addEventListener('click',()=>{
+  const pool=CHAR_ORDER.filter(id=>id!==CURRENT_CHAR);
+  const pick=pool[Math.floor(Math.random()*pool.length)];
+  openChar(pick);
+});
 
 // ════════════════════════════════
 // FAVORITES
@@ -1038,10 +1395,39 @@ const CCOLORS={fuutaro:'#6495ed',ichika:'#c9902a',nino:'#7c3aed',miku:'#e05068',
 let FAVS=JSON.parse(localStorage.getItem('gt_favs')||'[]');
 function toggleFav(id,btn){
   const i=FAVS.indexOf(id);
-  if(i>-1){FAVS.splice(i,1);btn.textContent='♡';btn.classList.remove('active')}
-  else{FAVS.push(id);btn.textContent='♥';btn.classList.add('active')}
+  if(i>-1){FAVS.splice(i,1);btn.textContent='♡';btn.classList.remove('active');showToast(CNAMES[id]+' dihapus dari favorit')}
+  else{FAVS.push(id);btn.textContent='♥';btn.classList.add('active');showToast(CNAMES[id]+' ditambahkan ke favorit ♥')}
   localStorage.setItem('gt_favs',JSON.stringify(FAVS));
   updateFavUI();
+  syncFavToggleBtn();
+}
+function toggleFavCurrent(){
+  if(!CURRENT_CHAR)return;
+  const i=FAVS.indexOf(CURRENT_CHAR);
+  if(i>-1){FAVS.splice(i,1);showToast(CNAMES[CURRENT_CHAR]+' dihapus dari favorit')}
+  else{FAVS.push(CURRENT_CHAR);showToast(CNAMES[CURRENT_CHAR]+' ditambahkan ke favorit ♥')}
+  localStorage.setItem('gt_favs',JSON.stringify(FAVS));
+  updateFavUI();syncFavToggleBtn();
+  const toggleBtn=document.getElementById('fav-toggle-btn');
+  if(toggleBtn){
+    toggleBtn.classList.remove('beat');
+    void toggleBtn.offsetWidth;
+    toggleBtn.classList.add('beat');
+  }
+  document.querySelectorAll('.card-fav').forEach(btn=>{
+    const card=btn.closest('[onclick*="openChar"]');
+    if(!card)return;
+    const m=card.getAttribute('onclick').match(/openChar\('(\w+)'\)/);
+    if(m&&m[1]===CURRENT_CHAR){
+      if(FAVS.includes(CURRENT_CHAR)){btn.textContent='♥';btn.classList.add('active')}
+      else{btn.textContent='♡';btn.classList.remove('active')}
+    }
+  });
+}
+function syncFavToggleBtn(){
+  const el=document.getElementById('fav-toggle-txt');
+  if(!el||!CURRENT_CHAR)return;
+  el.textContent=FAVS.includes(CURRENT_CHAR)?'Favorit ♥':'Favoritkan';
 }
 function updateFavUI(){
   const b=document.getElementById('fav-badge');
@@ -1049,11 +1435,31 @@ function updateFavUI(){
   b.classList.toggle('show',FAVS.length>0);
   const btn=document.getElementById('fav-btn');
   btn.childNodes[0].textContent=FAVS.length>0?'♥':'♡';
+  const sf=document.getElementById('stat-favs');
+  if(sf){sf.dataset.count=FAVS.length;sf.textContent=FAVS.length}
 }
 function renderFavList(){
   const el=document.getElementById('fav-list');
   if(!FAVS.length){el.innerHTML='<div class="fav-empty">Belum ada favorit ✿</div>';return}
-  el.innerHTML=FAVS.map(id=>`<div class="fav-item" onclick="openChar('${id}');closeFavPanel()"><div class="fav-dot" style="background:${CCOLORS[id]}"></div><div class="fav-name">${CNAMES[id]||id}</div></div>`).join('');
+  el.innerHTML=FAVS.map(id=>`<div class="fav-item"><div class="fav-dot" style="background:${CCOLORS[id]}"></div><div class="fav-name" onclick="openChar('${id}');closeFavPanel()">${CNAMES[id]||id}</div><div class="fav-rm" onclick="event.stopPropagation();removeFav('${id}')">✕</div></div>`).join('');
+}
+function removeFav(id){
+  const i=FAVS.indexOf(id);
+  if(i>-1)FAVS.splice(i,1);
+  localStorage.setItem('gt_favs',JSON.stringify(FAVS));
+  updateFavUI();renderFavList();syncFavToggleBtn();
+}
+function clearFavs(){
+  if(!FAVS.length)return;
+  FAVS=[];
+  localStorage.setItem('gt_favs','[]');
+  updateFavUI();renderFavList();syncFavToggleBtn();
+  showToast('Semua favorit dihapus');
+}
+function shareFavs(){
+  if(!FAVS.length){showToast('Belum ada favorit untuk dibagikan');return}
+  const txt='Karakter favoritku di 五等分の花嫁: '+FAVS.map(id=>CNAMES[id]).join(', ')+' ✿';
+  copyToClipboard(txt);
 }
 function toggleFavPanel(){
   const p=document.getElementById('fav-panel');
@@ -1061,29 +1467,562 @@ function toggleFavPanel(){
   if(p.classList.contains('open'))renderFavList();
 }
 function closeFavPanel(){document.getElementById('fav-panel').classList.remove('open')}
+function copyToClipboard(txt){
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(()=>showToast('Disalin ke clipboard ✓')).catch(()=>showToast('Gagal menyalin'));
+  } else {
+    showToast('Disalin ke clipboard ✓');
+  }
+}
+function shareChar(){
+  if(!CURRENT_CHAR)return;
+  const d=DB[CURRENT_CHAR];
+  const txt=d.en+' — '+d.logo+' · 五等分の花嫁 Encyclopedia';
+  if(navigator.share){
+    navigator.share({title:d.en,text:txt}).catch(()=>{});
+  } else {
+    copyToClipboard(txt);
+  }
+}
 updateFavUI();
 
 // ════════════════════════════════
-// CURSOR — LIKE ORIGINAL CODE
+// LIGHTBOX
 // ════════════════════════════════
-var cd=document.getElementById('cd'),cr=document.getElementById('cr');
-var mx=window.innerWidth/2,my=window.innerHeight/2,rx=mx,ry=my;
+let LB_CHAR=null,LB_IDX=0;
+function openLightbox(charId,idx){
+  const d=DB[charId];
+  const gal=d.gal.filter(g=>!g.k);
+  LB_CHAR=charId;LB_IDX=d.gal.slice(0,idx+1).filter(g=>!g.k).length-1;
+  showLightboxImg();
+  document.getElementById('lightbox').classList.add('open');
+}
+function showLightboxImg(){
+  const d=DB[LB_CHAR];
+  const gal=d.gal.filter(g=>!g.k);
+  if(LB_IDX<0)LB_IDX=gal.length-1;
+  if(LB_IDX>=gal.length)LB_IDX=0;
+  const g=gal[LB_IDX];
+  const img=document.getElementById('lb-img');
+  img.style.opacity='0';img.src=g.s;
+  img.onload=()=>{img.style.transition='opacity .4s';img.style.opacity='1'};
+  img.onerror=()=>{img.style.opacity='.1'};
+  document.getElementById('lb-cap').textContent=g.l+' · '+(LB_IDX+1)+'/'+gal.length;
+}
+function lbNav(dir){LB_IDX+=dir;showLightboxImg()}
+function closeLightbox(){document.getElementById('lightbox').classList.remove('open')}
+document.getElementById('lb-close-btn').addEventListener('click',closeLightbox);
+document.getElementById('lb-prev').addEventListener('click',()=>lbNav(-1));
+document.getElementById('lb-next').addEventListener('click',()=>lbNav(1));
+document.getElementById('lightbox').addEventListener('click',e=>{if(e.target.id==='lightbox')closeLightbox()});
+(function(){
+  let sx=0,sy=0;
+  const lb=document.getElementById('lightbox');
+  lb.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});
+  lb.addEventListener('touchend',e=>{
+    const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;
+    if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)){dx>0?lbNav(-1):lbNav(1)}
+  },{passive:true});
+})();
+
+// ════════════════════════════════
+// QUIZ
+// ════════════════════════════════
+const QUIZ_Q=[
+  {q:'Bagaimana caramu menghadapi masalah?',opts:[
+    {t:'Tetap santai, cari solusi sambil tersenyum',id:'ichika'},
+    {t:'Hadapi langsung, blak-blakan tanpa basa-basi',id:'nino'},
+    {t:'Diam sebentar, pikirkan matang-matang sendirian',id:'miku'},
+    {t:'Langsung bergerak dengan semangat penuh',id:'yotsuba'},
+    {t:'Buat rencana terstruktur lalu jalankan step by step',id:'itsuki'},
+  ]},
+  {q:'Weekend idealmu seperti apa?',opts:[
+    {t:'Nonton drama/film sambil tiduran santai',id:'ichika'},
+    {t:'Coba resep masakan baru di dapur',id:'nino'},
+    {t:'Dengar musik pakai headphone sambil baca buku',id:'miku'},
+    {t:'Olahraga atau lari pagi bareng teman',id:'yotsuba'},
+    {t:'Belajar hal baru di perpustakaan atau kafe',id:'itsuki'},
+  ]},
+  {q:'Apa yang paling kamu hargai dalam sebuah hubungan?',opts:[
+    {t:'Menjaga suasana tetap hangat dan menyenangkan',id:'ichika'},
+    {t:'Kejujuran dan keberanian mengungkapkan perasaan',id:'nino'},
+    {t:'Kesamaan minat dan momen tenang berdua',id:'miku'},
+    {t:'Selalu ada dan saling mendukung',id:'yotsuba'},
+    {t:'Rasa saling percaya yang tumbuh perlahan',id:'itsuki'},
+  ]},
+  {q:'Teman-teman biasanya menggambarkanmu sebagai orang yang…',opts:[
+    {t:'Ceria dan mudah membaur di mana saja',id:'ichika'},
+    {t:'Tegas, stylish, dan sedikit keras kepala',id:'nino'},
+    {t:'Pendiam tapi punya dunia sendiri yang menarik',id:'miku'},
+    {t:'Energik dan penyemangat semua orang',id:'yotsuba'},
+    {t:'Rajin, serius, dan bertanggung jawab',id:'itsuki'},
+  ]},
+  {q:'Kalau ada konflik dalam kelompok, kamu biasanya…',opts:[
+    {t:'Jadi penengah yang menjaga semua tetap akur',id:'ichika'},
+    {t:'Menyuarakan pendapat dengan tegas tanpa ragu',id:'nino'},
+    {t:'Mengamati dulu sebelum ikut bicara',id:'miku'},
+    {t:'Mencairkan suasana dengan sikap positif',id:'yotsuba'},
+    {t:'Mencari solusi paling adil dan masuk akal',id:'itsuki'},
+  ]},
+  {q:'Hal kecil yang bikin harimu jadi baik?',opts:[
+    {t:'Tidur siang yang nyenyak',id:'ichika'},
+    {t:'Berhasil membuat sesuatu dengan tangan sendiri',id:'nino'},
+    {t:'Menemukan hal baru yang menarik minatmu',id:'miku'},
+    {t:'Melihat orang lain tersenyum karenamu',id:'yotsuba'},
+    {t:'Menyelesaikan target yang sudah direncanakan',id:'itsuki'},
+  ]},
+  {q:'Rutinitas pagimu biasanya seperti apa?',opts:[
+    {t:'Santai, sedikit malas-malasan sebelum siap',id:'ichika'},
+    {t:'Sarapan cepat lalu langsung sibuk bekerja',id:'nino'},
+    {t:'Diam menikmati secangkir kopi atau teh sendirian',id:'miku'},
+    {t:'Lari pagi atau peregangan penuh energi',id:'yotsuba'},
+    {t:'Cek jadwal dan susun daftar tugas hari ini',id:'itsuki'},
+  ]},
+  {q:'Kalau lagi banyak pikiran, kamu biasanya…',opts:[
+    {t:'Cerita ke orang terdekat sambil bercanda',id:'ichika'},
+    {t:'Sibukkan diri dengan aktivitas yang produktif',id:'nino'},
+    {t:'Pakai headphone dan menyendiri sejenak',id:'miku'},
+    {t:'Cari teman untuk diajak ngobrol atau jalan',id:'yotsuba'},
+    {t:'Buat daftar masalah lalu selesaikan satu per satu',id:'itsuki'},
+  ]},
+  {q:'Gaya belanja pakaianmu seperti apa?',opts:[
+    {t:'Simpel dan nyaman, yang penting natural',id:'ichika'},
+    {t:'Selalu update tren dan detail fashion',id:'nino'},
+    {t:'Warna netral, tidak neko-neko',id:'miku'},
+    {t:'Praktis untuk aktivitas fisik',id:'yotsuba'},
+    {t:'Rapi dan sesuai kebutuhan, tidak boros',id:'itsuki'},
+  ]},
+  {q:'Kalau dikasih pujian, reaksimu biasanya…',opts:[
+    {t:'Tersenyum manis dan berterima kasih ramah',id:'ichika'},
+    {t:'Sedikit malu tapi tetap percaya diri',id:'nino'},
+    {t:'Salah tingkah, susah menatap mata lawan bicara',id:'miku'},
+    {t:'Senang sekali dan langsung bersemangat',id:'yotsuba'},
+    {t:'Merasa harus terus meningkatkan diri lagi',id:'itsuki'},
+  ]},
+  {q:'Bagaimana caramu menunjukkan sayang ke orang terdekat?',opts:[
+    {t:'Selalu ada untuk mendengarkan cerita mereka',id:'ichika'},
+    {t:'Memasakkan sesuatu yang spesial untuk mereka',id:'nino'},
+    {t:'Memberi perhatian lewat hal-hal kecil dan diam-diam',id:'miku'},
+    {t:'Selalu semangat mendukung dari pinggir lapangan',id:'yotsuba'},
+    {t:'Membantu mereka mencapai tujuan dengan serius',id:'itsuki'},
+  ]},
+  {q:'Kalau gagal dalam sesuatu, kamu biasanya…',opts:[
+    {t:'Coba lupakan dulu, nanti dipikir lagi',id:'ichika'},
+    {t:'Kesal sebentar, lalu bangkit dan coba lagi',id:'nino'},
+    {t:'Introspeksi diam-diam tanpa cerita ke siapa-siapa',id:'miku'},
+    {t:'Tetap semangat dan cari sisi positifnya',id:'yotsuba'},
+    {t:'Evaluasi detail apa yang salah lalu perbaiki',id:'itsuki'},
+  ]},
+  {q:'Tempat favoritmu untuk menenangkan diri?',opts:[
+    {t:'Kamar sendiri yang nyaman untuk rebahan',id:'ichika'},
+    {t:'Dapur, sambil sibuk memasak sesuatu',id:'nino'},
+    {t:'Tempat sepi seperti kuil atau taman kecil',id:'miku'},
+    {t:'Lapangan terbuka atau tempat olahraga',id:'yotsuba'},
+    {t:'Perpustakaan atau ruang belajar yang tenang',id:'itsuki'},
+  ]},
+  {q:'Kalau ditanya pendapat soal sesuatu, kamu…',opts:[
+    {t:'Menjawab dengan diplomatis biar semua nyaman',id:'ichika'},
+    {t:'Langsung bilang apa adanya tanpa filter',id:'nino'},
+    {t:'Berpikir dulu sebelum jawab dengan hati-hati',id:'miku'},
+    {t:'Jawab jujur dengan nada ceria',id:'yotsuba'},
+    {t:'Jelaskan dengan alasan yang logis dan terstruktur',id:'itsuki'},
+  ]},
+  {q:'Hal yang paling kamu takutkan?',opts:[
+    {t:'Membuat orang lain kecewa karena kebohongan kecil',id:'ichika'},
+    {t:'Terlihat lemah di depan orang lain',id:'nino'},
+    {t:'Tidak dipahami oleh orang yang kamu sayangi',id:'miku'},
+    {t:'Tidak bisa membantu saat dibutuhkan',id:'yotsuba'},
+    {t:'Gagal mencapai target yang sudah ditetapkan',id:'itsuki'},
+  ]},
+  {q:'Kegiatan ekstrakurikuler favoritmu di sekolah?',opts:[
+    {t:'Klub drama atau seni peran',id:'ichika'},
+    {t:'Klub tata boga atau memasak',id:'nino'},
+    {t:'Klub sejarah atau klub baca',id:'miku'},
+    {t:'Klub atletik atau olahraga tim',id:'yotsuba'},
+    {t:'Klub akademik atau OSIS',id:'itsuki'},
+  ]},
+  {q:'Bagaimana caramu belajar hal baru?',opts:[
+    {t:'Sambil santai dan tidak terburu-buru',id:'ichika'},
+    {t:'Langsung praktik, belajar sambil mencoba',id:'nino'},
+    {t:'Mendalami sampai benar-benar paham sendiri',id:'miku'},
+    {t:'Belajar bareng orang lain biar seru',id:'yotsuba'},
+    {t:'Susun rencana belajar yang rapi dan disiplin',id:'itsuki'},
+  ]},
+  {q:'Kalau kamu dapat hadiah kejutan, reaksimu?',opts:[
+    {t:'Terharu dan langsung memeluk yang memberi',id:'ichika'},
+    {t:'Senang tapi berusaha terlihat biasa saja',id:'nino'},
+    {t:'Diam sejenak karena terlalu terkejut',id:'miku'},
+    {t:'Berteriak senang dan langsung memamerkannya',id:'yotsuba'},
+    {t:'Berpikir bagaimana cara membalas kebaikan itu',id:'itsuki'},
+  ]},
+  {q:'Musim favoritmu dan alasannya?',opts:[
+    {t:'Musim semi, suasananya hangat dan ceria',id:'ichika'},
+    {t:'Musim panas, penuh energi dan warna',id:'nino'},
+    {t:'Musim gugur, tenang dan penuh refleksi',id:'miku'},
+    {t:'Musim panas juga, cocok untuk olahraga',id:'yotsuba'},
+    {t:'Musim dingin, waktu terbaik untuk fokus belajar',id:'itsuki'},
+  ]},
+  {q:'Kalau kamu jadi ketua kelompok, gaya kepemimpinanmu?',opts:[
+    {t:'Memimpin dengan ramah dan menyenangkan',id:'ichika'},
+    {t:'Tegas dalam mengambil keputusan penting',id:'nino'},
+    {t:'Memimpin dari belakang, memberi ruang tiap orang',id:'miku'},
+    {t:'Memotivasi semua anggota agar tetap semangat',id:'yotsuba'},
+    {t:'Membagi tugas dengan rencana yang jelas',id:'itsuki'},
+  ]},
+  {q:'Bagaimana kamu merespon kritik?',opts:[
+    {t:'Menerima dengan senyum meski dalam hati sedih',id:'ichika'},
+    {t:'Membela diri dulu sebelum menerima masukan',id:'nino'},
+    {t:'Memikirkannya lama sebelum bereaksi',id:'miku'},
+    {t:'Menerima dengan lapang dan tetap ceria',id:'yotsuba'},
+    {t:'Menganalisis kritik itu untuk perbaikan nyata',id:'itsuki'},
+  ]},
+  {q:'Kalau kamu punya waktu luang satu hari penuh, kamu akan…',opts:[
+    {t:'Jalan-jalan santai tanpa rencana ketat',id:'ichika'},
+    {t:'Bereksperimen dengan resep masakan baru',id:'nino'},
+    {t:'Menghabiskan waktu dengan buku dan musik',id:'miku'},
+    {t:'Ikut kegiatan olahraga atau komunitas',id:'yotsuba'},
+    {t:'Menyusun ulang jadwal dan target pribadi',id:'itsuki'},
+  ]},
+  {q:'Apa hal yang paling kamu banggakan dari dirimu?',opts:[
+    {t:'Kemampuan membuat orang lain nyaman',id:'ichika'},
+    {t:'Keberanian mengejar apa yang diinginkan',id:'nino'},
+    {t:'Ketekunan dalam hal yang disukai',id:'miku'},
+    {t:'Semangat yang tidak pernah padam',id:'yotsuba'},
+    {t:'Disiplin dan tanggung jawab yang tinggi',id:'itsuki'},
+  ]},
+  {q:'Kalau ada teman yang sedih, kamu akan…',opts:[
+    {t:'Menghiburnya dengan candaan ringan',id:'ichika'},
+    {t:'Memasakkan makanan kesukaannya',id:'nino'},
+    {t:'Duduk diam menemani tanpa banyak bicara',id:'miku'},
+    {t:'Mengajaknya keluar untuk menghirup udara segar',id:'yotsuba'},
+    {t:'Membantu mencari solusi atas masalahnya',id:'itsuki'},
+  ]},
+  {q:'Warna yang paling menggambarkan dirimu?',opts:[
+    {t:'Kuning cerah — hangat dan ramah',id:'ichika'},
+    {t:'Ungu — berani dan penuh karakter',id:'nino'},
+    {t:'Merah muda lembut — tenang dan dalam',id:'miku'},
+    {t:'Hijau — segar dan penuh energi',id:'yotsuba'},
+    {t:'Merah — tegas dan bersemangat',id:'itsuki'},
+  ]},
+  {q:'Kebiasaanmu saat malam sebelum tidur?',opts:[
+    {t:'Scroll media sosial santai sambil rebahan',id:'ichika'},
+    {t:'Menyiapkan segala sesuatu untuk esok hari',id:'nino'},
+    {t:'Membaca buku atau dengar musik pelan',id:'miku'},
+    {t:'Merencanakan aktivitas seru untuk besok',id:'yotsuba'},
+    {t:'Mengecek ulang catatan atau tugas',id:'itsuki'},
+  ]},
+  {q:'Kalau harus memilih pekerjaan impian, kamu memilih…',opts:[
+    {t:'Sesuatu yang kreatif seperti seni atau hiburan',id:'ichika'},
+    {t:'Sesuatu yang menantang dan penuh tanggung jawab',id:'nino'},
+    {t:'Pekerjaan yang tenang dan mendalam, seperti riset',id:'miku'},
+    {t:'Pekerjaan yang aktif dan banyak bergerak',id:'yotsuba'},
+    {t:'Pekerjaan yang bermakna, seperti mendidik orang lain',id:'itsuki'},
+  ]},
+  {q:'Sikapmu terhadap perubahan mendadak dalam rencana?',opts:[
+    {t:'Santai saja, ikuti alur yang ada',id:'ichika'},
+    {t:'Awalnya kesal tapi cepat beradaptasi',id:'nino'},
+    {t:'Butuh waktu untuk menyesuaikan diri',id:'miku'},
+    {t:'Justru makin semangat menghadapi hal baru',id:'yotsuba'},
+    {t:'Coba susun ulang rencana secepat mungkin',id:'itsuki'},
+  ]},
+  {q:'Kalau lagi kumpul bareng teman-teman, posisimu biasanya…',opts:[
+    {t:'Jadi yang paling ramai dan menghibur',id:'ichika'},
+    {t:'Jadi yang paling aktif mengatur acara',id:'nino'},
+    {t:'Duduk tenang mendengarkan sambil sesekali menimpali',id:'miku'},
+    {t:'Jadi yang mengajak semua ikut bermain',id:'yotsuba'},
+    {t:'Jadi yang mengingatkan waktu dan rencana',id:'itsuki'},
+  ]},
+  {q:'Cara kamu mengekspresikan rasa terima kasih?',opts:[
+    {t:'Ucapan hangat dan pelukan tulus',id:'ichika'},
+    {t:'Membuatkan sesuatu sebagai balasan',id:'nino'},
+    {t:'Menulis pesan singkat yang jujur',id:'miku'},
+    {t:'Bilang langsung dengan penuh semangat',id:'yotsuba'},
+    {t:'Membantu balik di saat mereka butuh',id:'itsuki'},
+  ]},
+  {q:'Kalau melihat sesuatu yang tidak adil, kamu…',opts:[
+    {t:'Coba menengahi dengan cara halus',id:'ichika'},
+    {t:'Langsung bersuara menentang tanpa ragu',id:'nino'},
+    {t:'Diam dulu, amati situasi sebelum bertindak',id:'miku'},
+    {t:'Membela pihak yang dirugikan secara spontan',id:'yotsuba'},
+    {t:'Cari fakta dulu sebelum mengambil sikap',id:'itsuki'},
+  ]},
+  {q:'Apa yang biasanya membuatmu bersemangat di pagi hari?',opts:[
+    {t:'Membayangkan hal menyenangkan yang akan terjadi',id:'ichika'},
+    {t:'Rencana untuk mencoba sesuatu yang baru',id:'nino'},
+    {t:'Waktu tenang sebelum dunia menjadi ramai',id:'miku'},
+    {t:'Kesempatan bergerak dan berolahraga',id:'yotsuba'},
+    {t:'Daftar tugas yang siap diselesaikan',id:'itsuki'},
+  ]},
+  {q:'Bagaimana kamu menghadapi orang yang menyebalkan?',opts:[
+    {t:'Tetap ramah meski dalam hati kesal',id:'ichika'},
+    {t:'Bilang langsung kalau perilakunya mengganggu',id:'nino'},
+    {t:'Menjauh diam-diam tanpa banyak drama',id:'miku'},
+    {t:'Coba ajak bicara baik-baik dengan ceria',id:'yotsuba'},
+    {t:'Jaga jarak profesional dan tetap adil',id:'itsuki'},
+  ]},
+  {q:'Kalau harus memilih hewan peliharaan, kamu pilih…',opts:[
+    {t:'Kucing yang manja dan lucu',id:'ichika'},
+    {t:'Anjing yang setia dan aktif',id:'nino'},
+    {t:'Hewan kecil yang tenang seperti kelinci',id:'miku'},
+    {t:'Anjing besar yang energik untuk diajak lari',id:'yotsuba'},
+    {t:'Hewan yang mudah dirawat dan disiplin, seperti burung',id:'itsuki'},
+  ]},
+  {q:'Apa gaya komunikasimu dengan orang baru?',opts:[
+    {t:'Ramah dan cepat akrab',id:'ichika'},
+    {t:'Sedikit jaga jarak di awal, blak-blakan setelah dekat',id:'nino'},
+    {t:'Pendiam dan butuh waktu untuk terbuka',id:'miku'},
+    {t:'Langsung terbuka dan penuh semangat',id:'yotsuba'},
+    {t:'Sopan dan formal sampai lebih mengenal',id:'itsuki'},
+  ]},
+  {q:'Kalau ada tugas kelompok, peran favoritmu?',opts:[
+    {t:'Menjaga suasana kerja tetap menyenangkan',id:'ichika'},
+    {t:'Mengambil bagian tersulit dan mengerjakannya sendiri',id:'nino'},
+    {t:'Mengerjakan bagian riset yang detail',id:'miku'},
+    {t:'Menyemangati anggota lain agar tetap on track',id:'yotsuba'},
+    {t:'Mengatur jadwal dan memastikan semua tepat waktu',id:'itsuki'},
+  ]},
+  {q:'Reaksimu kalau rencana liburan tiba-tiba batal?',opts:[
+    {t:'Sedikit kecewa tapi cepat mencari alternatif santai',id:'ichika'},
+    {t:'Kesal, langsung cari solusi pengganti',id:'nino'},
+    {t:'Menerimanya dengan tenang, tidak masalah sendirian',id:'miku'},
+    {t:'Cari kegiatan seru lain sebagai gantinya',id:'yotsuba'},
+    {t:'Menyusun ulang jadwal secepatnya',id:'itsuki'},
+  ]},
+  {q:'Kebiasaan makanmu sehari-hari?',opts:[
+    {t:'Suka mencoba makanan ringan yang praktis',id:'ichika'},
+    {t:'Suka memasak sendiri daripada beli',id:'nino'},
+    {t:'Makan secukupnya, tidak terlalu memikirkan',id:'miku'},
+    {t:'Makan banyak karena aktivitas fisik tinggi',id:'yotsuba'},
+    {t:'Suka makan enak dan porsi besar',id:'itsuki'},
+  ]},
+  {q:'Kalau kamu diberi tanggung jawab besar, perasaanmu?',opts:[
+    {t:'Sedikit gugup tapi tetap positif',id:'ichika'},
+    {t:'Percaya diri dan siap membuktikan diri',id:'nino'},
+    {t:'Merasa terbebani tapi tetap berusaha',id:'miku'},
+    {t:'Bersemangat dan langsung bergerak cepat',id:'yotsuba'},
+    {t:'Merasa termotivasi untuk membuktikan kemampuan',id:'itsuki'},
+  ]},
+  {q:'Bagaimana caramu merayakan pencapaian?',opts:[
+    {t:'Traktir teman-teman dan bersenang-senang',id:'ichika'},
+    {t:'Merayakannya dengan masakan spesial buatan sendiri',id:'nino'},
+    {t:'Merayakan sendirian dengan cara yang tenang',id:'miku'},
+    {t:'Mengajak semua orang ikut merayakan bersama',id:'yotsuba'},
+    {t:'Mencatatnya sebagai motivasi untuk pencapaian berikutnya',id:'itsuki'},
+  ]},
+  {q:'Kalau harus memilih genre buku/film favorit?',opts:[
+    {t:'Drama romantis yang hangat',id:'ichika'},
+    {t:'Aksi atau thriller yang seru',id:'nino'},
+    {t:'Sejarah atau dokumenter mendalam',id:'miku'},
+    {t:'Olahraga atau petualangan penuh semangat',id:'yotsuba'},
+    {t:'Edukatif atau biografi inspiratif',id:'itsuki'},
+  ]},
+  {q:'Sikapmu terhadap aturan yang ketat?',opts:[
+    {t:'Ikuti saja selama tidak merepotkan',id:'ichika'},
+    {t:'Suka mempertanyakan kalau dirasa tidak masuk akal',id:'nino'},
+    {t:'Ikuti dengan tenang tanpa banyak protes',id:'miku'},
+    {t:'Terima dengan semangat asal jelas tujuannya',id:'yotsuba'},
+    {t:'Menghormati aturan sebagai bagian dari tanggung jawab',id:'itsuki'},
+  ]},
+  {q:'Kalau kamu harus minta maaf, gayamu seperti apa?',opts:[
+    {t:'Minta maaf dengan lembut dan tulus',id:'ichika'},
+    {t:'Langsung to the point tanpa berputar-putar',id:'nino'},
+    {t:'Menulis pesan karena sulit bicara langsung',id:'miku'},
+    {t:'Minta maaf dengan penuh semangat dan senyum',id:'yotsuba'},
+    {t:'Menjelaskan alasan sambil tetap bertanggung jawab',id:'itsuki'},
+  ]},
+  {q:'Apa yang paling membuatmu termotivasi?',opts:[
+    {t:'Melihat orang-orang terdekat bahagia',id:'ichika'},
+    {t:'Membuktikan kemampuan diri sendiri',id:'nino'},
+    {t:'Mendalami sesuatu yang benar-benar disukai',id:'miku'},
+    {t:'Semangat dari orang-orang di sekitar',id:'yotsuba'},
+    {t:'Mencapai tujuan jangka panjang yang jelas',id:'itsuki'},
+  ]},
+  {q:'Kalau kamu sedang capek, cara terbaik memulihkan energi?',opts:[
+    {t:'Tidur panjang tanpa gangguan',id:'ichika'},
+    {t:'Melakukan sesuatu yang produktif untuk melepas stres',id:'nino'},
+    {t:'Waktu sendiri yang benar-benar tenang',id:'miku'},
+    {t:'Bergerak aktif, olahraga ringan',id:'yotsuba'},
+    {t:'Menyelesaikan tugas kecil agar pikiran lega',id:'itsuki'},
+  ]},
+  {q:'Bagaimana kamu memandang kompetisi?',opts:[
+    {t:'Santai, yang penting semua senang',id:'ichika'},
+    {t:'Suka tantangan dan ingin menang',id:'nino'},
+    {t:'Tidak terlalu suka bersaing secara terbuka',id:'miku'},
+    {t:'Menikmati semangat kompetisi bersama tim',id:'yotsuba'},
+    {t:'Serius dan ingin membuktikan usaha terbaik',id:'itsuki'},
+  ]},
+  {q:'Kalau kamu punya rahasia besar, kamu akan…',opts:[
+    {t:'Simpan tapi mudah luluh kalau ditanya baik-baik',id:'ichika'},
+    {t:'Simpan rapat-rapat sampai waktu yang tepat',id:'nino'},
+    {t:'Simpan sendirian tanpa cerita ke siapapun',id:'miku'},
+    {t:'Sulit menyimpan lama, ingin segera berbagi',id:'yotsuba'},
+    {t:'Simpan dengan pertimbangan matang kapan diungkap',id:'itsuki'},
+  ]},
+  {q:'Apa arti "rumah" bagimu?',opts:[
+    {t:'Tempat semua orang merasa nyaman dan hangat',id:'ichika'},
+    {t:'Tempat untuk melindungi orang-orang tersayang',id:'nino'},
+    {t:'Tempat tenang untuk jadi diri sendiri',id:'miku'},
+    {t:'Tempat penuh keceriaan dan kehangatan keluarga',id:'yotsuba'},
+    {t:'Tempat membangun kebiasaan baik dan disiplin',id:'itsuki'},
+  ]},
+  {q:'Kalimat mana yang paling menggambarkan prinsip hidupmu?',opts:[
+    {t:'Hidup itu harus dinikmati, jangan terlalu serius',id:'ichika'},
+    {t:'Kalau punya mimpi, kejar dengan berani',id:'nino'},
+    {t:'Yang penting jujur pada diri sendiri',id:'miku'},
+    {t:'Selalu ada cara untuk tetap semangat',id:'yotsuba'},
+    {t:'Kerja keras hari ini demi masa depan yang jelas',id:'itsuki'},
+  ]},
+  {q:'Kalau ditawari kejutan berupa perjalanan mendadak, reaksimu?',opts:[
+    {t:'Ikut saja, seru buat suasana baru',id:'ichika'},
+    {t:'Semangat asal boleh atur sendiri detailnya',id:'nino'},
+    {t:'Sedikit ragu, butuh waktu menyiapkan diri',id:'miku'},
+    {t:'Langsung setuju tanpa pikir panjang',id:'yotsuba'},
+    {t:'Mau ikut asal jadwal lain tidak terganggu',id:'itsuki'},
+  ]},
+];
+let quizAnswers=[],quizStep=0;
+function openQuiz(){
+  quizAnswers=[];quizStep=0;
+  document.getElementById('quiz-ov').classList.add('open');
+  renderQuizIntro();
+}
+function closeQuiz(){document.getElementById('quiz-ov').classList.remove('open')}
+document.getElementById('quiz-close-btn').addEventListener('click',closeQuiz);
+document.getElementById('quiz-ov').addEventListener('click',e=>{if(e.target.id==='quiz-ov')closeQuiz()});
+
+function renderQuizIntro(){
+  const avatars=['ichika','nino','miku','yotsuba','itsuki'].map(id=>`<div class="qia"><img src="${DB[id].img}" alt="${id}" onerror="this.style.opacity='.1'"/></div>`).join('');
+  document.getElementById('quiz-content').innerHTML=`
+    <div class="quiz-intro">
+      <div class="quiz-intro-avatars">${avatars}</div>
+      <div class="quiz-intro-icon">五</div>
+      <h3>Kamu Nakano yang Mana?</h3>
+      <p>Jawab ${QUIZ_Q.length} pertanyaan singkat berdasarkan kepribadianmu sehari-hari, dan temukan saudari Nakano mana yang paling mirip denganmu.</p>
+      <div class="quiz-start-btn" onclick="renderQuizQ()">Mulai Kuis <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+    </div>`;
+}
+function renderQuizQ(){
+  const container=document.getElementById('quiz-content');
+  const existing=container.querySelector('.quiz-q-wrap');
+  if(existing){
+    existing.classList.add('out');
+    setTimeout(drawQuizQ,190);
+  } else {
+    drawQuizQ();
+  }
+}
+function drawQuizQ(){
+  const q=QUIZ_Q[quizStep];
+  const pct=((quizStep)/QUIZ_Q.length)*100;
+  const letters=['A','B','C','D','E'];
+  const dots=QUIZ_Q.map((_,i)=>`<div class="qp-dot${i<quizStep?' done':''}"></div>`).join('');
+  document.getElementById('quiz-content').innerHTML=`
+    <div class="quiz-progress-dots">${dots}</div>
+    <div class="quiz-progress-wrap"><div class="quiz-progress-bar" style="width:${pct}%"></div></div>
+    <div class="quiz-q-wrap">
+      <p class="quiz-step">Pertanyaan ${quizStep+1} dari ${QUIZ_Q.length}</p>
+      <h3 class="quiz-q">${q.q}</h3>
+      <div class="quiz-opts">${q.opts.map((o,i)=>`<div class="quiz-opt" data-idx="${i}" onclick="answerQuiz('${o.id}',this)"><span class="qo-let">${letters[i]}</span><span>${o.t}</span></div>`).join('')}</div>
+    </div>`;
+}
+function answerQuiz(id,el){
+  document.querySelectorAll('.quiz-opt').forEach(o=>o.style.pointerEvents='none');
+  el.classList.add('selected');
+  quizAnswers.push(id);
+  quizStep++;
+  setTimeout(()=>{
+    if(quizStep<QUIZ_Q.length){renderQuizQ()}
+    else{renderQuizResult()}
+  },260);
+}
+function spawnConfetti(container,color){
+  const colors=[color,'#f5c06e','#a78bfa','#4ade80','#f87171','#7dd3fc'];
+  let html='';
+  for(let i=0;i<26;i++){
+    const left=Math.random()*100;
+    const sz=4+Math.random()*6;
+    const delay=Math.random()*.4;
+    const dur=1.1+Math.random()*.8;
+    const c=colors[i%colors.length];
+    const rot=Math.random()*360;
+    html+=`<div class="confetto" style="left:${left}%;width:${sz}px;height:${sz*1.4}px;background:${c};animation-delay:${delay}s;animation-duration:${dur}s;transform:rotate(${rot}deg)"></div>`;
+  }
+  container.innerHTML=html;
+}
+function renderQuizResult(){
+  const tally={ichika:0,nino:0,miku:0,yotsuba:0,itsuki:0};
+  quizAnswers.forEach(id=>tally[id]++);
+  let winner='ichika',max=-1;
+  Object.keys(tally).forEach(k=>{if(tally[k]>max){max=tally[k];winner=k}});
+  const d=DB[winner];
+  const total=quizAnswers.length;
+  const bars=Object.keys(tally).sort((a,b)=>tally[b]-tally[a]).map(k=>{
+    const dd=DB[k];const pct=Math.round((tally[k]/total)*100);
+    return `<div class="qr-bar-row"><span class="qr-bar-name">${CNAMES[k]}</span><div class="qr-bar-track"><div class="qr-bar-fill" data-w="${pct}" style="background:${dd.ca}"></div></div><span class="qr-bar-pct">${pct}%</span></div>`;
+  }).join('');
+  document.getElementById('quiz-content').innerHTML=`
+    <div class="quiz-result">
+      <div class="qr-confetti" id="qr-confetti"></div>
+      <p class="qr-eye">Hasil Kuismu</p>
+      <div class="qr-img-wrap" style="border-color:${d.ca}"><img src="${d.img}" alt="${d.en}" onerror="this.style.opacity='.1'"/></div>
+      <h3 class="qr-jp">${d.kj}</h3>
+      <p class="qr-en" style="color:${d.caGold}">${d.en}</p>
+      <p class="qr-desc">Kamu paling mirip dengan <strong>${CNAMES[winner]}</strong>! ${d.tag.replace(/<br>/g,' ')}</p>
+      <div class="qr-bars">${bars}</div>
+      <div class="quiz-result-actions">
+        <div class="qra-btn primary" onclick="closeQuiz();openChar('${winner}')">Lihat Profil ${CNAMES[winner]} <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        <div class="qra-btn ghost" onclick="copyToClipboard('Aku dapat hasil ${CNAMES[winner]} di kuis Kamu Nakano yang Mana? ✿')">Bagikan Hasil</div>
+        <div class="qra-btn ghost" onclick="openQuiz()">Ulangi Kuis</div>
+      </div>
+    </div>`;
+  const confettiEl=document.getElementById('qr-confetti');
+  if(confettiEl)spawnConfetti(confettiEl,d.ca);
+  setTimeout(()=>{
+    document.querySelectorAll('.qr-bar-fill').forEach(el=>{el.style.width=el.dataset.w+'%'});
+  },80);
+}
+
+// ════════════════════════════════
+// CURSOR — dot + ring + glow trail + click ripple
+// ════════════════════════════════
+var cd=document.getElementById('cd'),cr=document.getElementById('cr'),cglow=document.getElementById('cglow');
+var mx=window.innerWidth/2,my=window.innerHeight/2,rx=mx,ry=my,gx=mx,gy=my;
 cd.style.left=mx+'px';cd.style.top=my+'px';
 cr.style.left=rx+'px';cr.style.top=ry+'px';
+cglow.style.left=gx+'px';cglow.style.top=gy+'px';
 
 if(window.matchMedia('(hover:hover)').matches){
-  document.addEventListener('mousemove',function(e){mx=e.clientX;my=e.clientY;});
+  var moveTimer=null;
+  document.addEventListener('mousemove',function(e){
+    mx=e.clientX;my=e.clientY;
+    document.body.classList.add('cur-move');
+    clearTimeout(moveTimer);
+    moveTimer=setTimeout(function(){document.body.classList.remove('cur-move')},900);
+  });
+  document.addEventListener('mousedown',function(){document.body.classList.add('cur-down')});
+  document.addEventListener('mouseup',function(){document.body.classList.remove('cur-down')});
+  document.addEventListener('click',function(e){
+    var rip=document.createElement('div');
+    rip.className='cur-ripple';
+    rip.style.left=e.clientX+'px';rip.style.top=e.clientY+'px';
+    document.body.appendChild(rip);
+    setTimeout(function(){rip.remove()},600);
+  });
   (function loop(){
     cd.style.left=mx+'px';
     cd.style.top=my+'px';
-    rx+=(mx-rx)*.12;
-    ry+=(my-ry)*.12;
+    rx+=(mx-rx)*.16;
+    ry+=(my-ry)*.16;
     cr.style.left=rx+'px';
     cr.style.top=ry+'px';
+    gx+=(mx-gx)*.07;
+    gy+=(my-gy)*.07;
+    cglow.style.left=gx+'px';
+    cglow.style.top=gy+'px';
     requestAnimationFrame(loop);
   })();
   document.addEventListener('mouseover',function(e){
-    var hov=!!e.target.closest('a,button,[role="button"],.char-card,.fuutaro-card,.sc-card,.tc,.hc,.ffc,.stc,.svc,.gp,.ep-item,.ch-item,.fav-item,.s-item,.card-fav');
+    var hov=!!e.target.closest('a,button,[role="button"],.char-card,.fuutaro-card,.sc-card,.tc,.hc,.ffc,.stc,.svc,.gp,.ep-item,.ch-item,.fav-item,.s-item,.card-fav,.quiz-opt,.quiz-cta,.stat-item,.chip');
     document.body.classList.toggle('hov',hov);
   });
 }
@@ -1104,7 +2043,7 @@ function setCA(d){
   if(THEME==='dark') r.style.setProperty('--bg-dk',d.bgDk);
   cd.style.background=d.ca;
   cr.style.borderColor='rgba('+d.caRgb+',.4)';
-  document.getElementById('n-dot').style.background=d.ca;
+  document.getElementById('n-dot').style.background='linear-gradient(135deg,'+d.cab+','+d.ca+')';
   document.getElementById('scroll-top').style.background=d.ca;
   document.getElementById('fav-btn').style.color=d.ca;
 }
@@ -1149,6 +2088,7 @@ function showView(id){
   ['home-view','char-view','series-view'].forEach(function(v){
     document.getElementById(v).style.display=(v===id)?'block':'none';
   });
+  document.querySelectorAll('.char-nav-arrow,.char-dots').forEach(function(e){e.style.display=(id==='char-view')?'':'none'});
 }
 function flash(color){
   var f=document.getElementById('fov');
@@ -1211,17 +2151,47 @@ function openSeries(id){
 }
 
 // ════════════════════════════════
+// CHARACTER PREV/NEXT NAV
+// ════════════════════════════════
+function renderCharDots(){
+  const wrap=document.getElementById('char-dots');
+  wrap.innerHTML=CHAR_ORDER.map(id=>`<div class="char-dot${id===CURRENT_CHAR?' active':''}" onclick="openChar('${id}')" title="${CNAMES[id]||id}"></div>`).join('');
+}
+function navChar(dir){
+  const idx=CHAR_ORDER.indexOf(CURRENT_CHAR);
+  let next=idx+dir;
+  if(next<0)next=CHAR_ORDER.length-1;
+  if(next>=CHAR_ORDER.length)next=0;
+  openChar(CHAR_ORDER[next]);
+}
+document.getElementById('char-prev').addEventListener('click',()=>navChar(-1));
+document.getElementById('char-next').addEventListener('click',()=>navChar(1));
+(function(){
+  let sx=0,sy=0,swiping=false;
+  const hero=document.getElementById('chero');
+  hero.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY;swiping=true},{passive:true});
+  hero.addEventListener('touchend',e=>{
+    if(!swiping)return;swiping=false;
+    const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;
+    if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.4){dx>0?navChar(-1):navChar(1)}
+  },{passive:true});
+})();
+
+// ════════════════════════════════
 // OPEN CHARACTER
 // ════════════════════════════════
 function openChar(id){
   var d=DB[id];
   if(!d){console.error('Char not found:',id);return}
+  CURRENT_CHAR=id;
   flash(d.ca);
   showView('char-view');
   window.scrollTo({top:0,behavior:'instant'});
   document.getElementById('nav').classList.remove('solid');
   document.getElementById('nhome').classList.add('show');
   themeChar(d);
+  renderCharDots();
+  syncFavToggleBtn();
 
   setTxt('n-txt',d.logo);
   document.getElementById('n-dot').textContent=d.kj[0]||'五';
@@ -1241,6 +2211,11 @@ function openChar(id){
   document.getElementById('s-ht').innerHTML=d.ht+'<span style="font-size:.72em">cm</span>';
   document.getElementById('s-wt').innerHTML=d.wt+'<span style="font-size:.72em">kg</span>';
   setTxt('s-bd',d.bd);setTxt('s-zo',d.zo);setTxt('s-zol',d.zol);
+  document.querySelectorAll('.stn').forEach(function(el){
+    el.style.animation='none';
+    void el.offsetWidth;
+    el.style.animation='';
+  });
   loadImg('pimg',d.pi);
   setTxt('pcap',d.pcap);
   setHtml('ptit',d.ptit);
@@ -1252,7 +2227,7 @@ function openChar(id){
   setTxt('trtit',d.trt);
   setHtml('trgrid',R.tr(d.tr));
   setTxt('geye',d.ge);setTxt('gtit',d.gt);
-  setHtml('ggrid',R.gal(d.gal));
+  setHtml('ggrid',R.gal(d.gal,id));
   document.querySelectorAll('.gtp').forEach(function(e){e.style.background='linear-gradient(135deg,'+d.d2+','+d.d3+')'});
   setTxt('hhtit',d.ht2);
   setHtml('hhgrid',R.hob(d.hob));
@@ -1266,7 +2241,8 @@ function openChar(id){
   // petals
   var hero=document.getElementById('chero');
   hero.querySelectorAll('.petal').forEach(function(p){p.remove()});
-  for(var i=0;i<20;i++){
+  var petalCount=window.innerWidth<640?10:20;
+  for(var i=0;i<petalCount;i++){
     var p=document.createElement('div');p.className='petal';
     var sz=4+Math.random()*9;
     p.style.cssText='left:'+Math.random()*100+'%;width:'+sz+'px;height:'+(sz*1.28)+'px;background:'+[d.ca,d.cab,'rgba(255,255,255,.42)'][i%3]+';animation-duration:'+(9+Math.random()*12)+'s;animation-delay:'+(Math.random()*14)+'s;transform:rotate('+(Math.random()*360)+'deg)';
@@ -1281,10 +2257,11 @@ function openChar(id){
 function goHome(){
   flash('#fff');
   showView('home-view');
+  CURRENT_CHAR=null;
   document.getElementById('nhome').classList.remove('show');
   setTxt('n-txt','五等分の花嫁');
   document.getElementById('n-dot').textContent='五';
-  document.getElementById('n-dot').style.background='#e05068';
+  document.getElementById('n-dot').style.background='linear-gradient(135deg,#f28fa0,#e05068)';
   document.getElementById('scroll-top').style.background='#e05068';
   document.getElementById('fav-btn').style.color='#e05068';
   cd.style.background='#e05068';
@@ -1302,6 +2279,7 @@ function goHome(){
     if(m&&FAVS.includes(m[1])){btn.textContent='♥';btn.classList.add('active')}
     else{btn.textContent='♡';btn.classList.remove('active')}
   });
+  setTimeout(observeAll,120);
 }
 
 // ════════════════════════════════
@@ -1309,9 +2287,16 @@ function goHome(){
 // ════════════════════════════════
 var nav=document.getElementById('nav');
 var stBtn=document.getElementById('scroll-top');
+var scrollTicking=false;
 window.addEventListener('scroll',function(){
-  nav.classList.toggle('solid',window.scrollY>50);
-  stBtn.classList.toggle('show',window.scrollY>400);
+  if(!scrollTicking){
+    requestAnimationFrame(function(){
+      nav.classList.toggle('solid',window.scrollY>50);
+      stBtn.classList.toggle('show',window.scrollY>400);
+      scrollTicking=false;
+    });
+    scrollTicking=true;
+  }
 },{passive:true});
 
 // ════════════════════════════════
@@ -1325,12 +2310,39 @@ document.querySelectorAll('.char-card,.fuutaro-card,.sc-card').forEach(function(
 // STARS
 // ════════════════════════════════
 var hv=document.getElementById('home-view');
-for(var i=0;i<65;i++){
+var starCount=window.innerWidth<640?36:65;
+for(var i=0;i<starCount;i++){
   var s=document.createElement('div');s.className='star';
   var sz=Math.random()<.65?1:Math.random()<.8?1.5:2;
   s.style.cssText='width:'+sz+'px;height:'+sz+'px;top:'+Math.random()*100+'%;left:'+Math.random()*100+'%;animation-duration:'+(2+Math.random()*4)+'s;animation-delay:'+(Math.random()*5)+'s';
   hv.appendChild(s);
 }
+
+// ════════════════════════════════
+// STATS COUNT-UP
+// ════════════════════════════════
+function animateCount(el){
+  const target=parseInt(el.dataset.count,10)||0;
+  const dur=900;const t0=performance.now();
+  function step(t){
+    const p=Math.min(1,(t-t0)/dur);
+    const eased=1-Math.pow(1-p,3);
+    el.textContent=Math.round(eased*target);
+    if(p<1)requestAnimationFrame(step);
+    else el.textContent=target;
+  }
+  requestAnimationFrame(step);
+}
+const statsObs=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){
+    if(e.isIntersecting){
+      e.target.querySelectorAll('.stat-num').forEach(animateCount);
+      statsObs.unobserve(e.target);
+    }
+  });
+},{threshold:.4});
+var statsBarEl=document.querySelector('.stats-bar');
+if(statsBarEl)statsObs.observe(statsBarEl);
 
 // ════════════════════════════════
 // SCROLL REVEAL
@@ -1344,9 +2356,10 @@ function observeAll(){
 observeAll();
 
 // ════════════════════════════════
-// PARALLAX
+// PARALLAX (skips on touch / reduced motion for smoothness)
 // ════════════════════════════════
-if(window.matchMedia('(hover:hover) and (min-width:769px)').matches){
+var reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+if(!reduceMotion&&window.matchMedia('(hover:hover) and (min-width:769px)').matches){
   var tk=false;
   window.addEventListener('scroll',function(){
     if(!tk){requestAnimationFrame(function(){
