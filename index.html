@@ -147,9 +147,10 @@ body.cur-down #cd{transform:translate(-50%,-50%) scale(1.4)}
 .n-btn svg{width:15px;height:15px;transition:transform .3s}
 .n-btn:hover svg{transform:rotate(18deg)}
 #search-btn:hover{background:var(--ca);color:#fff;border-color:var(--ca)}
-#quiz-nav-btn{display:none}
-#quiz-nav-btn.show{display:flex}
-@media(min-width:640px){#quiz-nav-btn{display:flex}}
+#music-nav-btn:hover{background:var(--ca);color:#fff;border-color:var(--ca)}
+#quiz-nav-btn,#music-nav-btn{display:none}
+#quiz-nav-btn.show,#music-nav-btn.show{display:flex}
+@media(min-width:640px){#quiz-nav-btn,#music-nav-btn{display:flex}}
 
 /* ── SEARCH ── */
 #search-ov{
@@ -272,6 +273,26 @@ body.cur-down #cd{transform:translate(-50%,-50%) scale(1.4)}
 .quiz-cta-btn svg{width:13px;height:13px}
 .quiz-mini-avatars{position:absolute;right:-10px;bottom:-18px;display:flex;opacity:.16;pointer-events:none}
 .quiz-mini-avatars span{font-family:'Shippori Mincho',serif;font-size:5rem;line-height:1}
+
+.cta-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:860px){.cta-grid{grid-template-columns:1fr}}
+.music-cta{
+  position:relative;overflow:hidden;border-radius:20px;border:1px solid var(--border2);
+  background:linear-gradient(120deg,rgba(124,58,237,.14),rgba(224,80,104,.08));
+  padding:clamp(1.6rem,4vw,2.2rem);display:flex;align-items:center;justify-content:space-between;gap:1.2rem;flex-wrap:wrap;
+  cursor:pointer;transition:transform .4s var(--ease),box-shadow .4s,border-color .4s;
+}
+.music-cta::before{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.12) 50%,transparent 70%);
+  background-size:220% 100%;background-position:140% 0;transition:background-position 1s var(--eout);
+}
+.music-cta:hover::before{background-position:-40% 0}
+.music-cta:hover{transform:translateY(-4px);box-shadow:0 20px 50px var(--shadow);border-color:rgba(124,58,237,.4)}
+.music-cta-note{
+  position:absolute;right:-6px;bottom:-14px;font-size:5.4rem;line-height:1;color:#a78bfa;opacity:.14;
+  font-family:'Playfair Display',serif;pointer-events:none;animation:noteBob 3s ease-in-out infinite;
+}
 
 /* ── SECTION LABEL ── */
 .sec-label-row{
@@ -771,6 +792,58 @@ footer{background:var(--bg);padding:clamp(1.8rem,3.8vh,3rem) clamp(1.5rem,5vw,4r
 .qra-btn svg{width:12px;height:12px}
 @media(max-width:640px){.quiz-box{padding:1.4rem;border-radius:16px}}
 
+/* ── MUSIC MODAL ── */
+#music-ov{position:fixed;inset:0;z-index:1100;background:rgba(2,0,3,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);display:none;align-items:center;justify-content:center;padding:1.2rem;overflow-y:auto;-webkit-overflow-scrolling:touch}
+#music-ov.open{display:flex}
+.music-box{
+  position:relative;width:100%;max-width:640px;background:var(--card-bg);border:1px solid var(--border2);
+  border-radius:22px;padding:clamp(1.6rem,4vw,2.4rem);box-shadow:0 30px 90px rgba(0,0,0,.5);
+  animation:popin .4s var(--spring);max-height:88vh;overflow-y:auto;-webkit-overflow-scrolling:touch;
+}
+.music-head{display:flex;align-items:center;gap:.9rem;margin-bottom:1.3rem}
+.music-head-icon{
+  width:46px;height:46px;border-radius:14px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--cab),var(--ca));color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:1.35rem;
+  box-shadow:0 8px 22px rgba(var(--ca-rgb),.35);animation:noteBob 2.6s ease-in-out infinite;
+}
+@keyframes noteBob{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-4px) rotate(4deg)}}
+.music-eye{font-size:.53rem;letter-spacing:.42em;text-transform:uppercase;color:var(--ca);margin-bottom:.2rem}
+.music-title{font-family:'Playfair Display',serif;font-size:clamp(1.15rem,2.4vw,1.5rem);color:var(--text)}
+.music-tabs{display:flex;gap:.4rem;overflow-x:auto;padding-bottom:.6rem;margin-bottom:1rem;scrollbar-width:none}
+.music-tabs::-webkit-scrollbar{display:none}
+.music-tab{
+  flex-shrink:0;padding:.4rem 1rem;border-radius:100px;font-size:.6rem;letter-spacing:.12em;
+  border:1px solid var(--border2);background:var(--surface);color:var(--text3);cursor:pointer;
+  transition:all .22s;white-space:nowrap;
+}
+.music-tab.active,.music-tab:hover{background:var(--ca);border-color:var(--ca);color:#fff}
+.music-section-title{font-size:.58rem;letter-spacing:.35em;text-transform:uppercase;color:var(--ca);margin:1.1rem 0 .55rem;display:flex;align-items:center;gap:.5rem}
+.music-section-title:first-child{margin-top:0}
+.music-section-title::before{content:'✿'}
+.music-list-wrap{display:flex;flex-direction:column;gap:.5rem}
+.music-item{
+  display:flex;align-items:center;gap:.8rem;padding:.7rem .9rem;border-radius:12px;
+  border:1px solid var(--border);background:var(--surface);cursor:pointer;
+  transition:all .22s var(--eout);text-decoration:none;color:inherit;
+  opacity:0;animation:qoptin .4s var(--eout) forwards;
+}
+.music-item:hover{border-color:var(--ca);background:rgba(var(--ca-rgb),.08);transform:translateX(4px)}
+.music-play-ic{
+  width:32px;height:32px;border-radius:50%;flex-shrink:0;background:var(--surface2);
+  display:flex;align-items:center;justify-content:center;color:var(--ca);transition:all .25s;
+}
+.music-item:hover .music-play-ic{background:var(--ca);color:#fff;transform:scale(1.08)}
+.music-play-ic svg{width:12px;height:12px}
+.music-item-txt{flex:1;min-width:0}
+.music-item-title{font-size:.78rem;color:var(--text);margin-bottom:.12rem;font-weight:500}
+.music-item-artist{font-size:.63rem;color:var(--text3)}
+.music-item-badge{flex-shrink:0;font-size:.5rem;letter-spacing:.15em;text-transform:uppercase;color:var(--ca-gold);background:rgba(var(--ca-rgb),.1);border:1px solid rgba(var(--ca-rgb),.22);padding:.18rem .5rem;border-radius:100px;white-space:nowrap}
+.music-item-ext{width:14px;height:14px;flex-shrink:0;color:var(--text4);transition:color .25s}
+.music-item:hover .music-item-ext{color:var(--ca)}
+.music-foot-note{margin-top:1.2rem;text-align:center;font-size:.62rem;color:var(--text4);letter-spacing:.05em}
+@media(max-width:640px){.music-box{padding:1.4rem;border-radius:16px}}
+
 @media(max-width:1100px){.gl{grid-template-columns:1fr 1fr;grid-template-rows:215px 215px 215px}.gp.gt{grid-row:span 2}.tg{grid-template-columns:1fr 1fr}.ff{grid-template-columns:1fr 1fr}.series-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:820px){.sv-hero{grid-template-columns:1fr}.sv-vis{position:absolute;inset:0;height:100%;opacity:.28;z-index:1}.sv-vis::before{background:linear-gradient(to top,var(--bg-dk) 0%,rgba(8,3,10,.58) 65%,rgba(8,3,10,.22) 100%)}.sv-col{z-index:4;padding:6rem 1.4rem 3rem;min-height:100vh;justify-content:flex-end}.sv-kj{display:none}.sv-rib-in{grid-template-columns:1fr 1fr 1fr!important}.sv-info-g{grid-template-columns:1fr}}
 @media(max-width:768px){#chero{grid-template-columns:1fr}.hvis{position:absolute;inset:0;height:100%;opacity:.28;z-index:1}.hvis::before{background:linear-gradient(to top,var(--bg-dk) 0%,rgba(8,3,10,.58) 65%,rgba(8,3,10,.22) 100%)}.hcol{z-index:4;padding:6rem 1.4rem 3rem;min-height:100vh;justify-content:flex-end}.hkj{display:none}.stin{grid-template-columns:repeat(3,1fr)}.stc:nth-child(4),.stc:nth-child(5){border-top:1px solid var(--border)}.pg{grid-template-columns:1fr}.pif{aspect-ratio:4/3;max-height:300px}.hg{grid-template-columns:1fr 1fr}.gl{grid-template-columns:1fr 1fr;grid-template-rows:auto}.gp.gt{grid-row:span 1;min-height:185px}.dbox{grid-template-columns:1fr}.series-grid{grid-template-columns:1fr}}
@@ -827,6 +900,23 @@ footer{background:var(--bg);padding:clamp(1.8rem,3.8vh,3rem) clamp(1.5rem,5vw,4r
   </div>
 </div>
 
+<!-- MUSIC MODAL -->
+<div id="music-ov">
+  <div class="music-box" id="music-box">
+    <button class="quiz-close" id="music-close-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+    <div class="music-head">
+      <div class="music-head-icon">♪</div>
+      <div>
+        <p class="music-eye">Discography</p>
+        <h3 class="music-title">Lagu &amp; Soundtrack</h3>
+      </div>
+    </div>
+    <div class="music-tabs" id="music-tabs"></div>
+    <div id="music-list"></div>
+    <p class="music-foot-note">Tap judul lagu untuk mencarinya di Spotify ✿</p>
+  </div>
+</div>
+
 <!-- NAV -->
 <nav id="nav">
   <a class="n-logo" id="nlogo" href="#" onclick="goHome();return false">
@@ -837,6 +927,9 @@ footer{background:var(--bg);padding:clamp(1.8rem,3.8vh,3rem) clamp(1.5rem,5vw,4r
     <button class="n-home" id="nhome" onclick="goHome()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12L12 3l9 9"/><path d="M9 21V12h6v9"/></svg>
       Home
+    </button>
+    <button class="n-btn" id="music-nav-btn" title="Daftar Lagu" onclick="openMusic()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
     </button>
     <button class="n-btn" id="quiz-nav-btn" title="Kuis Kepribadian" onclick="openQuiz()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.5 9a2.5 2.5 0 015 0c0 1.5-2 2-2 3.5"/><circle cx="12" cy="17" r=".6" fill="currentColor" stroke="none"/></svg>
@@ -877,14 +970,25 @@ footer{background:var(--bg);padding:clamp(1.8rem,3.8vh,3rem) clamp(1.5rem,5vw,4r
   </div>
 
   <div class="quiz-cta-wrap">
-    <div class="quiz-cta" onclick="openQuiz()" role="button" tabindex="0">
-      <div class="quiz-mini-avatars"><span>五</span></div>
-      <div class="quiz-cta-txt">
-        <div class="quiz-cta-eye">✿ Kuis Kepribadian</div>
-        <h3 class="quiz-cta-h">Kamu Nakano yang Mana?</h3>
-        <p class="quiz-cta-p">Jawab beberapa pertanyaan singkat dan temukan saudari Nakano mana yang paling mirip dengan kepribadianmu.</p>
+    <div class="cta-grid">
+      <div class="quiz-cta" onclick="openQuiz()" role="button" tabindex="0">
+        <div class="quiz-mini-avatars"><span>五</span></div>
+        <div class="quiz-cta-txt">
+          <div class="quiz-cta-eye">✿ Kuis Kepribadian</div>
+          <h3 class="quiz-cta-h">Kamu Nakano yang Mana?</h3>
+          <p class="quiz-cta-p">Jawab beberapa pertanyaan singkat dan temukan saudari Nakano mana yang paling mirip dengan kepribadianmu.</p>
+        </div>
+        <div class="quiz-cta-btn">Mulai Kuis <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
       </div>
-      <div class="quiz-cta-btn">Mulai Kuis <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+      <div class="music-cta" onclick="openMusic()" role="button" tabindex="0">
+        <div class="music-cta-note">♪</div>
+        <div class="quiz-cta-txt">
+          <div class="quiz-cta-eye" style="color:#a78bfa">✿ Discography</div>
+          <h3 class="quiz-cta-h">Dengarkan Semua Lagunya</h3>
+          <p class="quiz-cta-p">OP, ED, insert song, sampai character song tiap Nakano bersaudara — lengkap dengan link pencarian Spotify.</p>
+        </div>
+        <div class="quiz-cta-btn" style="background:linear-gradient(120deg,#a78bfa,#7c3aed)">Buka Playlist <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+      </div>
     </div>
   </div>
 
@@ -1269,6 +1373,7 @@ const DB={
 
 const CHAR_ORDER=['fuutaro','ichika','nino','miku','yotsuba','itsuki'];
 let CURRENT_CHAR=null;
+let CURRENT_SERIES=null;
 
 // ════════════════════════════════
 // RENDERER
@@ -1312,12 +1417,21 @@ function applyTheme(t){
   document.documentElement.setAttribute('data-theme',t);
   localStorage.setItem('gt_theme',t);
   const ico=document.getElementById('theme-ico');
-  if(t==='dark'){
-    ico.innerHTML='<path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>';
-  } else {
-    ico.innerHTML='<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
-  }
+  ico.style.transform='rotate(-90deg) scale(.5)';ico.style.opacity='0';
+  setTimeout(function(){
+    if(t==='dark'){
+      ico.innerHTML='<path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>';
+    } else {
+      ico.innerHTML='<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+    }
+    ico.style.transform='rotate(0deg) scale(1)';ico.style.opacity='1';
+  },150);
+  // re-sync colors (incl. --bg-dk) for whichever detail view is currently open,
+  // since those set an inline override that must refresh when the theme flips
+  if(CURRENT_CHAR&&DB[CURRENT_CHAR]){themeChar(DB[CURRENT_CHAR])}
+  else if(CURRENT_SERIES&&SDB[CURRENT_SERIES]){themeSeries(SDB[CURRENT_SERIES])}
 }
+document.getElementById('theme-ico').style.transition='transform .35s var(--spring),opacity .25s';
 document.getElementById('theme-btn').onclick=()=>applyTheme(THEME==='dark'?'light':'dark');
 applyTheme(THEME);
 
@@ -1366,7 +1480,7 @@ document.getElementById('search-btn').addEventListener('click',openSearch);
 document.getElementById('s-close-btn').addEventListener('click',closeSearch);
 document.getElementById('search-ov').addEventListener('click',e=>{if(e.target===e.currentTarget)closeSearch()});
 document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){closeSearch();closeLightbox();closeQuiz()}
+  if(e.key==='Escape'){closeSearch();closeLightbox();closeQuiz();closeMusic()}
   if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();openSearch()}
   if(document.getElementById('char-view').style.display!=='none'){
     if(e.key==='ArrowLeft')navChar(-1);
@@ -1911,8 +2025,17 @@ function renderQuizQ(){
     drawQuizQ();
   }
 }
+function shuffleArr(arr){
+  const a=arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
 function drawQuizQ(){
   const q=QUIZ_Q[quizStep];
+  const shuffledOpts=shuffleArr(q.opts);
   const pct=((quizStep)/QUIZ_Q.length)*100;
   const letters=['A','B','C','D','E'];
   const dots=QUIZ_Q.map((_,i)=>`<div class="qp-dot${i<quizStep?' done':''}"></div>`).join('');
@@ -1922,7 +2045,7 @@ function drawQuizQ(){
     <div class="quiz-q-wrap">
       <p class="quiz-step">Pertanyaan ${quizStep+1} dari ${QUIZ_Q.length}</p>
       <h3 class="quiz-q">${q.q}</h3>
-      <div class="quiz-opts">${q.opts.map((o,i)=>`<div class="quiz-opt" data-idx="${i}" onclick="answerQuiz('${o.id}',this)"><span class="qo-let">${letters[i]}</span><span>${o.t}</span></div>`).join('')}</div>
+      <div class="quiz-opts">${shuffledOpts.map((o,i)=>`<div class="quiz-opt" data-idx="${i}" onclick="answerQuiz('${o.id}',this)"><span class="qo-let">${letters[i]}</span><span>${o.t}</span></div>`).join('')}</div>
     </div>`;
 }
 function answerQuiz(id,el){
@@ -1983,6 +2106,106 @@ function renderQuizResult(){
 }
 
 // ════════════════════════════════
+// MUSIC — Discography with Spotify search links
+// ════════════════════════════════
+const MUSIC_DATA={
+  anime:[
+    {section:'Musim 1 (2019)',songs:[
+      {t:'Gotoubun no Kimochi',a:'Nakanoke no Itsutsugo',tag:'Opening'},
+      {t:'Sign',a:'Aya Uchida',tag:'Ending'},
+      {t:'Gobun no Ichi',a:'Nakanoke no Itsutsugo',tag:'Insert Song'}
+    ]},
+    {section:'Musim 2 (2021)',songs:[
+      {t:'Gotoubun no Katachi',a:'Nakanoke no Itsutsugo',tag:'Opening'},
+      {t:'Hatsukoi',a:'Nakanoke no Itsutsugo',tag:'Ending'}
+    ]},
+    {section:'The Movie (2022)',songs:[
+      {t:'Gotoubun no Kiseki',a:'Nakanoke no Itsutsugo',tag:'Theme Song'},
+      {t:'Gotoubun no Hanayome ~Arigato no Hana~',a:'Nakanoke no Itsutsugo',tag:'Ending Film'},
+      {t:'Mirai e no Hanataba',a:'Nakanoke no Itsutsugo',tag:'Insert Song'}
+    ]},
+    {section:'Spesial Episode / OVA (2023)',songs:[
+      {t:'Gokoubun no Egao',a:'Nakanoke no Itsutsugo',tag:'Opening'},
+      {t:'Takaramono',a:'Nakanoke no Itsutsugo',tag:'Ending'}
+    ]}
+  ],
+  charS1:[
+    {section:'Character Album · Musim 1 (2019)',songs:[
+      {t:'Hello, dear my dream ~Ichibyou-go ni wa~',a:'Kana Hanazawa · Ichika Nakano',tag:'Ichika'},
+      {t:'Aitsu to Kimi ~Nidoto nai Unmei~',a:'Ayana Taketatsu · Nino Nakano',tag:'Nino'},
+      {t:'Lovely music ~Sanshuukanmae made wa Shirokatta~',a:'Miku Ito · Miku Nakano',tag:'Miku'},
+      {t:'Heart no Katachi ~Yotsuba no Clover~',a:'Ayane Sakura · Yotsuba Nakano',tag:'Yotsuba'},
+      {t:'Sunao ni Open Heart ~Itsutsu no Kazoete~',a:'Inori Minase · Itsuki Nakano',tag:'Itsuki'}
+    ]}
+  ],
+  charS2:[
+    {section:'Character Album · Musim 2 (2021)',songs:[
+      {t:'Kizuiteyo ~One Love~',a:'Kana Hanazawa · Ichika Nakano',tag:'Ichika'},
+      {t:'Sukiyo ~Two Hearts~',a:'Ayana Taketatsu · Nino Nakano',tag:'Nino'},
+      {t:'Kimi ga Suki ~Three Feelings~',a:'Miku Ito · Miku Nakano',tag:'Miku'},
+      {t:'Naisho no Koi ~Love Four U~',a:'Ayane Sakura · Yotsuba Nakano',tag:'Yotsuba'},
+      {t:'Tokubetsu na Hito ~Lesson Five~',a:'Inori Minase · Itsuki Nakano',tag:'Itsuki'}
+    ]}
+  ],
+  special:[
+    {section:'Lagu Spesial Lainnya',songs:[
+      {t:'Kore Kara mo Gotoubun',a:'Nakanoke no Itsutsugo',tag:'Ulang Tahun'}
+    ]}
+  ]
+};
+const MUSIC_TABS=[
+  {id:'all',label:'Semua'},
+  {id:'anime',label:'Anime & Film'},
+  {id:'charS1',label:'Character S1'},
+  {id:'charS2',label:'Character S2'},
+  {id:'special',label:'Spesial'}
+];
+let musicFilter='all';
+function musicSpotifyUrl(title){
+  return 'https://open.spotify.com/search/'+encodeURIComponent(title+' Gotoubun no Hanayome');
+}
+function openMusic(){
+  document.getElementById('music-ov').classList.add('open');
+  musicFilter='all';
+  renderMusicTabs();
+  renderMusicList();
+}
+function closeMusic(){document.getElementById('music-ov').classList.remove('open')}
+document.getElementById('music-close-btn').addEventListener('click',closeMusic);
+document.getElementById('music-ov').addEventListener('click',e=>{if(e.target.id==='music-ov')closeMusic()});
+function renderMusicTabs(){
+  document.getElementById('music-tabs').innerHTML=MUSIC_TABS.map(t=>
+    `<div class="music-tab${t.id===musicFilter?' active':''}" onclick="setMusicFilter('${t.id}')">${t.label}</div>`
+  ).join('');
+}
+function setMusicFilter(id){
+  musicFilter=id;
+  renderMusicTabs();
+  renderMusicList();
+}
+function renderMusicList(){
+  const groups=musicFilter==='all'
+    ? [...MUSIC_DATA.anime,...MUSIC_DATA.charS1,...MUSIC_DATA.charS2,...MUSIC_DATA.special]
+    : MUSIC_DATA[musicFilter];
+  let html='';
+  let idx=0;
+  groups.forEach(g=>{
+    html+=`<p class="music-section-title">${g.section}</p><div class="music-list-wrap">`;
+    g.songs.forEach(s=>{
+      idx++;
+      html+=`<a class="music-item" style="animation-delay:${Math.min(idx*.04,.5)}s" href="${musicSpotifyUrl(s.t)}" target="_blank" rel="noopener">
+        <div class="music-play-ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
+        <div class="music-item-txt"><p class="music-item-title">${s.t}</p><p class="music-item-artist">${s.a}</p></div>
+        <span class="music-item-badge">${s.tag}</span>
+        <svg class="music-item-ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
+      </a>`;
+    });
+    html+='</div>';
+  });
+  document.getElementById('music-list').innerHTML=html;
+}
+
+// ════════════════════════════════
 // CURSOR — dot + ring + glow trail + click ripple
 // ════════════════════════════════
 var cd=document.getElementById('cd'),cr=document.getElementById('cr'),cglow=document.getElementById('cglow');
@@ -2022,7 +2245,7 @@ if(window.matchMedia('(hover:hover)').matches){
     requestAnimationFrame(loop);
   })();
   document.addEventListener('mouseover',function(e){
-    var hov=!!e.target.closest('a,button,[role="button"],.char-card,.fuutaro-card,.sc-card,.tc,.hc,.ffc,.stc,.svc,.gp,.ep-item,.ch-item,.fav-item,.s-item,.card-fav,.quiz-opt,.quiz-cta,.stat-item,.chip');
+    var hov=!!e.target.closest('a,button,[role="button"],.char-card,.fuutaro-card,.sc-card,.tc,.hc,.ffc,.stc,.svc,.gp,.ep-item,.ch-item,.fav-item,.s-item,.card-fav,.quiz-opt,.quiz-cta,.stat-item,.chip,.music-item,.music-tab');
     document.body.classList.toggle('hov',hov);
   });
 }
@@ -2110,6 +2333,7 @@ function loadImg(id,src){
 function openSeries(id){
   var d=SDB[id];
   if(!d){console.error('Series not found:',id);return}
+  CURRENT_SERIES=id;
   flash(d.ca);
   showView('series-view');
   window.scrollTo({top:0,behavior:'instant'});
@@ -2258,6 +2482,7 @@ function goHome(){
   flash('#fff');
   showView('home-view');
   CURRENT_CHAR=null;
+  CURRENT_SERIES=null;
   document.getElementById('nhome').classList.remove('show');
   setTxt('n-txt','五等分の花嫁');
   document.getElementById('n-dot').textContent='五';
