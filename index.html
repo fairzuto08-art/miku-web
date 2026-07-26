@@ -5,7 +5,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
 <title>五等分の花嫁 — Complete Encyclopedia</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%25' stop-color='%23f28fa0'/><stop offset='55%25' stop-color='%23e05068'/><stop offset='100%25' stop-color='%23a72a45'/></linearGradient></defs><rect width='64' height='64' rx='16' fill='url(%23g)'/><circle cx='32' cy='32' r='26' fill='none' stroke='white' stroke-opacity='.22' stroke-width='1.4'/><text x='32' y='45' text-anchor='middle' font-size='36' font-family='serif' fill='white'>五</text></svg>"/>
-<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%}
@@ -30,14 +32,16 @@ button{font-family:inherit;border:none;background:none}
 }
 [data-theme="light"]{
   --bg:#faf5f8;--bg2:#f3eaf2;--bg3:#ece0eb;
-  --surface:rgba(0,0,0,.04);--surface2:rgba(0,0,0,.08);
-  --border:rgba(0,0,0,.08);--border2:rgba(0,0,0,.16);
-  --text:#1a0820;--text2:rgba(26,8,32,.65);--text3:rgba(26,8,32,.42);--text4:rgba(26,8,32,.22);
-  --shadow:rgba(0,0,0,.12);--card-bg:#fff;
+  --surface:rgba(92,21,38,.035);--surface2:rgba(92,21,38,.07);
+  --border:rgba(92,21,38,.09);--border2:rgba(92,21,38,.16);
+  --text:#1a0820;--text2:rgba(26,8,32,.66);--text3:rgba(26,8,32,.43);--text4:rgba(26,8,32,.24);
+  --shadow:rgba(92,21,38,.13);--card-bg:#fffdfe;
   --nav-bg:rgba(250,245,248,.96);
   --bg-dk:#f5eef3;
 }
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;cursor:none;transition:background .4s,color .4s}
+body,#nav,footer,.quiz-box,.music-box,#fav-panel,#search-ov .s-box{transition:background-color .5s var(--eout),border-color .5s var(--eout),color .5s var(--eout),box-shadow .5s var(--eout)}
+body{font-family:'DM Sans',sans-serif;font-weight:400;background:var(--bg);color:var(--text);overflow-x:hidden;cursor:none;transition:background .5s var(--eout),color .5s var(--eout);text-rendering:optimizeLegibility;-moz-osx-font-smoothing:grayscale;font-feature-settings:"kern" 1,"liga" 1;letter-spacing:.01em}
+h1,h2,h3,h4,.stit,.sstit,.tname,.httl,.tlh,.qr-jp,.sc-title-row,.sh-title{letter-spacing:normal}
 @media(hover:none){body{cursor:auto}}
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
@@ -46,42 +50,54 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);ove
 
 /* ── CURSOR ── */
 #cglow{
-  position:fixed;top:0;left:0;width:120px;height:120px;border-radius:50%;
+  position:fixed;top:0;left:0;width:130px;height:130px;border-radius:50%;
   pointer-events:none;z-index:9997;transform:translate(-50%,-50%);
-  background:radial-gradient(circle,rgba(var(--ca-rgb),.16) 0%,transparent 68%);
+  background:radial-gradient(circle,rgba(var(--ca-rgb),.18) 0%,transparent 68%);
   opacity:0;transition:opacity .5s;will-change:transform;filter:blur(2px);
 }
 body.cur-move #cglow{opacity:1}
 #cd,#cr{
-  position:fixed;top:0;left:0;border-radius:50%;
+  position:fixed;top:0;left:0;
   pointer-events:none;z-index:9999;
   transform:translate(-50%,-50%);will-change:transform;
 }
-#cd{width:7px;height:7px;background:var(--ca);transition:background .4s,width .2s,height .2s;box-shadow:0 0 8px rgba(var(--ca-rgb),.7)}
+#cd{width:20px;height:20px;display:flex;align-items:center;justify-content:center;transition:width .25s var(--spring),height .25s var(--spring)}
+#cd svg{width:100%;height:100%;color:var(--ca);filter:drop-shadow(0 0 5px rgba(var(--ca-rgb),.75));animation:cbloom 7s linear infinite;transition:color .4s}
+@keyframes cbloom{to{transform:rotate(360deg)}}
 #cr{
-  width:36px;height:36px;
-  border:1.5px solid rgba(224,80,104,.4);
+  width:38px;height:38px;border-radius:50%;
+  border:1.5px solid rgba(var(--ca-rgb),.38);
   background:transparent;
-  transition:width .3s var(--spring),height .3s var(--spring),border-color .4s,opacity .3s,transform .3s var(--spring);
+  transition:width .32s var(--spring),height .32s var(--spring),border-color .4s,opacity .3s,transform .32s var(--spring);
 }
-#cr::before,#cr::after{
-  content:'';position:absolute;inset:-6px;border-radius:50%;
+#cr::before{
+  content:'';position:absolute;inset:-7px;border-radius:50%;
   border:1px dashed rgba(var(--ca-rgb),0);
   transition:border-color .4s;
 }
-body.hov #cr{width:58px;height:58px;border-color:var(--ca);transform:translate(-50%,-50%) rotate(45deg)}
-body.hov #cr::before{border-color:rgba(var(--ca-rgb),.28);animation:cspin 5s linear infinite}
-body.hov #cd{width:4px;height:4px}
-body.cur-down #cr{transform:translate(-50%,-50%) scale(.82)}
-body.cur-down #cd{transform:translate(-50%,-50%) scale(1.4)}
+body.hov #cd{width:28px;height:28px}
+body.hov #cd svg{animation-duration:2.2s}
+body.hov #cr{width:62px;height:62px;border-color:rgba(var(--ca-rgb),.55)}
+body.hov #cr::before{border-color:rgba(var(--ca-rgb),.3);animation:cspin 5s linear infinite}
+body.cur-down #cr{transform:translate(-50%,-50%) scale(.8)}
+body.cur-down #cd{transform:translate(-50%,-50%) scale(1.25)}
 @keyframes cspin{to{transform:rotate(360deg)}}
-@keyframes cripple{from{width:8px;height:8px;opacity:.55}to{width:70px;height:70px;opacity:0}}
+@keyframes cripple{from{width:8px;height:8px;opacity:.55}to{width:74px;height:74px;opacity:0}}
 .cur-ripple{
   position:fixed;top:0;left:0;border-radius:50%;pointer-events:none;z-index:9998;
   transform:translate(-50%,-50%);border:1.5px solid var(--ca);
   animation:cripple .55s var(--eout) forwards;
 }
-@media(hover:none){#cd,#cr,#cglow{display:none}}
+.cur-trail{
+  position:fixed;top:0;left:0;pointer-events:none;z-index:9996;
+  transform:translate(-50%,-50%);border-radius:50% 0 50% 50%;
+  animation:ctrailFade .75s var(--eout) forwards;
+}
+@keyframes ctrailFade{
+  0%{opacity:.65;transform:translate(-50%,-50%) scale(1) rotate(0deg)}
+  100%{opacity:0;transform:translate(-50%,-50%) scale(.2) rotate(140deg) translateY(18px)}
+}
+@media(hover:none){#cd,#cr,#cglow,.cur-trail,.cur-ripple{display:none}}
 
 /* ── FLASH ── */
 #fov{position:fixed;inset:0;z-index:600;pointer-events:none;opacity:0;transition:opacity .25s}
@@ -215,6 +231,18 @@ body.cur-down #cd{transform:translate(-50%,-50%) scale(1.4)}
 @keyframes twk{from{opacity:.04}to{opacity:.38}}
 [data-theme="light"] .star{background:var(--ca);opacity:.2}
 @media(max-width:640px){.h-orb{filter:blur(55px)}}
+
+/* ── HOME PETALS & EXTRA ATMOSPHERE ── */
+#home-petals{position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+#home-petals .petal{position:absolute;border-radius:50% 0 50% 50%;opacity:0;animation:pfallHome linear infinite}
+@keyframes pfallHome{0%{transform:translateY(-6vh) translateX(0) rotate(0deg);opacity:0}6%{opacity:.55}92%{opacity:.35}100%{transform:translateY(106vh) translateX(var(--drift,40px)) rotate(480deg);opacity:0}}
+.home-kanji-deco{position:absolute;z-index:1;font-family:'Shippori Mincho',serif;font-weight:600;color:rgba(var(--ca-rgb),.05);pointer-events:none;line-height:1;user-select:none}
+[data-theme="light"] .home-kanji-deco{color:rgba(var(--ca-rgb),.08)}
+.hk-1{font-size:clamp(9rem,22vw,18rem);top:2%;right:-3%;transform:rotate(-6deg)}
+.hk-2{font-size:clamp(7rem,16vw,13rem);bottom:4%;left:-2%;transform:rotate(5deg)}
+.sparkle{position:absolute;pointer-events:none;z-index:1;animation:sparkleAni ease-in-out infinite}
+.sparkle svg{width:100%;height:100%;color:var(--ca);opacity:.5}
+@keyframes sparkleAni{0%,100%{opacity:0;transform:scale(.4) rotate(0deg)}50%{opacity:.6;transform:scale(1) rotate(90deg)}}
 
 /* ── HOME HERO ── */
 .home-hero{position:relative;z-index:2;text-align:center;padding:clamp(4.5rem,10vh,7rem) 1rem clamp(1.5rem,2.5vh,2rem)}
@@ -666,6 +694,22 @@ body.cur-down #cd{transform:translate(-50%,-50%) scale(1.4)}
 .hn{font-family:'Playfair Display',serif;font-size:clamp(1.7rem,2.5vw,2.35rem);font-weight:400;color:rgba(var(--ca-rgb),.15);line-height:1;flex-shrink:0;min-width:1.8ch}
 .httl{font-family:'Playfair Display',serif;font-size:clamp(.88rem,.98vw,1.02rem);margin-bottom:.26rem;color:var(--ca-wine)}
 .htxt{font-size:clamp(.65rem,.74vw,.75rem);line-height:1.88;color:var(--ca-sub)}
+
+/* ── FAMILY & PERSONAL FACTS ── */
+.fam-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(.8rem,1.2vw,1.25rem)}
+.fam-card{padding:clamp(1.1rem,1.9vh,1.5rem) 1rem;border-radius:12px;text-align:center;transition:all .3s var(--eout);position:relative;overflow:hidden}
+.sl .fam-card{background:var(--cam)}
+.sl .fam-card:hover{background:var(--cap);transform:translateY(-5px);box-shadow:0 12px 30px rgba(var(--ca-rgb),.15)}
+.fam-icon{font-size:1.5rem;margin-bottom:.55rem;display:block}
+.fam-role{font-size:.5rem;letter-spacing:.35em;text-transform:uppercase;color:var(--ca-sub);margin-bottom:.4rem}
+.fam-name{font-family:'Playfair Display',serif;font-size:.98rem;color:var(--ca-wine);margin-bottom:.5rem;line-height:1.3}
+.fam-note{font-size:.66rem;line-height:1.78;color:var(--ca-sub)}
+.pers-grid{display:grid;grid-template-columns:1fr 1fr;gap:.7rem 1.2rem}
+.pers-item{padding:.9rem 1.1rem;border-radius:10px;border-left:3px solid var(--ca);background:var(--cam);transition:transform .25s var(--eout),box-shadow .3s}
+.pers-item:hover{transform:translateX(4px);box-shadow:0 8px 22px rgba(var(--ca-rgb),.13)}
+.pers-label{font-size:.5rem;letter-spacing:.3em;text-transform:uppercase;color:var(--ca-sub);margin-bottom:.32rem}
+.pers-value{font-family:'Playfair Display',serif;font-size:.85rem;color:var(--ca-wine);line-height:1.5}
+@media(max-width:768px){.fam-grid{grid-template-columns:1fr}.pers-grid{grid-template-columns:1fr}}
 .ff{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(.75rem,1.1vw,1rem)}
 .ffc{border:1px solid var(--border);border-radius:10px;padding:1.12rem .95rem;text-align:center;transition:all .3s;cursor:default}
 .ffc:hover{border-color:var(--ca);background:rgba(var(--ca-rgb),.04);transform:translateY(-3px)}
@@ -766,6 +810,53 @@ footer{background:var(--bg);padding:clamp(1.8rem,3.8vh,3rem) clamp(1.5rem,5vw,4r
 .qia img{width:100%;height:100%;object-fit:cover;object-position:top center}
 .quiz-start-btn{display:inline-flex;align-items:center;gap:.6rem;padding:.85rem 1.8rem;border-radius:100px;background:linear-gradient(120deg,var(--cab),var(--ca));color:#fff;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;transition:all .25s;box-shadow:0 10px 28px rgba(var(--ca-rgb),.28)}
 .quiz-start-btn:hover{transform:translateY(-3px) scale(1.03);box-shadow:0 16px 36px rgba(var(--ca-rgb),.4)}
+
+/* ── QUIZ TYPE SELECT ── */
+.quiz-type-grid{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;margin-top:.4rem}
+.quiz-type-card{
+  padding:1.4rem 1.1rem;border-radius:16px;border:1.5px solid var(--border2);background:var(--surface);
+  cursor:pointer;transition:all .3s var(--eout);text-align:center;position:relative;overflow:hidden;
+  opacity:0;animation:qoptin .5s var(--eout) forwards;
+}
+.quiz-type-card:nth-child(1){animation-delay:.05s}.quiz-type-card:nth-child(2){animation-delay:.14s}
+.quiz-type-card::before{content:'';position:absolute;inset:0;background:linear-gradient(150deg,rgba(var(--ca-rgb),.12),transparent 65%);opacity:0;transition:opacity .3s}
+.quiz-type-card:hover{border-color:var(--ca);transform:translateY(-5px);box-shadow:0 16px 36px rgba(var(--ca-rgb),.18)}
+.quiz-type-card:hover::before{opacity:1}
+.qt-icon{font-size:2rem;margin-bottom:.6rem;display:block;position:relative;z-index:1;transition:transform .3s var(--spring)}
+.quiz-type-card:hover .qt-icon{transform:scale(1.2) rotate(-6deg)}
+.quiz-type-card h4{font-family:'Playfair Display',serif;font-size:.95rem;color:var(--text);margin-bottom:.45rem;position:relative;z-index:1}
+.quiz-type-card p{font-size:.65rem;line-height:1.7;color:var(--text3);margin:0;position:relative;z-index:1}
+@media(max-width:540px){.quiz-type-grid{grid-template-columns:1fr}}
+
+/* ── QUIZ DIFFICULTY SELECT ── */
+.quiz-diff-grid{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-top:.4rem}
+.quiz-diff-card{
+  padding:1.1rem .9rem;border-radius:14px;border:1.5px solid var(--border2);background:var(--surface);
+  cursor:pointer;transition:all .28s var(--eout);text-align:center;position:relative;overflow:hidden;
+  opacity:0;animation:qoptin .45s var(--eout) forwards;
+}
+.quiz-diff-card:nth-child(1){animation-delay:.04s}.quiz-diff-card:nth-child(2){animation-delay:.1s}.quiz-diff-card:nth-child(3){animation-delay:.16s}.quiz-diff-card:nth-child(4){animation-delay:.22s}
+.quiz-diff-card:hover{transform:translateY(-4px) scale(1.02)}
+.qd-label{display:block;font-family:'Playfair Display',serif;font-size:1.05rem;margin-bottom:.3rem}
+.qd-count{display:block;font-size:.58rem;letter-spacing:.15em;text-transform:uppercase;color:var(--text3)}
+.qd-dots{display:flex;justify-content:center;gap:3px;margin-top:.5rem}
+.qd-dots span{width:4px;height:4px;border-radius:50%;background:currentColor;opacity:.5}
+.quiz-diff-card[data-diff="easy"]{border-color:rgba(74,222,128,.3)}
+.quiz-diff-card[data-diff="easy"] .qd-label{color:#4ade80}
+.quiz-diff-card[data-diff="easy"]:hover{background:rgba(74,222,128,.08);border-color:#4ade80;box-shadow:0 14px 30px rgba(74,222,128,.18)}
+.quiz-diff-card[data-diff="normal"]{border-color:rgba(96,165,250,.3)}
+.quiz-diff-card[data-diff="normal"] .qd-label{color:#60a5fa}
+.quiz-diff-card[data-diff="normal"]:hover{background:rgba(96,165,250,.08);border-color:#60a5fa;box-shadow:0 14px 30px rgba(96,165,250,.18)}
+.quiz-diff-card[data-diff="hard"]{border-color:rgba(251,146,60,.3)}
+.quiz-diff-card[data-diff="hard"] .qd-label{color:#fb923c}
+.quiz-diff-card[data-diff="hard"]:hover{background:rgba(251,146,60,.08);border-color:#fb923c;box-shadow:0 14px 30px rgba(251,146,60,.18)}
+.quiz-diff-card[data-diff="hardcore"]{border-color:rgba(248,113,113,.3)}
+.quiz-diff-card[data-diff="hardcore"] .qd-label{color:#f87171}
+.quiz-diff-card[data-diff="hardcore"]:hover{background:rgba(248,113,113,.08);border-color:#f87171;box-shadow:0 14px 30px rgba(248,113,113,.18)}
+@media(max-width:540px){.quiz-diff-grid{grid-template-columns:1fr 1fr}}
+.quiz-back-btn{display:inline-flex;align-items:center;gap:.4rem;margin-top:1.3rem;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text3);cursor:pointer;transition:color .2s}
+.quiz-back-btn:hover{color:var(--ca)}
+
 .quiz-result{text-align:center;position:relative}
 .qr-confetti{position:absolute;top:-1rem;left:0;right:0;height:0;overflow:visible;pointer-events:none;z-index:0}
 .confetto{position:absolute;top:0;border-radius:2px;opacity:0;animation:confFall 1.6s ease-in forwards}
@@ -860,7 +951,7 @@ footer{background:var(--bg);padding:clamp(1.8rem,3.8vh,3rem) clamp(1.5rem,5vw,4r
 <body>
 <div id="fov"></div>
 <div id="cglow"></div>
-<div id="cd"></div>
+<div id="cd"><svg viewBox="0 0 32 32" fill="currentColor"><path d="M16 16C13 11 13 5 16 2C19 5 19 11 16 16Z"/><path d="M16 16C13 11 13 5 16 2C19 5 19 11 16 16Z" transform="rotate(72 16 16)"/><path d="M16 16C13 11 13 5 16 2C19 5 19 11 16 16Z" transform="rotate(144 16 16)"/><path d="M16 16C13 11 13 5 16 2C19 5 19 11 16 16Z" transform="rotate(216 16 16)"/><path d="M16 16C13 11 13 5 16 2C19 5 19 11 16 16Z" transform="rotate(288 16 16)"/><circle cx="16" cy="16" r="2.6"/></svg></div>
 <div id="cr"></div>
 <div id="toast-wrap"></div>
 
@@ -951,9 +1042,13 @@ footer{background:var(--bg);padding:clamp(1.8rem,3.8vh,3rem) clamp(1.5rem,5vw,4r
 <!-- ════ HOME VIEW ════ -->
 <div id="home-view">
   <div class="hbg"></div>
+  <div class="home-kanji-deco hk-1">五</div>
+  <div class="home-kanji-deco hk-2">恋</div>
   <div class="h-orb" style="width:clamp(340px,52vw,620px);height:clamp(340px,52vw,620px);background:radial-gradient(circle,rgba(201,144,42,.13),transparent 68%);top:-20%;left:-14%;animation-duration:20s"></div>
   <div class="h-orb" style="width:clamp(270px,40vw,500px);height:clamp(270px,40vw,500px);background:radial-gradient(circle,rgba(124,58,237,.11),transparent 68%);bottom:-14%;right:-8%;animation-duration:16s;animation-delay:-7s"></div>
   <div class="h-orb" style="width:clamp(180px,26vw,340px);height:clamp(180px,26vw,340px);background:radial-gradient(circle,rgba(100,149,237,.09),transparent 68%);top:30%;left:45%;animation-duration:13s;animation-delay:-4s"></div>
+  <div id="home-petals"></div>
+  <div id="home-sparkles"></div>
 
   <div class="home-hero">
     <div class="home-badge">五等分の花嫁 · The Quintessential Quintuplets</div>
@@ -974,9 +1069,9 @@ footer{background:var(--bg);padding:clamp(1.8rem,3.8vh,3rem) clamp(1.5rem,5vw,4r
       <div class="quiz-cta" onclick="openQuiz()" role="button" tabindex="0">
         <div class="quiz-mini-avatars"><span>五</span></div>
         <div class="quiz-cta-txt">
-          <div class="quiz-cta-eye">✿ Kuis Kepribadian</div>
+          <div class="quiz-cta-eye">✿ Kuis Kepribadian &amp; Ending</div>
           <h3 class="quiz-cta-h">Kamu Nakano yang Mana?</h3>
-          <p class="quiz-cta-p">Jawab beberapa pertanyaan singkat dan temukan saudari Nakano mana yang paling mirip dengan kepribadianmu.</p>
+          <p class="quiz-cta-p">Pilih mode "Kamu Nakano yang Mana?" atau "Endingmu", lalu atur tingkat kesulitan — Easy 10 soal sampai Hardcore 50 soal, selalu acak tiap kali main.</p>
         </div>
         <div class="quiz-cta-btn">Mulai Kuis <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
       </div>
@@ -1177,6 +1272,7 @@ footer{background:var(--bg);padding:clamp(1.8rem,3.8vh,3rem) clamp(1.5rem,5vw,4r
   </section>
   <div class="qb" data-rv id="qband"><p class="qjp" id="qqjp"></p><p class="qtr" id="qqtr"></p><p class="qsrc" id="qqsrc"></p></div>
   <section class="sd sp" id="sec-tr"><div class="si"><p class="seye" data-rv>Kepribadian</p><h2 class="stit" data-rv id="trtit"></h2><div class="tg" id="trgrid"></div></div></section>
+  <section class="sl sp" id="sec-fam"><div class="si"><p class="seye" data-rv>Keluarga &amp; Latar Belakang</p><h2 class="stit" data-rv id="famtit"></h2><div class="fam-grid" data-rv id="famgrid"></div><div class="pers-grid" id="persgrid" style="margin-top:1.7rem"></div></div></section>
   <section class="sw sp" id="sec-gal"><div class="si"><p class="seye" data-rv id="geye"></p><h2 class="stit" data-rv id="gtit"></h2><div class="gl" data-rv id="ggrid"></div></div></section>
   <section class="sl sp" id="sec-hob"><div class="si"><p class="seye" data-rv>Minat &amp; Hobi</p><h2 class="stit" data-rv id="hhtit"></h2><div class="hg" id="hhgrid"></div></div></section>
   <section class="sd sp" id="sec-ff"><div class="si"><p class="seye" data-rv>Fun Facts</p><h2 class="stit" data-rv id="fftit"></h2><div class="ff" id="ffgrid"></div></div></section>
@@ -1258,6 +1354,12 @@ const DB={
   ff:[{i:'🏆',t:'Rank 1 Nasional',d:'Pencapaian luar biasa dari siswa otodidak tanpa biaya les.'},{i:'👧',t:'Adik Kesayangan',d:'Raiha selalu mendorongnya meski kondisi sulit.'},{i:'📷',t:'Foto Misterius',d:'Menyimpan foto gadis misterius yang menjadi kunci misteri terbesar.'},{i:'💔',t:'Nol Teman',d:'Mengakui punya nol teman — hingga bertemu kelima saudari.'}],
   tlt:'Perjalanan Fuutarou',tle:'Kisah Sang Tutor',
   tl:[{y:'Sebelum Cerita',h:'Perjanjian Masa Kecil',b:'Bertemu gadis misterius yang memberikannya keberanian untuk terus belajar.'},{y:'Awal Cerita',h:'Menjadi Tutor',b:'Menerima pekerjaan tutor yang ternyata adalah kelima saudari kembar Nakano.'},{y:'Perjuangan',h:'Memenangkan Kepercayaan',b:'Perlahan memenangkan kepercayaan setiap saudari dengan sabar dan kegigihan.'},{y:'Perasaan Tumbuh',h:'Bingung dengan Hati',b:'Mulai merasakan sesuatu lebih dari sekedar hubungan tutor-murid.'},{y:'Keputusan Final',h:'Memilih Satu dari Lima',b:'Setelah perjalanan panjang, membuat keputusan dari dalam hati.'}],
+  fam:[
+    {role:'Ayah',name:'Isanari Uesugi',note:'Membesarkan Fuutarou dan Raiha seorang diri di tengah keterbatasan ekonomi, bekerja keras demi masa depan kedua anaknya.'},
+    {role:'Ibu',name:'Nyonya Uesugi',note:'Sosok yang jarang muncul dalam cerita — Fuutarou tumbuh besar terutama di bawah asuhan sang ayah.'},
+    {role:'Adik',name:'Raiha Uesugi',note:'Adik perempuan Fuutarou yang akrab dengannya, bahkan sering memotong rambut kakaknya sendiri di rumah.'}
+  ],
+  pers:[['Makanan Favorit','Masakan rumahan sederhana — terbiasa masak hemat untuk dirinya dan Raiha'],['Mata Pelajaran','Semua mata pelajaran — meraih nilai sempurna tanpa bimbingan les'],['Cita-cita Awal','Sekadar mencari uang tambahan untuk membantu ekonomi keluarga'],['Yang Tidak Disukai','Pemborosan dan sikap yang tidak jujur'],['Kenangan Masa Kecil','Pernah bertemu seorang gadis misterius yang mengubah cara pandangnya terhadap hidup']],
   flog:'上杉 風太郎'},
 
   ichika:{ca:'#c9902a',cab:'#f5c06e',cap:'#fef3e2',cam:'#fde8c0',caRgb:'201,144,42',caWine:'#7c4a0a',caSub:'#a06820',caGold:'#e8b87a',bgDk:'#0d0804',d2:'#0d0804',d3:'#0a0603',pifDeco:'rgba(201,144,42,.18)',o1:'radial-gradient(circle,rgba(201,144,42,.16),transparent 70%)',o2:'radial-gradient(circle,rgba(120,64,8,.28),transparent 70%)',mesh:'radial-gradient(ellipse 65% 55% at 80% 40%,rgba(180,120,30,.2) 0%,transparent 65%),radial-gradient(ellipse 50% 50% at 10% 80%,rgba(100,60,8,.3) 0%,transparent 60%),#0d0804',
@@ -1280,6 +1382,12 @@ const DB={
   ff:[{i:'🎬',t:'Debut Akting',d:'Yang pertama memulai karir profesional di antara kelima saudari.'},{i:'😴',t:'Ratu Tidur',d:'Bisa tertidur di mana saja dan kapan saja — bahkan saat belajar.'},{i:'🎤',t:'Suara Merdu',d:'Selain akting, memiliki bakat bernyanyi yang tidak kalah.'},{i:'💄',t:'Natural Look',d:'Berbeda dari Nino, Ichika memilih penampilan natural.'}],
   tlt:'Kisah Ichika',tle:'Perjalanan',
   tl:[{y:'Awal Cerita',h:'Kakak yang Diandalkan',b:'Yang pertama menunjukkan sikap terbuka kepada Fuutarou dan mencoba menjadi jembatan.'},{y:'Karir Melonjak',h:'Tawaran Akting Besar',b:'Mendapat tawaran peran besar yang memaksanya membagi waktu antara belajar dan akting.'},{y:'Konflik Batin',h:'Perasaan Tersembunyi',b:'Menyadari menyukai Fuutarou namun memilih menyembunyikannya.'},{y:'Titik Balik',h:'Kejujuran yang Terlambat',b:'Ketika akhirnya jujur, situasi sudah berubah. Harus belajar menerima.'},{y:'Akhir Cerita',h:'Aktris Sesungguhnya',b:'Tumbuh menjadi aktris dan pribadi yang lebih matang.'}],
+  fam:[
+    {role:'Ibu Kandung',name:'Rena Nakano',note:'Almarhumah — dulu seorang guru SMA yang sangat disayangi murid-muridnya. Wafat karena sakit sekitar lima tahun sebelum cerita dimulai.'},
+    {role:'Ayah Tiri',name:'Maruo Nakano',note:'Dokter sekaligus pengusaha sukses pemilik rumah sakit. Awalnya terkesan dingin dan sibuk, namun sebenarnya sangat menyayangi kelima putrinya.'},
+    {role:'Saudari',name:'Nino, Miku, Yotsuba, Itsuki',note:'Empat saudari kembar identik lainnya yang bersama Ichika membentuk kelima bersaudari Nakano.'}
+  ],
+  pers:[['Makanan Favorit','Makanan manis dan dessert ringan'],['Cita-cita','Menjadi aktris/model profesional'],['Peran di Keluarga','Kakak sulung yang bersikap keibuan terhadap keempat adiknya'],['Yang Disembunyikan','Perasaannya sendiri, demi menjaga suasana tetap harmonis'],['Kenangan Masa Kecil','Tumbuh menjadi peniru ulung — bisa menirukan ekspresi dan sifat saudarinya dengan sangat meyakinkan']],
   flog:'中野 一花'},
 
   nino:{ca:'#7c3aed',cab:'#a78bfa',cap:'#ede9fe',cam:'#ddd6fe',caRgb:'124,58,237',caWine:'#3b0764',caSub:'#6d28d9',caGold:'#c4b5fd',bgDk:'#06030f',d2:'#0a0514',d3:'#070310',pifDeco:'rgba(124,58,237,.18)',o1:'radial-gradient(circle,rgba(124,58,237,.16),transparent 70%)',o2:'radial-gradient(circle,rgba(59,7,100,.3),transparent 70%)',mesh:'radial-gradient(ellipse 65% 55% at 80% 40%,rgba(100,50,200,.2) 0%,transparent 65%),radial-gradient(ellipse 50% 50% at 10% 80%,rgba(50,10,100,.3) 0%,transparent 60%),#06030f',
@@ -1302,6 +1410,12 @@ const DB={
   ff:[{i:'🧪',t:'Ahli Parfum',d:'Bisa meracik parfum dari bahan-bahan alami dengan akurasi aroma sangat tinggi.'},{i:'🎭',t:'Penyamaran Berani',d:'Pernah menyamar sebagai Itsuki untuk mendekati Fuutarou.'},{i:'💇',t:'Potong Rambut',d:'Momen Nino memotong rambutnya adalah turning point paling ikonik.'},{i:'🍳',t:'Masak Terbaik',d:'Di antara kelima saudari, Nino yang paling mahir memasak.'}],
   tlt:'Kisah Nino',tle:'Perjalanan',
   tl:[{y:'Awal Cerita',h:'Penolakan Keras',b:'Yang paling keras menolak Fuutarou dan tidak menyembunyikan rasa tidak sukanya.'},{y:'Titik Balik',h:'Bertemu "Kintoki"',b:'Bertemu pria misterius Kintoki dan jatuh hati — tidak menyadari itu Fuutarou menyamar.'},{y:'Kesadaran',h:'Identitas Terungkap',b:'Saat mengetahui Kintoki adalah Fuutarou, tidak menarik perasaannya. Transformasi dramatis.'},{y:'Keberanian',h:'Pengakuan Berulang',b:'Mengungkapkan perasaannya berkali-kali meski ditolak — tidak akan menyerah.'},{y:'Akhir Cerita',h:'Menerima dengan Lapang',b:'Tumbuh menjadi wanita lebih matang dan siap membuka lembaran baru.'}],
+  fam:[
+    {role:'Ibu Kandung',name:'Rena Nakano',note:'Almarhumah — dulu seorang guru SMA yang berdedikasi. Wafat karena sakit ketika kelima putrinya masih duduk di bangku SMP.'},
+    {role:'Ayah Tiri',name:'Maruo Nakano',note:'Dokter dan pengusaha sukses. Hubungan Nino dengannya sempat renggang karena ia menganggap sang ayah terlalu jarang di rumah.'},
+    {role:'Saudari',name:'Ichika, Miku, Yotsuba, Itsuki',note:'Empat saudari kembar identik lainnya yang tumbuh bersama Nino sejak kecil.'}
+  ],
+  pers:[['Makanan Favorit','Masakan Jepang buatan sendiri'],['Cita-cita','Membuka restoran sendiri suatu hari nanti'],['Spesialisasi','Memasak — yang paling mahir di antara kelima saudari'],['Yang Tidak Disukai','Kebohongan dan sosok figur ayah yang jarang hadir'],['Kenangan Masa Kecil','Sempat sulit memercayai sosok ayah setelah ayah kandung mereka meninggalkan keluarga']],
   flog:'中野 二乃'},
 
   miku:{ca:'#e05068',cab:'#f28fa0',cap:'#fce8ed',cam:'#fad5de',caRgb:'224,80,104',caWine:'#5c1526',caSub:'#8a4456',caGold:'#c8919e',bgDk:'#0e0408',d2:'#0c0308',d3:'#0a0205',pifDeco:'rgba(224,80,104,.18)',o1:'radial-gradient(circle,rgba(224,80,104,.16),transparent 70%)',o2:'radial-gradient(circle,rgba(92,21,38,.3),transparent 70%)',mesh:'radial-gradient(ellipse 65% 55% at 80% 40%,rgba(200,50,80,.22) 0%,transparent 65%),radial-gradient(ellipse 50% 50% at 10% 80%,rgba(100,20,40,.35) 0%,transparent 60%),#0e0408',
@@ -1324,6 +1438,12 @@ const DB={
   ff:[{i:'🎧',t:'Headphone Ikonik',d:'Ciri khas paling terkenal — hampir tidak pernah terlihat tanpanya.'},{i:'⚔️',t:'Pertama Mengakui',d:'Saudari pertama yang secara terbuka mengakui perasaannya kepada Fuutarou.'},{i:'☕',t:'Barista Otodidak',d:'Belajar membuat kopi dari nol demi menyiapkan minuman sempurna.'},{i:'🏯',t:'Fakta Sengoku',d:'Bisa bercerita berjam-jam tentang sejarah Sengoku tanpa henti.'}],
   tlt:'Kisah Miku',tle:'Perjalanan',
   tl:[{y:'Pertemuan Pertama',h:'Fuutarou, Sang Tutor',b:'Bertemu Fuutarou saat ditugaskan menjadi tutor. Kesan pertamanya biasa saja.'},{y:'Percikan Pertama',h:'Dunia Sengoku yang Sama',b:'Saat Fuutarou membahas sejarah Sengoku dengan semangat sama, benih perasaan mulai tumbuh.'},{y:'Keberanian Terbesar',h:'Pengakuan Cinta Pertama',b:'Menjadi saudari pertama yang secara terang-terangan mengakui perasaannya.'},{y:'Perjuangan',h:'Tumbuh Lebih Kuat',b:'Berjuang keras di bidang akademik dan memasak — tidak menyerah.'},{y:'Akhir Cerita',h:'Bukan Pemenang, tapi Terkuat',b:'Meski jalan cintanya tidak berakhir seperti harapan, tumbuh menjadi pribadi yang lebih matang.'}],
+  fam:[
+    {role:'Ibu Kandung',name:'Rena Nakano',note:'Almarhumah — dulu seorang guru SMA yang dikenal hangat pada murid-muridnya. Wafat karena sakit lima tahun sebelum cerita bermula.'},
+    {role:'Ayah Tiri',name:'Maruo Nakano',note:'Dokter sekaligus pengusaha sukses yang mempekerjakan Fuutarou sebagai tutor privat untuk kelima putrinya.'},
+    {role:'Saudari',name:'Ichika, Nino, Yotsuba, Itsuki',note:'Empat saudari kembar identik lainnya — Miku dikenal sebagai yang paling pendiam di antara mereka.'}
+  ],
+  pers:[['Makanan Favorit','Kopi buatan sendiri dan wagashi (manisan tradisional Jepang)'],['Pekerjaan Sampingan','Bekerja paruh waktu di toko roti Komugiya'],['Cita-cita','Terus berkembang dalam memasak, terinspirasi oleh keahlian Nino'],['Ketertarikan Utama','Sejarah era Sengoku, terutama sosok Tokugawa Ieyasu'],['Kenangan Masa Kecil','Pendiam sejak kecil — headphone merahnya menjadi cara menciptakan dunia sendiri']],
   flog:'中野 三玖'},
 
   yotsuba:{ca:'#16a34a',cab:'#4ade80',cap:'#f0fdf4',cam:'#dcfce7',caRgb:'22,163,74',caWine:'#14532d',caSub:'#15803d',caGold:'#86efac',bgDk:'#030d06',d2:'#031008',d3:'#020b05',pifDeco:'rgba(22,163,74,.18)',o1:'radial-gradient(circle,rgba(22,163,74,.16),transparent 70%)',o2:'radial-gradient(circle,rgba(5,70,20,.28),transparent 70%)',mesh:'radial-gradient(ellipse 65% 55% at 80% 40%,rgba(20,140,60,.18) 0%,transparent 65%),radial-gradient(ellipse 50% 50% at 10% 80%,rgba(5,70,20,.28) 0%,transparent 60%),#030d06',
@@ -1346,6 +1466,12 @@ const DB={
   ff:[{i:'🍀',t:'Bando Ikonik',d:'Bando daun semanggi hijau yang tidak pernah ia lepas.'},{i:'🏅',t:'Atlet Berprestasi',d:'Meraih berbagai penghargaan atletik di tingkat sekolah dan regional.'},{i:'🤫',t:'Rahasia Besar',d:'Menyimpan rahasia besar terkait masa lalu Fuutarou.'},{i:'😂',t:'Comic Relief Terbaik',d:'Reaksi spontan dan ekspresif selalu menjadi momen paling menghibur.'}],
   tlt:'Kisah Yotsuba',tle:'Perjalanan',
   tl:[{y:'Awal Cerita',h:'Si Pendukung Setia',b:'Yang paling antusias menyambut Fuutarou. Energinya membuat suasana belajar menyenangkan.'},{y:'Rahasia Terungkap',h:'Gadis dari Masa Lalu',b:'Memiliki hubungan spesial dengan Fuutarou di masa lalu — rahasia yang dijaga sendirian.'},{y:'Pengorbanan Besar',h:'Merelakan Kebahagiaannya',b:'Merelakan impian dan kebahagiaannya sendiri demi saudarinya.'},{y:'Kejujuran',h:'Akhirnya Berbicara',b:'Akhirnya berani berbicara jujur tentang perasaan dan pengorbanannya.'},{y:'Akhir Cerita',h:'Pilihan Fuutarou',b:'Fuutarou memilih Yotsuba. Gadis ceria dengan pengorbanan terbesar mendapatkan kebahagiaannya.'}],
+  fam:[
+    {role:'Ibu Kandung',name:'Rena Nakano',note:'Almarhumah — mengajarkan "Prinsip Gotoubun" kepada kelima putrinya: bahwa mereka adalah satu kesatuan yang saling berbagi.'},
+    {role:'Ayah Tiri',name:'Maruo Nakano',note:'Dokter dan pengusaha sukses. Yotsuba salah satu yang paling memahami sisi lembut di balik sikap tegasnya.'},
+    {role:'Saudari',name:'Ichika, Nino, Miku, Itsuki',note:'Empat saudari kembar identik lainnya — Yotsuba dikenal sebagai penyemangat di antara mereka.'}
+  ],
+  pers:[['Makanan Favorit','Menu berporsi besar dan bertenaga, cocok untuk aktivitas fisiknya'],['Spesialisasi','Atletik, terutama lari jarak jauh'],['Sifat Menonjol','Selalu berusaha membantu orang lain tanpa pamrih'],['Rahasia Besar','Menyimpan kenangan masa lalu bersama Fuutarou yang lama belum terungkap ke saudarinya'],['Kenangan Masa Kecil','Tumbuh menjadi sosok yang rela mengalah demi kebahagiaan bersama keluarganya']],
   flog:'中野 四葉'},
 
   itsuki:{ca:'#dc2626',cab:'#f87171',cap:'#fef2f2',cam:'#fecaca',caRgb:'220,38,38',caWine:'#7f1d1d',caSub:'#b91c1c',caGold:'#fca5a5',bgDk:'#0d0202',d2:'#0d0202',d3:'#0a0202',pifDeco:'rgba(220,38,38,.18)',o1:'radial-gradient(circle,rgba(220,38,38,.16),transparent 70%)',o2:'radial-gradient(circle,rgba(127,29,29,.28),transparent 70%)',mesh:'radial-gradient(ellipse 65% 55% at 80% 40%,rgba(200,30,30,.2) 0%,transparent 65%),radial-gradient(ellipse 50% 50% at 10% 80%,rgba(100,10,10,.3) 0%,transparent 60%),#0d0202',
@@ -1368,6 +1494,12 @@ const DB={
   ff:[{i:'🍜',t:'Food Enthusiast',d:'Terkenal sebagai yang paling antusias soal makanan — ekspresinya sangat ikonik.'},{i:'👩‍🏫',t:'Calon Guru',d:'Satu-satunya dari kelima saudari yang memiliki cita-cita spesifik sejak awal.'},{i:'👥',t:'Paling Mirip Ayah',d:'Karakternya paling banyak mencerminkan kepribadian ayah mereka.'},{i:'🎭',t:'Pernah Menyamar',d:'Pernah menyamar sebagai Miku untuk membantu saudarinya.'}],
   tlt:'Kisah Itsuki',tle:'Perjalanan',
   tl:[{y:'Awal Cerita',h:'Yang Paling Keras Kepala',b:'Paling gigih menolak bantuan Fuutarou — merasa bisa belajar sendiri.'},{y:'Perubahan Sikap',h:'Mulai Menerima',b:'Mulai melihat kesungguhan Fuutarou dan perlahan membuka diri.'},{y:'Warisan Ayah',h:'Mimpi Menjadi Guru',b:'Mimpi menjadi guru terinspirasi langsung dari sang ayah.'},{y:'Perkembangan',h:'Tumbuh Lebih Terbuka',b:'Melepas kekakuannya — menerima bantuan bukan kelemahan melainkan kekuatan.'},{y:'Akhir Cerita',h:'Melanjutkan Jejak Ayah',b:'Memantapkan langkah menuju cita-citanya menjadi guru.'}],
+  fam:[
+    {role:'Ibu Kandung',name:'Rena Nakano',note:'Almarhumah — dulu seorang guru SMA yang disegani. Wafat karena sakit ketika kelima putrinya masih duduk di bangku SMP.'},
+    {role:'Ayah Tiri',name:'Maruo Nakano',note:'Dokter dan pengusaha sukses. Itsuki termasuk yang paling dekat dengan harapan akademik sang ayah.'},
+    {role:'Saudari',name:'Ichika, Nino, Miku, Yotsuba',note:'Empat saudari kembar identik lainnya — Itsuki dikenal sebagai yang paling protektif terhadap mereka.'}
+  ],
+  pers:[['Makanan Favorit','Hampir semua makanan enak — terutama masakan buatan Nino'],['Cita-cita','Berkarier di dunia kuliner, termasuk mengulas makanan'],['Sifat Menonjol','Cerdas dan percaya diri, namun juga keras kepala'],['Peran di Keluarga','Paling protektif terhadap keempat saudarinya'],['Kenangan Masa Kecil','Sejak kecil terbiasa menjaga saudari-saudarinya dan bersikap dewasa lebih dulu']],
   flog:'中野 五月'}
 };
 
@@ -1392,7 +1524,12 @@ const R={
   tl:(a)=>a.map(t=>`<div class="tli" data-rv><div class="tld"></div><p class="tlyr">${t.y}</p><h3 class="tlh">${t.h}</h3><p class="tlb">${t.b}</p></div>`).join(''),
   ribbon:(a)=>a.map(r=>`<div class="svc"><span class="svn">${r.n}</span><span class="svl">${r.l}</span></div>`).join(''),
   eps:(a)=>`<div class="ep-list">${a.map(e=>`<div class="ep-item" data-rv><div class="ep-num">${e.n}</div><div class="ep-info"><p class="ep-title">${e.t}</p><p class="ep-desc">${e.d}</p></div><div class="ep-right"><span class="ep-rating">${e.r}</span><span class="ep-dur">IMDb</span></div></div>`).join('')}</div>`,
-  chapters:(a)=>`<div class="ch-grid-wrap">${a.map((c,i)=>`<div class="ch-item" data-rv data-d="${(i%6)+1}"><span class="ch-num">Ch.${c[0]}</span><span class="ch-title">${c[1]}</span></div>`).join('')}</div>`
+  chapters:(a)=>`<div class="ch-grid-wrap">${a.map((c,i)=>`<div class="ch-item" data-rv data-d="${(i%6)+1}"><span class="ch-num">Ch.${c[0]}</span><span class="ch-title">${c[1]}</span></div>`).join('')}</div>`,
+  fam:(a)=>{
+    const icons={'Ayah':'👨','Ibu':'👩','Ibu Kandung':'👩','Ayah Tiri':'🧑‍⚕️','Adik':'👧','Saudari':'✿'};
+    return a.map((f,i)=>`<div class="fam-card" data-rv data-d="${(i%3)+1}"><span class="fam-icon">${icons[f.role]||'👤'}</span><p class="fam-role">${f.role}</p><p class="fam-name">${f.name}</p><p class="fam-note">${f.note}</p></div>`).join('');
+  },
+  pers:(a)=>a.map(([l,v])=>`<div class="pers-item"><p class="pers-label">${l}</p><p class="pers-value">${v}</p></div>`).join('')
 };
 
 // ════════════════════════════════
@@ -1994,26 +2131,447 @@ const QUIZ_Q=[
     {t:'Mau ikut asal jadwal lain tidak terganggu',id:'itsuki'},
   ]},
 ];
-let quizAnswers=[],quizStep=0;
+
+const ENDING_Q=[
+  {q:'Bagaimana lamaran pernikahan impianmu?',opts:[
+    {t:'Kejutan hangat dengan tawa dan air mata bahagia',id:'ichika'},
+    {t:'Sederhana tapi penuh kejujuran, tanpa drama berlebihan',id:'nino'},
+    {t:'Momen tenang berdua saat matahari terbenam',id:'miku'},
+    {t:'Diumumkan di depan semua orang tersayang dengan meriah',id:'yotsuba'},
+    {t:'Direncanakan matang-matang dengan detail yang sempurna',id:'itsuki'},
+  ]},
+  {q:'Pasangan seperti apa yang paling kamu butuhkan untuk mendampingi hidupmu?',opts:[
+    {t:'Yang bisa mencairkan suasana saat aku lelah',id:'ichika'},
+    {t:'Yang jujur dan berani bicara apa adanya',id:'nino'},
+    {t:'Yang mengerti diamku tanpa perlu banyak kata',id:'miku'},
+    {t:'Yang selalu menyemangatiku di saat terpuruk',id:'yotsuba'},
+    {t:'Yang bisa diajak merencanakan masa depan bersama',id:'itsuki'},
+  ]},
+  {q:'Bagaimana kalian menghabiskan malam pertama sebagai suami istri?',opts:[
+    {t:'Ngobrol santai sambil tertawa mengenang masa pacaran',id:'ichika'},
+    {t:'Makan malam romantis hasil masakan sendiri',id:'nino'},
+    {t:'Duduk berdua menikmati keheningan yang nyaman',id:'miku'},
+    {t:'Merayakannya dengan pesta kecil bersama orang terdekat',id:'yotsuba'},
+    {t:'Menyusun rencana hidup untuk tahun-tahun ke depan',id:'itsuki'},
+  ]},
+  {q:'Apa yang paling kamu harapkan dari pernikahan?',opts:[
+    {t:'Rumah yang selalu penuh tawa dan kehangatan',id:'ichika'},
+    {t:'Pasangan yang saling percaya sepenuhnya',id:'nino'},
+    {t:'Ketenangan dan pengertian tanpa banyak konflik',id:'miku'},
+    {t:'Dukungan penuh dalam setiap langkah hidup',id:'yotsuba'},
+    {t:'Kemitraan yang seimbang dan saling melengkapi',id:'itsuki'},
+  ]},
+  {q:'Kalau pasanganmu sedang sedih, cara terbaik menghiburnya?',opts:[
+    {t:'Memeluknya sambil bercanda ringan',id:'ichika'},
+    {t:'Memasakkan makanan kesukaannya',id:'nino'},
+    {t:'Menemaninya diam tanpa memaksa cerita',id:'miku'},
+    {t:'Mengajaknya jalan-jalan menghirup udara segar',id:'yotsuba'},
+    {t:'Mendengarkan lalu membantu cari solusi bersama',id:'itsuki'},
+  ]},
+  {q:'Kado ulang tahun pernikahan favoritmu?',opts:[
+    {t:'Kejutan penuh kenangan dan cerita lama',id:'ichika'},
+    {t:'Sesuatu yang dibuat dengan tangan sendiri',id:'nino'},
+    {t:'Waktu berdua tanpa gangguan siapapun',id:'miku'},
+    {t:'Perjalanan seru ke tempat baru bersama',id:'yotsuba'},
+    {t:'Rencana masa depan yang matang dan bermakna',id:'itsuki'},
+  ]},
+  {q:'Bagaimana caramu menyelesaikan pertengkaran rumah tangga?',opts:[
+    {t:'Mencairkan suasana dulu sebelum bicara serius',id:'ichika'},
+    {t:'Bicara terus terang sampai semua jelas',id:'nino'},
+    {t:'Memberi waktu diam sejenak sebelum berdamai',id:'miku'},
+    {t:'Mengajak ngobrol sambil tetap ceria',id:'yotsuba'},
+    {t:'Duduk bersama mencari solusi yang adil',id:'itsuki'},
+  ]},
+  {q:'Apa peran yang ingin kamu jalani dalam rumah tangga?',opts:[
+    {t:'Penghibur yang menjaga suasana tetap hangat',id:'ichika'},
+    {t:'Pengelola rumah yang cekatan dan penuh kasih',id:'nino'},
+    {t:'Pendamping tenang yang selalu ada',id:'miku'},
+    {t:'Penyemangat yang selalu mendukung pasangan',id:'yotsuba'},
+    {t:'Partner yang merencanakan masa depan bersama',id:'itsuki'},
+  ]},
+  {q:'Liburan pernikahan (bulan madu) impianmu?',opts:[
+    {t:'Kota ramai penuh hiburan dan kuliner',id:'ichika'},
+    {t:'Tempat eksotis dengan pengalaman baru yang berani',id:'nino'},
+    {t:'Tempat tenang jauh dari keramaian',id:'miku'},
+    {t:'Petualangan alam terbuka yang aktif',id:'yotsuba'},
+    {t:'Perjalanan budaya yang penuh pembelajaran',id:'itsuki'},
+  ]},
+  {q:'Bagaimana kamu ingin dikenang oleh pasanganmu kelak?',opts:[
+    {t:'Sebagai orang yang selalu membawa keceriaan',id:'ichika'},
+    {t:'Sebagai orang yang setia dan berani mencintai',id:'nino'},
+    {t:'Sebagai orang yang tulus dan bisa diandalkan',id:'miku'},
+    {t:'Sebagai orang yang selalu ada dan mendukung',id:'yotsuba'},
+    {t:'Sebagai partner yang membangun masa depan bersama',id:'itsuki'},
+  ]},
+  {q:'Kalau harus memilih rumah masa depan, kamu memilih…',opts:[
+    {t:'Rumah nyaman di tengah kota yang ramai',id:'ichika'},
+    {t:'Rumah dengan dapur besar untuk memasak bersama',id:'nino'},
+    {t:'Rumah tenang dengan ruang baca pribadi',id:'miku'},
+    {t:'Rumah dekat taman untuk beraktivitas outdoor',id:'yotsuba'},
+    {t:'Rumah rapi dengan ruang kerja yang tertata',id:'itsuki'},
+  ]},
+  {q:'Apa yang membuatmu yakin seseorang adalah jodohmu?',opts:[
+    {t:'Selalu bisa membuatku tertawa meski hari berat',id:'ichika'},
+    {t:'Berani jujur meski itu sulit diucapkan',id:'nino'},
+    {t:'Merasa nyaman diam bersamanya tanpa canggung',id:'miku'},
+    {t:'Selalu mendukung mimpi-mimpiku tanpa ragu',id:'yotsuba'},
+    {t:'Punya visi hidup yang sejalan denganku',id:'itsuki'},
+  ]},
+  {q:'Momen paling romantis versi kamu?',opts:[
+    {t:'Tertawa bersama sampai lupa waktu',id:'ichika'},
+    {t:'Menerima kejujuran perasaan secara langsung',id:'nino'},
+    {t:'Berbagi keheningan yang nyaman berdua',id:'miku'},
+    {t:'Dirayakan bersama orang-orang tersayang',id:'yotsuba'},
+    {t:'Membicarakan rencana masa depan bersama',id:'itsuki'},
+  ]},
+  {q:'Bagaimana caramu merawat hubungan agar tetap awet?',opts:[
+    {t:'Selalu jaga komunikasi tetap ringan dan menyenangkan',id:'ichika'},
+    {t:'Jujur soal perasaan, tidak memendam masalah',id:'nino'},
+    {t:'Memberi ruang pribadi tapi tetap dekat secara emosional',id:'miku'},
+    {t:'Terus saling menyemangati dalam segala hal',id:'yotsuba'},
+    {t:'Membuat rencana dan tujuan bersama secara berkala',id:'itsuki'},
+  ]},
+  {q:'Kalau harus memilih pasangan untuk menemani masa tua, kualitas utamanya?',opts:[
+    {t:'Selalu bisa membuat suasana tetap hangat',id:'ichika'},
+    {t:'Setia dan berani menghadapi apapun bersama',id:'nino'},
+    {t:'Tenang dan saling memahami tanpa banyak kata',id:'miku'},
+    {t:'Selalu jadi penyemangat di setiap fase hidup',id:'yotsuba'},
+    {t:'Bisa diajak merencanakan hidup dengan matang',id:'itsuki'},
+  ]},
+  {q:'Perayaan pernikahan seperti apa yang kamu inginkan?',opts:[
+    {t:'Pesta meriah penuh tawa dan kejutan',id:'ichika'},
+    {t:'Sederhana namun penuh makna dan kejujuran',id:'nino'},
+    {t:'Kecil dan intim, hanya orang-orang terdekat',id:'miku'},
+    {t:'Besar dan penuh semangat dengan banyak tamu',id:'yotsuba'},
+    {t:'Rapi terorganisir dengan detail yang sempurna',id:'itsuki'},
+  ]},
+  {q:'Kalau pasanganmu sedang sibuk bekerja, kamu akan…',opts:[
+    {t:'Membawakan camilan sambil menghiburnya sebentar',id:'ichika'},
+    {t:'Memasakkan makan malam agar dia tetap sehat',id:'nino'},
+    {t:'Membiarkannya fokus tanpa banyak gangguan',id:'miku'},
+    {t:'Mengingatkannya untuk istirahat dengan ceria',id:'yotsuba'},
+    {t:'Membantu menyusun prioritas agar lebih efisien',id:'itsuki'},
+  ]},
+  {q:'Apa arti "selamanya" bagimu dalam sebuah hubungan?',opts:[
+    {t:'Terus tertawa bersama apapun yang terjadi',id:'ichika'},
+    {t:'Saling percaya penuh tanpa keraguan',id:'nino'},
+    {t:'Tetap merasa nyaman meski waktu terus berubah',id:'miku'},
+    {t:'Selalu saling mendukung dalam setiap keadaan',id:'yotsuba'},
+    {t:'Terus tumbuh dan membangun masa depan bersama',id:'itsuki'},
+  ]},
+  {q:'Kalau harus memilih hadiah pernikahan untuk pasangan, kamu memberi…',opts:[
+    {t:'Album kenangan penuh momen bahagia berdua',id:'ichika'},
+    {t:'Sesuatu yang kamu buat dengan tangan sendiri',id:'nino'},
+    {t:'Waktu tenang berdua tanpa gangguan',id:'miku'},
+    {t:'Kejutan liburan ke tempat impiannya',id:'yotsuba'},
+    {t:'Rencana masa depan yang sudah kamu susun rapi',id:'itsuki'},
+  ]},
+  {q:'Bagaimana caramu mendukung mimpi pasangan?',opts:[
+    {t:'Selalu jadi penyemangat nomor satu dengan ceria',id:'ichika'},
+    {t:'Membantu secara nyata dengan kerja keras',id:'nino'},
+    {t:'Memberi ruang dan waktu tanpa menekan',id:'miku'},
+    {t:'Selalu hadir memberi dorongan semangat',id:'yotsuba'},
+    {t:'Membantu menyusun langkah nyata mencapainya',id:'itsuki'},
+  ]},
+  {q:'Kalau harus memilih satu sifat yang ingin kamu bawa ke pernikahan, itu adalah…',opts:[
+    {t:'Kehangatan yang selalu bisa dirasakan pasangan',id:'ichika'},
+    {t:'Keberanian untuk selalu jujur',id:'nino'},
+    {t:'Ketenangan yang menenangkan suasana rumah',id:'miku'},
+    {t:'Semangat yang menular ke semua orang',id:'yotsuba'},
+    {t:'Kedisiplinan dalam menjaga komitmen',id:'itsuki'},
+  ]},
+  {q:'Bagaimana kalian merayakan pencapaian kecil sehari-hari?',opts:[
+    {t:'Tertawa bersama merayakan hal-hal sederhana',id:'ichika'},
+    {t:'Memasak makanan spesial sebagai perayaan',id:'nino'},
+    {t:'Menikmati momen berdua dengan tenang',id:'yotsuba'},
+    {t:'Mengajak jalan-jalan singkat merayakannya',id:'miku'},
+    {t:'Mencatatnya sebagai motivasi ke depan',id:'itsuki'},
+  ]},
+  {q:'Apa yang paling kamu takutkan dalam sebuah pernikahan?',opts:[
+    {t:'Kehilangan tawa dan kehangatan dalam rumah tangga',id:'ichika'},
+    {t:'Ketidakjujuran yang perlahan merusak kepercayaan',id:'nino'},
+    {t:'Tidak lagi dipahami oleh pasangan sendiri',id:'miku'},
+    {t:'Tidak bisa saling mendukung saat dibutuhkan',id:'yotsuba'},
+    {t:'Kehilangan arah dan tujuan bersama',id:'itsuki'},
+  ]},
+  {q:'Kalau harus memilih cara mengungkapkan cinta setiap hari, kamu memilih…',opts:[
+    {t:'Membuat pasangan tertawa setiap hari',id:'ichika'},
+    {t:'Memasakkan sesuatu penuh perhatian',id:'nino'},
+    {t:'Memberi perhatian lewat hal-hal kecil dan tulus',id:'miku'},
+    {t:'Selalu menyemangati dengan kata-kata positif',id:'yotsuba'},
+    {t:'Membantu mencapai tujuan bersama setiap hari',id:'itsuki'},
+  ]},
+  {q:'Kalau kalian punya anak kelak, nilai apa yang ingin kamu tanamkan?',opts:[
+    {t:'Selalu menemukan kebahagiaan dalam hal kecil',id:'ichika'},
+    {t:'Keberanian untuk jujur dan percaya diri',id:'nino'},
+    {t:'Ketenangan dalam menghadapi masalah',id:'miku'},
+    {t:'Semangat pantang menyerah',id:'yotsuba'},
+    {t:'Kedisiplinan dan tanggung jawab',id:'itsuki'},
+  ]},
+  {q:'Bagaimana kamu membayangkan akhir pekan bersama pasangan setelah menikah?',opts:[
+    {t:'Jalan-jalan santai sambil menikmati kuliner',id:'ichika'},
+    {t:'Memasak bersama di dapur sambil bercanda',id:'nino'},
+    {t:'Membaca buku atau menikmati musik berdua',id:'miku'},
+    {t:'Berolahraga atau piknik di luar rumah',id:'yotsuba'},
+    {t:'Merencanakan agenda minggu depan bersama',id:'itsuki'},
+  ]},
+  {q:'Apa hadiah pernikahan yang paling berkesan bagimu?',opts:[
+    {t:'Kejutan yang mengingatkan kenangan indah',id:'ichika'},
+    {t:'Sesuatu yang menunjukkan kerja keras pasangan',id:'nino'},
+    {t:'Waktu dan perhatian penuh tanpa gangguan',id:'miku'},
+    {t:'Perayaan bersama orang-orang tersayang',id:'yotsuba'},
+    {t:'Rencana masa depan yang sudah dipikirkan matang',id:'itsuki'},
+  ]},
+  {q:'Kalau harus memilih lagu untuk pernikahanmu, nuansanya seperti apa?',opts:[
+    {t:'Ceria dan penuh semangat kebahagiaan',id:'ichika'},
+    {t:'Emosional dan penuh kejujuran perasaan',id:'nino'},
+    {t:'Lembut dan menenangkan',id:'miku'},
+    {t:'Energik dan membangkitkan semangat',id:'yotsuba'},
+    {t:'Elegan dan penuh makna mendalam',id:'itsuki'},
+  ]},
+  {q:'Bagaimana caramu menunjukkan rasa syukur atas pernikahanmu?',opts:[
+    {t:'Selalu bersyukur lewat tawa dan kebersamaan',id:'ichika'},
+    {t:'Bekerja keras menjaga hubungan tetap kuat',id:'nino'},
+    {t:'Menghargai momen tenang bersama pasangan',id:'miku'},
+    {t:'Selalu mendukung dan menyemangati pasangan',id:'yotsuba'},
+    {t:'Terus membangun masa depan bersama dengan disiplin',id:'itsuki'},
+  ]},
+  {q:'Kalimat mana yang paling menggambarkan janji pernikahanmu?',opts:[
+    {t:'Aku akan selalu membawa tawa ke dalam hidupmu',id:'ichika'},
+    {t:'Aku akan selalu jujur dan setia kepadamu',id:'nino'},
+    {t:'Aku akan selalu ada, meski dalam diam',id:'miku'},
+    {t:'Aku akan selalu menyemangatimu apapun yang terjadi',id:'yotsuba'},
+    {t:'Aku akan selalu membangun masa depan bersamamu',id:'itsuki'},
+  ]},
+  {q:'Bagaimana kamu ingin pasanganmu memperkenalkanmu ke orang lain?',opts:[
+    {t:'Sebagai orang yang selalu membawa keceriaan',id:'ichika'},
+    {t:'Sebagai orang yang berani dan penuh cinta',id:'nino'},
+    {t:'Sebagai orang yang tenang dan bisa diandalkan',id:'miku'},
+    {t:'Sebagai orang yang penuh semangat dan dukungan',id:'yotsuba'},
+    {t:'Sebagai partner hidup yang serius dan bertanggung jawab',id:'itsuki'},
+  ]},
+  {q:'Kalau kalian pindah rumah baru, siapa yang mengatur dekorasinya?',opts:[
+    {t:'Aku, biar suasananya selalu ceria dan hangat',id:'ichika'},
+    {t:'Aku, aku suka menata semuanya dengan detail',id:'nino'},
+    {t:'Kami berdua, sambil menikmati prosesnya pelan-pelan',id:'miku'},
+    {t:'Kami berdua sambil bercanda dan seru-seruan',id:'yotsuba'},
+    {t:'Aku, dengan rencana dan pertimbangan matang',id:'itsuki'},
+  ]},
+  {q:'Apa yang ingin kamu lakukan di anniversary pertama pernikahan?',opts:[
+    {t:'Merayakannya dengan pesta kecil penuh tawa',id:'ichika'},
+    {t:'Memasak makan malam romantis berdua',id:'nino'},
+    {t:'Menghabiskan waktu tenang mengenang perjalanan kalian',id:'miku'},
+    {t:'Melakukan aktivitas seru yang belum pernah dicoba',id:'yotsuba'},
+    {t:'Merefleksikan pencapaian dan menyusun rencana baru',id:'itsuki'},
+  ]},
+  {q:'Bagaimana caramu memberi kejutan untuk pasangan?',opts:[
+    {t:'Kejutan spontan yang penuh keceriaan',id:'ichika'},
+    {t:'Kejutan yang tulus meski sederhana',id:'nino'},
+    {t:'Kejutan kecil yang penuh perhatian diam-diam',id:'miku'},
+    {t:'Kejutan besar yang melibatkan banyak orang',id:'yotsuba'},
+    {t:'Kejutan yang direncanakan dengan detail matang',id:'itsuki'},
+  ]},
+  {q:'Apa nasihat pernikahan terbaik yang ingin kamu pegang?',opts:[
+    {t:'Selalu simpan tawa meski di masa sulit',id:'ichika'},
+    {t:'Jangan pernah takut untuk jujur',id:'nino'},
+    {t:'Saling memberi ruang itu penting',id:'miku'},
+    {t:'Selalu saling menyemangati tanpa henti',id:'yotsuba'},
+    {t:'Terus bertumbuh bersama dengan tujuan yang jelas',id:'itsuki'},
+  ]},
+  {q:'Kalau harus memilih tempat pernikahan impian, kamu memilih…',opts:[
+    {t:'Tempat ramai penuh dekorasi ceria',id:'ichika'},
+    {t:'Tempat sederhana yang terasa personal',id:'nino'},
+    {t:'Taman tenang dengan suasana intim',id:'miku'},
+    {t:'Lapangan terbuka penuh semangat dan cahaya',id:'yotsuba'},
+    {t:'Gedung elegan yang tertata rapi',id:'itsuki'},
+  ]},
+  {q:'Bagaimana kamu membayangkan pasangan idealmu menghadapi kegagalanmu?',opts:[
+    {t:'Menghiburku dengan candaan sampai aku tersenyum lagi',id:'ichika'},
+    {t:'Berkata jujur tapi tetap mendukungku',id:'nino'},
+    {t:'Diam menemani tanpa menghakimi',id:'miku'},
+    {t:'Menyemangatiku untuk bangkit lagi',id:'yotsuba'},
+    {t:'Membantuku mengevaluasi dan mencari solusi',id:'itsuki'},
+  ]},
+  {q:'Kalau harus memilih kado pertunangan, kamu memilih…',opts:[
+    {t:'Sesuatu yang mengingatkan momen-momen bahagia',id:'ichika'},
+    {t:'Sesuatu yang dibuat dengan penuh usaha',id:'nino'},
+    {t:'Sesuatu yang sederhana tapi bermakna dalam',id:'miku'},
+    {t:'Sesuatu yang bisa dinikmati bersama-sama',id:'yotsuba'},
+    {t:'Sesuatu yang simbolis untuk masa depan',id:'itsuki'},
+  ]},
+  {q:'Apa yang membuatmu merasa \'ini rumah\' bersama pasanganmu?',opts:[
+    {t:'Suara tawa yang selalu memenuhi ruangan',id:'ichika'},
+    {t:'Aroma masakan yang selalu menyambutku pulang',id:'nino'},
+    {t:'Ketenangan yang selalu ada saat aku pulang',id:'miku'},
+    {t:'Semangat dan kehangatan yang selalu menyambut',id:'yotsuba'},
+    {t:'Rencana dan tujuan yang selalu kami bangun bersama',id:'itsuki'},
+  ]},
+  {q:'Bagaimana caramu meredakan pasangan yang sedang marah?',opts:[
+    {t:'Mencairkan suasana dengan candaan ringan',id:'ichika'},
+    {t:'Mendengarkan dulu sebelum menjelaskan',id:'nino'},
+    {t:'Memberi waktu dan ruang sejenak',id:'miku'},
+    {t:'Mengajak bicara dengan penuh semangat positif',id:'yotsuba'},
+    {t:'Mencari akar masalah secara rasional',id:'itsuki'},
+  ]},
+  {q:'Kalimat perpisahan setiap pagi sebelum bekerja, kamu akan bilang…',opts:[
+    {t:'Semangat ya, nanti cerita serunya!',id:'ichika'},
+    {t:'Hati-hati, aku selalu mendukungmu',id:'nino'},
+    {t:'Sampai nanti, aku menunggumu pulang',id:'miku'},
+    {t:'Semangat! Kamu pasti bisa!',id:'yotsuba'},
+    {t:'Jangan lupa istirahat, semoga harimu lancar',id:'itsuki'},
+  ]},
+  {q:'Apa hal terkecil yang bisa membuat pernikahanmu terasa bahagia setiap hari?',opts:[
+    {t:'Tertawa bersama walau hanya sebentar',id:'ichika'},
+    {t:'Makan bersama meski sesibuk apapun',id:'nino'},
+    {t:'Duduk diam berdua menikmati suasana',id:'miku'},
+    {t:'Saling menyemangati sebelum memulai hari',id:'yotsuba'},
+    {t:'Mengobrol tentang rencana esok hari',id:'itsuki'},
+  ]},
+  {q:'Bagaimana kamu ingin dikenang sebagai pasangan hidup?',opts:[
+    {t:'Sebagai sumber tawa dan kebahagiaan',id:'ichika'},
+    {t:'Sebagai pasangan yang setia dan jujur',id:'nino'},
+    {t:'Sebagai tempat pulang yang tenang',id:'miku'},
+    {t:'Sebagai penyemangat tanpa lelah',id:'yotsuba'},
+    {t:'Sebagai partner yang membangun masa depan bersama',id:'itsuki'},
+  ]},
+  {q:'Kalau harus memilih hobi untuk dilakukan bersama pasangan, kamu memilih…',opts:[
+    {t:'Nonton film atau drama sambil santai',id:'ichika'},
+    {t:'Memasak resep baru bersama',id:'nino'},
+    {t:'Membaca buku di tempat yang tenang',id:'miku'},
+    {t:'Olahraga atau aktivitas luar ruangan',id:'yotsuba'},
+    {t:'Belajar hal baru bersama',id:'itsuki'},
+  ]},
+  {q:'Apa yang ingin kamu katakan di depan altar pernikahan?',opts:[
+    {t:'Terima kasih sudah membuat hidupku penuh warna',id:'ichika'},
+    {t:'Aku janji akan selalu jujur dan setia',id:'nino'},
+    {t:'Terima kasih sudah menerimaku apa adanya',id:'miku'},
+    {t:'Aku akan selalu ada untuk menyemangatimu',id:'yotsuba'},
+    {t:'Aku siap membangun masa depan bersamamu',id:'itsuki'},
+  ]},
+  {q:'Bagaimana caramu merayakan hari jadi pernikahan setiap tahun?',opts:[
+    {t:'Merayakannya dengan cara yang berbeda tiap tahun',id:'ichika'},
+    {t:'Memasak makanan yang sama seperti hari pertama',id:'nino'},
+    {t:'Menghabiskan waktu tenang mengenang perjalanan',id:'miku'},
+    {t:'Melakukan hal seru baru bersama',id:'yotsuba'},
+    {t:'Mengevaluasi dan merencanakan tahun berikutnya',id:'itsuki'},
+  ]},
+  {q:'Apa yang kamu harapkan saat menjadi tua bersama pasangan?',opts:[
+    {t:'Masih bisa tertawa bersama seperti dulu',id:'ichika'},
+    {t:'Masih saling percaya seperti hari pertama',id:'nino'},
+    {t:'Masih merasa nyaman dalam diam bersama',id:'miku'},
+    {t:'Masih saling mendukung dalam segala hal',id:'yotsuba'},
+    {t:'Masih punya tujuan dan mimpi bersama',id:'itsuki'},
+  ]},
+  {q:'Kalau harus memilih satu kenangan untuk selalu diingat dari pernikahanmu, itu adalah…',opts:[
+    {t:'Momen tertawa lepas bersama di hari bahagia',id:'ichika'},
+    {t:'Momen saling jujur mengungkapkan perasaan',id:'nino'},
+    {t:'Momen tenang berdua yang penuh kehangatan',id:'miku'},
+    {t:'Momen dirayakan bersama orang-orang tersayang',id:'yotsuba'},
+    {t:'Momen menyusun mimpi masa depan bersama',id:'itsuki'},
+  ]},
+  {q:'Apa yang ingin kamu dengar dari pasangan saat kamu ragu mengambil keputusan besar?',opts:[
+    {t:'Santai saja, kita hadapi bersama sambil tersenyum',id:'ichika'},
+    {t:'Aku percaya keputusanmu, aku di sisimu',id:'nino'},
+    {t:'Ambil waktu yang kamu butuhkan, aku menunggu',id:'miku'},
+    {t:'Kamu pasti bisa, aku selalu mendukungmu',id:'yotsuba'},
+    {t:'Mari kita timbang bersama baik buruknya',id:'itsuki'},
+  ]},
+  {q:'Bagaimana kamu ingin menua bersama pasangan dalam satu kalimat?',opts:[
+    {t:'Terus tertawa bersama sampai rambut memutih',id:'ichika'},
+    {t:'Terus saling setia apapun yang terjadi',id:'nino'},
+    {t:'Terus nyaman berdua tanpa banyak kata',id:'miku'},
+    {t:'Terus saling menyemangati setiap hari',id:'yotsuba'},
+    {t:'Terus tumbuh dan membangun mimpi bersama',id:'itsuki'},
+  ]},
+];
+const ENDING_BLURB={
+  ichika:'Kalian membangun rumah tangga yang selalu diwarnai tawa dan kehangatan — pernikahan penuh kejutan manis setiap harinya.',
+  nino:'Kalian menikah dengan janji kejujuran dan kesetiaan penuh — cinta yang diperjuangkan dengan sepenuh hati.',
+  miku:'Kalian membangun rumah yang tenang dan penuh pengertian — kebahagiaan sederhana yang terasa mendalam.',
+  yotsuba:'Kalian menikah dengan semangat saling mendukung tanpa henti — rumah tangga yang selalu penuh energi positif.',
+  itsuki:'Kalian membangun masa depan bersama dengan penuh rencana dan dedikasi — kemitraan yang kokoh dan saling percaya.'
+};
+const QUIZ_DIFFICULTIES=[
+  {id:'easy',label:'Easy',count:10},
+  {id:'normal',label:'Normal',count:20},
+  {id:'hard',label:'Hard',count:35},
+  {id:'hardcore',label:'Hardcore',count:50}
+];
+let quizAnswers=[],quizStep=0,quizMode='match',activeQuestions=[];
 function openQuiz(){
-  quizAnswers=[];quizStep=0;
+  quizAnswers=[];quizStep=0;activeQuestions=[];
   document.getElementById('quiz-ov').classList.add('open');
-  renderQuizIntro();
+  renderQuizTypeSelect();
 }
 function closeQuiz(){document.getElementById('quiz-ov').classList.remove('open')}
 document.getElementById('quiz-close-btn').addEventListener('click',closeQuiz);
 document.getElementById('quiz-ov').addEventListener('click',e=>{if(e.target.id==='quiz-ov')closeQuiz()});
 
-function renderQuizIntro(){
+function renderQuizTypeSelect(){
   const avatars=['ichika','nino','miku','yotsuba','itsuki'].map(id=>`<div class="qia"><img src="${DB[id].img}" alt="${id}" onerror="this.style.opacity='.1'"/></div>`).join('');
   document.getElementById('quiz-content').innerHTML=`
     <div class="quiz-intro">
       <div class="quiz-intro-avatars">${avatars}</div>
       <div class="quiz-intro-icon">五</div>
-      <h3>Kamu Nakano yang Mana?</h3>
-      <p>Jawab ${QUIZ_Q.length} pertanyaan singkat berdasarkan kepribadianmu sehari-hari, dan temukan saudari Nakano mana yang paling mirip denganmu.</p>
-      <div class="quiz-start-btn" onclick="renderQuizQ()">Mulai Kuis <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+      <h3>Pilih Jenis Kuis</h3>
+      <p>Dua cara seru untuk menjelajahi dunia Nakano — pilih yang paling menarik untukmu.</p>
+      <div class="quiz-type-grid">
+        <div class="quiz-type-card" onclick="selectQuizMode('match')">
+          <span class="qt-icon">💭</span>
+          <h4>Kamu Nakano yang Mana?</h4>
+          <p>Temukan saudari Nakano yang paling mirip dengan kepribadianmu sehari-hari.</p>
+        </div>
+        <div class="quiz-type-card" onclick="selectQuizMode('ending')">
+          <span class="qt-icon">💍</span>
+          <h4>Endingmu</h4>
+          <p>Ikuti skenario pilihan cinta dan cari tahu siapa yang akan kamu nikahi.</p>
+        </div>
+      </div>
     </div>`;
+}
+function selectQuizMode(mode){
+  quizMode=mode;
+  renderDifficultySelect();
+}
+function renderDifficultySelect(){
+  const titles={match:'Kamu Nakano yang Mana?',ending:'Endingmu'};
+  const icons={match:'💭',ending:'💍'};
+  const cards=QUIZ_DIFFICULTIES.map(d=>`
+    <div class="quiz-diff-card" data-diff="${d.id}" onclick="startQuizWithDifficulty('${d.id}')">
+      <span class="qd-label">${d.label}</span>
+      <span class="qd-count">${d.count} Soal</span>
+      <div class="qd-dots">${'<span></span>'.repeat(Math.min(5,Math.ceil(d.count/10)))}</div>
+    </div>`).join('');
+  document.getElementById('quiz-content').innerHTML=`
+    <div class="quiz-intro">
+      <div class="quiz-intro-icon">${icons[quizMode]}</div>
+      <h3>${titles[quizMode]}</h3>
+      <p>Pilih tingkat kesulitan — makin banyak soal, makin akurat hasilnya.</p>
+      <div class="quiz-diff-grid">${cards}</div>
+      <div class="quiz-back-btn" onclick="renderQuizTypeSelect()">← Kembali pilih jenis kuis</div>
+    </div>`;
+}
+function shuffleArr(arr){
+  const a=arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+function sampleQuestions(pool,n){
+  let shuffled=shuffleArr(pool);
+  if(n<=shuffled.length)return shuffled.slice(0,n);
+  let result=[];
+  while(result.length<n){ result=result.concat(shuffleArr(pool)); }
+  return result.slice(0,n);
+}
+function startQuizWithDifficulty(diffId){
+  const diff=QUIZ_DIFFICULTIES.find(d=>d.id===diffId);
+  const pool=quizMode==='ending'?ENDING_Q:QUIZ_Q;
+  activeQuestions=sampleQuestions(pool,diff.count);
+  quizAnswers=[];quizStep=0;
+  renderQuizQ();
 }
 function renderQuizQ(){
   const container=document.getElementById('quiz-content');
@@ -2025,25 +2583,17 @@ function renderQuizQ(){
     drawQuizQ();
   }
 }
-function shuffleArr(arr){
-  const a=arr.slice();
-  for(let i=a.length-1;i>0;i--){
-    const j=Math.floor(Math.random()*(i+1));
-    [a[i],a[j]]=[a[j],a[i]];
-  }
-  return a;
-}
 function drawQuizQ(){
-  const q=QUIZ_Q[quizStep];
+  const q=activeQuestions[quizStep];
   const shuffledOpts=shuffleArr(q.opts);
-  const pct=((quizStep)/QUIZ_Q.length)*100;
+  const pct=((quizStep)/activeQuestions.length)*100;
   const letters=['A','B','C','D','E'];
-  const dots=QUIZ_Q.map((_,i)=>`<div class="qp-dot${i<quizStep?' done':''}"></div>`).join('');
+  const dots=activeQuestions.map((_,i)=>`<div class="qp-dot${i<quizStep?' done':''}"></div>`).join('');
   document.getElementById('quiz-content').innerHTML=`
     <div class="quiz-progress-dots">${dots}</div>
     <div class="quiz-progress-wrap"><div class="quiz-progress-bar" style="width:${pct}%"></div></div>
     <div class="quiz-q-wrap">
-      <p class="quiz-step">Pertanyaan ${quizStep+1} dari ${QUIZ_Q.length}</p>
+      <p class="quiz-step">Pertanyaan ${quizStep+1} dari ${activeQuestions.length}</p>
       <h3 class="quiz-q">${q.q}</h3>
       <div class="quiz-opts">${shuffledOpts.map((o,i)=>`<div class="quiz-opt" data-idx="${i}" onclick="answerQuiz('${o.id}',this)"><span class="qo-let">${letters[i]}</span><span>${o.t}</span></div>`).join('')}</div>
     </div>`;
@@ -2054,7 +2604,7 @@ function answerQuiz(id,el){
   quizAnswers.push(id);
   quizStep++;
   setTimeout(()=>{
-    if(quizStep<QUIZ_Q.length){renderQuizQ()}
+    if(quizStep<activeQuestions.length){renderQuizQ()}
     else{renderQuizResult()}
   },260);
 }
@@ -2083,18 +2633,28 @@ function renderQuizResult(){
     const dd=DB[k];const pct=Math.round((tally[k]/total)*100);
     return `<div class="qr-bar-row"><span class="qr-bar-name">${CNAMES[k]}</span><div class="qr-bar-track"><div class="qr-bar-fill" data-w="${pct}" style="background:${dd.ca}"></div></div><span class="qr-bar-pct">${pct}%</span></div>`;
   }).join('');
+  const isEnding=quizMode==='ending';
+  const eyeTxt=isEnding?'Endingmu':'Hasil Kuismu';
+  const jpExtra=isEnding?'<p style="font-size:1.3rem;margin-bottom:.3rem">💍</p>':'';
+  const headline=isEnding
+    ?`Kamu menikah dengan <strong>${CNAMES[winner]}</strong>! ${ENDING_BLURB[winner]}`
+    :`Kamu paling mirip dengan <strong>${CNAMES[winner]}</strong>! ${d.tag.replace(/<br>/g,' ')}`;
+  const shareTxt=isEnding
+    ?`Endingku adalah menikah dengan ${CNAMES[winner]} di kuis Endingmu ✿`
+    :`Aku dapat hasil ${CNAMES[winner]} di kuis Kamu Nakano yang Mana? ✿`;
   document.getElementById('quiz-content').innerHTML=`
     <div class="quiz-result">
       <div class="qr-confetti" id="qr-confetti"></div>
-      <p class="qr-eye">Hasil Kuismu</p>
+      ${jpExtra}
+      <p class="qr-eye">${eyeTxt}</p>
       <div class="qr-img-wrap" style="border-color:${d.ca}"><img src="${d.img}" alt="${d.en}" onerror="this.style.opacity='.1'"/></div>
       <h3 class="qr-jp">${d.kj}</h3>
       <p class="qr-en" style="color:${d.caGold}">${d.en}</p>
-      <p class="qr-desc">Kamu paling mirip dengan <strong>${CNAMES[winner]}</strong>! ${d.tag.replace(/<br>/g,' ')}</p>
+      <p class="qr-desc">${headline}</p>
       <div class="qr-bars">${bars}</div>
       <div class="quiz-result-actions">
         <div class="qra-btn primary" onclick="closeQuiz();openChar('${winner}')">Lihat Profil ${CNAMES[winner]} <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
-        <div class="qra-btn ghost" onclick="copyToClipboard('Aku dapat hasil ${CNAMES[winner]} di kuis Kamu Nakano yang Mana? ✿')">Bagikan Hasil</div>
+        <div class="qra-btn ghost" onclick="copyToClipboard('${shareTxt}')">Bagikan Hasil</div>
         <div class="qra-btn ghost" onclick="openQuiz()">Ulangi Kuis</div>
       </div>
     </div>`;
@@ -2216,11 +2776,24 @@ cglow.style.left=gx+'px';cglow.style.top=gy+'px';
 
 if(window.matchMedia('(hover:hover)').matches){
   var moveTimer=null;
+  var lastTrailTime=0;
+  var trailColors=['#e05068','#f5c06e','#a78bfa','#4ade80','#7dd3fc'];
   document.addEventListener('mousemove',function(e){
     mx=e.clientX;my=e.clientY;
     document.body.classList.add('cur-move');
     clearTimeout(moveTimer);
     moveTimer=setTimeout(function(){document.body.classList.remove('cur-move')},900);
+    var now=performance.now();
+    if(now-lastTrailTime>70){
+      lastTrailTime=now;
+      var tr=document.createElement('div');
+      tr.className='cur-trail';
+      var sz=4+Math.random()*4;
+      var col=getComputedStyle(document.documentElement).getPropertyValue('--ca').trim()||trailColors[Math.floor(Math.random()*trailColors.length)];
+      tr.style.cssText='left:'+mx+'px;top:'+my+'px;width:'+sz+'px;height:'+(sz*1.25)+'px;background:'+col+';opacity:.5';
+      document.body.appendChild(tr);
+      setTimeout(function(){tr.remove()},760);
+    }
   });
   document.addEventListener('mousedown',function(){document.body.classList.add('cur-down')});
   document.addEventListener('mouseup',function(){document.body.classList.remove('cur-down')});
@@ -2263,7 +2836,7 @@ function setCA(d){
   r.style.setProperty('--ca-wine',d.caWine);
   r.style.setProperty('--ca-sub',d.caSub);
   r.style.setProperty('--ca-gold',d.caGold);
-  if(THEME==='dark') r.style.setProperty('--bg-dk',d.bgDk);
+  if(THEME==='dark'){ r.style.setProperty('--bg-dk',d.bgDk); } else { r.style.removeProperty('--bg-dk'); }
   cd.style.background=d.ca;
   cr.style.borderColor='rgba('+d.caRgb+',.4)';
   document.getElementById('n-dot').style.background='linear-gradient(135deg,'+d.cab+','+d.ca+')';
@@ -2275,18 +2848,20 @@ function themeChar(d){
   document.getElementById('hmesh').style.background=d.mesh;
   document.getElementById('ho1').style.background=d.o1;
   document.getElementById('ho2').style.background=d.o2;
-  document.getElementById('strib').style.background=d.d3;
+  var isDark=THEME==='dark';
+  document.getElementById('strib').style.background=isDark?d.d3:'var(--bg3)';
   document.getElementById('qband').style.background=d.ca;
-  document.getElementById('sec-tr').style.background=d.d2;
-  document.getElementById('sec-gal').style.background=d.d3;
-  document.getElementById('sec-ff').style.background=d.d2;
-  document.getElementById('sec-tl').style.background=d.d3;
+  document.getElementById('sec-tr').style.background=isDark?d.d2:'var(--bg2)';
+  document.getElementById('sec-gal').style.background=isDark?d.d3:'var(--bg3)';
+  document.getElementById('sec-ff').style.background=isDark?d.d2:'var(--bg2)';
+  document.getElementById('sec-tl').style.background=isDark?d.d3:'var(--bg3)';
   document.getElementById('sec-pro').style.background=d.cap;
   document.getElementById('sec-hob').style.background=d.cap;
+  document.getElementById('sec-fam').style.background=d.cap;
   document.getElementById('pifdeco').style.borderColor=d.pifDeco;
-  document.querySelectorAll('#char-view footer').forEach(function(e){e.style.background=THEME==='dark'?d.d3:'var(--bg)'});
-  document.querySelectorAll('.tld').forEach(function(e){e.style.background=THEME==='dark'?d.bgDk:'var(--bg)'});
-  document.querySelectorAll('.gtp').forEach(function(e){e.style.background='linear-gradient(135deg,'+d.d2+','+d.d3+')'});
+  document.querySelectorAll('#char-view footer').forEach(function(e){e.style.background=isDark?d.d3:'var(--bg)'});
+  document.querySelectorAll('.tld').forEach(function(e){e.style.background=isDark?d.bgDk:'var(--bg)'});
+  document.querySelectorAll('.gtp').forEach(function(e){e.style.background=isDark?('linear-gradient(135deg,'+d.d2+','+d.d3+')'):'linear-gradient(135deg,var(--bg2),var(--bg3))'});
   document.getElementById('cfr').style.background=d.ca;
 }
 function themeSeries(d){
@@ -2294,14 +2869,15 @@ function themeSeries(d){
   document.getElementById('svmesh').style.background=d.mesh;
   document.getElementById('svo1').style.background=d.o1;
   document.getElementById('svo2').style.background=d.o2;
-  document.getElementById('svrib').style.background=d.d3;
+  var isDark=THEME==='dark';
+  document.getElementById('svrib').style.background=isDark?d.d3:'var(--bg3)';
   document.getElementById('sv-sec-info').style.background=d.cap;
   document.getElementById('svqband').style.background=d.ca;
-  document.getElementById('sv-sec-eps').style.background=d.d2;
+  document.getElementById('sv-sec-eps').style.background=isDark?d.d2:'var(--bg2)';
   document.getElementById('svfr').style.background=d.ca;
   document.getElementById('svcvrdeco').style.borderColor='rgba('+d.caRgb+',.18)';
-  document.querySelectorAll('#series-view .ssw').forEach(function(e){e.style.background=d.d3});
-  document.querySelectorAll('#series-view footer').forEach(function(e){e.style.background=THEME==='dark'?d.d3:'var(--bg)'});
+  document.querySelectorAll('#series-view .ssw').forEach(function(e){e.style.background=isDark?d.d3:'var(--bg3)'});
+  document.querySelectorAll('#series-view footer').forEach(function(e){e.style.background=isDark?d.d3:'var(--bg)'});
 }
 
 // ════════════════════════════════
@@ -2450,6 +3026,9 @@ function openChar(id){
   setTxt('qqjp',d.qjp);setTxt('qqtr',d.qtr);setTxt('qqsrc',d.qsrc);
   setTxt('trtit',d.trt);
   setHtml('trgrid',R.tr(d.tr));
+  setTxt('famtit','Mengenal '+CNAMES[id]+' Lebih Dekat');
+  setHtml('famgrid',d.fam?R.fam(d.fam):'');
+  setHtml('persgrid',d.pers?R.pers(d.pers):'');
   setTxt('geye',d.ge);setTxt('gtit',d.gt);
   setHtml('ggrid',R.gal(d.gal,id));
   document.querySelectorAll('.gtp').forEach(function(e){e.style.background='linear-gradient(135deg,'+d.d2+','+d.d3+')'});
@@ -2493,6 +3072,7 @@ function goHome(){
   cr.style.borderColor='rgba(224,80,104,.4)';
   document.documentElement.style.setProperty('--ca','#e05068');
   document.documentElement.style.setProperty('--ca-rgb','224,80,104');
+  document.documentElement.style.removeProperty('--bg-dk');
   document.title='五等分の花嫁 — Complete Encyclopedia';
   window.scrollTo({top:0,behavior:'instant'});
   document.getElementById('nav').classList.remove('solid');
@@ -2542,6 +3122,37 @@ for(var i=0;i<starCount;i++){
   s.style.cssText='width:'+sz+'px;height:'+sz+'px;top:'+Math.random()*100+'%;left:'+Math.random()*100+'%;animation-duration:'+(2+Math.random()*4)+'s;animation-delay:'+(Math.random()*5)+'s';
   hv.appendChild(s);
 }
+
+// ════════════════════════════════
+// HOME PETALS & SPARKLES — richer, non-plain background
+// ════════════════════════════════
+(function(){
+  function reduceMotionGlobal(){ return window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
+  if(reduceMotionGlobal())return;
+  var petalWrap=document.getElementById('home-petals');
+  var sparkleWrap=document.getElementById('home-sparkles');
+  if(!petalWrap||!sparkleWrap)return;
+  var petalColors=['#e05068','#f5c06e','#a78bfa','#4ade80','#7dd3fc','#f28fa0'];
+  var petalCount=window.innerWidth<640?9:16;
+  for(var pi=0;pi<petalCount;pi++){
+    var p=document.createElement('div');p.className='petal';
+    var sz=5+Math.random()*8;
+    var dur=14+Math.random()*16;
+    var delay=Math.random()*22;
+    var drift=(Math.random()*140-70).toFixed(0)+'px';
+    p.style.cssText='left:'+(Math.random()*100)+'%;width:'+sz+'px;height:'+(sz*1.28)+'px;background:'+petalColors[pi%petalColors.length]+';animation-duration:'+dur+'s;animation-delay:-'+delay+'s;--drift:'+drift;
+    petalWrap.appendChild(p);
+  }
+  var sparkleCount=window.innerWidth<640?5:9;
+  var sparkleSvg='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0l2.2 8.1L22 10l-7.8 2.2L12 20l-2.2-7.8L2 10l7.8-1.9z"/></svg>';
+  for(var sj=0;sj<sparkleCount;sj++){
+    var sp=document.createElement('div');sp.className='sparkle';
+    var ssz=10+Math.random()*14;
+    sp.style.cssText='left:'+(Math.random()*100)+'%;top:'+(Math.random()*90+3)+'%;width:'+ssz+'px;height:'+ssz+'px;animation-duration:'+(3+Math.random()*3)+'s;animation-delay:'+(Math.random()*5)+'s';
+    sp.innerHTML=sparkleSvg;
+    sparkleWrap.appendChild(sp);
+  }
+})();
 
 // ════════════════════════════════
 // STATS COUNT-UP
