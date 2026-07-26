@@ -61,6 +61,8 @@ body.cur-move #cglow{opacity:1}
   pointer-events:none;z-index:9999;
   transform:translate(-50%,-50%);will-change:transform;
 }
+#cd,#cr{opacity:0}
+body.cur-ready #cd,body.cur-ready #cr{opacity:1;transition:opacity .3s,width .25s var(--spring),height .25s var(--spring)}
 #cd{width:20px;height:20px;display:flex;align-items:center;justify-content:center;transition:width .25s var(--spring),height .25s var(--spring)}
 #cd svg{width:100%;height:100%;color:var(--ca);filter:drop-shadow(0 0 5px rgba(var(--ca-rgb),.75));animation:cbloom 7s linear infinite;transition:color .4s}
 @keyframes cbloom{to{transform:rotate(360deg)}}
@@ -2780,6 +2782,10 @@ if(window.matchMedia('(hover:hover)').matches){
   var trailColors=['#e05068','#f5c06e','#a78bfa','#4ade80','#7dd3fc'];
   document.addEventListener('mousemove',function(e){
     mx=e.clientX;my=e.clientY;
+    if(!document.body.classList.contains('cur-ready')){
+      document.body.classList.add('cur-ready');
+      rx=mx;ry=my;gx=mx;gy=my;
+    }
     document.body.classList.add('cur-move');
     clearTimeout(moveTimer);
     moveTimer=setTimeout(function(){document.body.classList.remove('cur-move')},900);
@@ -2837,7 +2843,6 @@ function setCA(d){
   r.style.setProperty('--ca-sub',d.caSub);
   r.style.setProperty('--ca-gold',d.caGold);
   if(THEME==='dark'){ r.style.setProperty('--bg-dk',d.bgDk); } else { r.style.removeProperty('--bg-dk'); }
-  cd.style.background=d.ca;
   cr.style.borderColor='rgba('+d.caRgb+',.4)';
   document.getElementById('n-dot').style.background='linear-gradient(135deg,'+d.cab+','+d.ca+')';
   document.getElementById('scroll-top').style.background=d.ca;
@@ -3068,7 +3073,6 @@ function goHome(){
   document.getElementById('n-dot').style.background='linear-gradient(135deg,#f28fa0,#e05068)';
   document.getElementById('scroll-top').style.background='#e05068';
   document.getElementById('fav-btn').style.color='#e05068';
-  cd.style.background='#e05068';
   cr.style.borderColor='rgba(224,80,104,.4)';
   document.documentElement.style.setProperty('--ca','#e05068');
   document.documentElement.style.setProperty('--ca-rgb','224,80,104');
