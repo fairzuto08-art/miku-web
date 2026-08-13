@@ -374,6 +374,12 @@ body.cur-down #cd{transform:translate(-50%,-50%) scale(1.25)}
 .char-card:hover{transform:translateY(-18px) scale(1.05)!important}
 .char-card::before{content:'';position:absolute;inset:0;z-index:1;background:linear-gradient(to top,rgba(0,0,0,.94) 0%,rgba(0,0,0,.4) 48%,transparent 78%);transition:opacity .32s}
 .char-card:hover::before{opacity:.72}
+.char-card::after,.fuutaro-card::after,.support-card::after,.sc-card::after{
+  content:'';position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.18) 50%,transparent 70%);
+  background-size:220% 100%;background-position:140% 0;transition:background-position .9s var(--eout);
+}
+.char-card:hover::after,.fuutaro-card:hover::after,.support-card:hover::after,.sc-card:hover::after{background-position:-40% 0}
 .char-card img{width:100%;height:100%;object-fit:cover;object-position:top center;transition:transform .55s var(--ease),filter .4s;filter:brightness(.85) saturate(1.05)}
 .char-card:hover img{transform:scale(1.1);filter:brightness(1.02) saturate(1.1)}
 .card-glow{position:absolute;bottom:-8px;left:10%;right:10%;height:72px;filter:blur(24px);border-radius:50%;opacity:0;transition:opacity .45s;z-index:0}
@@ -401,6 +407,21 @@ body.cur-down #cd{transform:translate(-50%,-50%) scale(1.25)}
 .h-divider{position:relative;z-index:2;display:flex;align-items:center;gap:1.1rem;max-width:1240px;margin:clamp(1.8rem,3.8vh,3rem) auto clamp(1.4rem,2.8vh,2.2rem);padding:0 clamp(1.2rem,4vw,3rem)}
 .h-divider::before,.h-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--border2),transparent)}
 .h-div-txt{font-size:.52rem;letter-spacing:.62em;text-transform:uppercase;color:var(--text4);white-space:nowrap;display:flex;align-items:center;gap:.5rem}
+
+/* ── SUPPORTING CHARACTERS ── */
+.support-section{position:relative;z-index:2;max-width:1240px;margin:0 auto;padding:0 clamp(1rem,4vw,3rem) clamp(1rem,2vh,1.5rem)}
+.support-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(.7rem,1.4vw,1.1rem)}
+.support-card{position:relative;border-radius:14px;overflow:hidden;cursor:pointer;aspect-ratio:3/4;border:1px solid var(--border);background:var(--card-bg);transition:transform .4s var(--spring),box-shadow .4s;opacity:0;animation:qoptin .5s var(--eout) forwards}
+.support-card:nth-child(1){animation-delay:.04s}.support-card:nth-child(2){animation-delay:.1s}.support-card:nth-child(3){animation-delay:.16s}.support-card:nth-child(4){animation-delay:.22s}.support-card:nth-child(5){animation-delay:.28s}.support-card:nth-child(6){animation-delay:.34s}
+.support-card:hover{transform:translateY(-6px);box-shadow:0 20px 44px var(--shadow)}
+.support-card::before{content:'';position:absolute;inset:0;z-index:1;background:linear-gradient(to top,rgba(0,0,0,.92) 0%,rgba(0,0,0,.3) 50%,transparent 78%);transition:opacity .3s}
+.support-card img{width:100%;height:100%;object-fit:cover;object-position:top center;filter:brightness(.85) saturate(1.05);transition:transform .55s var(--ease),filter .4s}
+.support-card:hover img{transform:scale(1.08);filter:brightness(1) saturate(1.1)}
+.support-info{position:absolute;bottom:0;left:0;right:0;z-index:2;padding:.75rem .7rem .7rem}
+.sup-role{font-size:.44rem;letter-spacing:.32em;text-transform:uppercase;color:rgba(255,255,255,.55);margin-bottom:.24rem}
+.sup-jp{font-family:'Shippori Mincho',serif;font-size:.85rem;color:#fff;margin-bottom:.08rem;line-height:1.2}
+.sup-en{font-size:.46rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.45)}
+@media(max-width:640px){.support-grid{grid-template-columns:1fr 1fr}}
 
 /* ── SERIES HOME ── */
 .series-home{position:relative;z-index:2;max-width:1240px;margin:0 auto;padding:0 clamp(1.2rem,4vw,3rem) clamp(2.5rem,5vh,4rem)}
@@ -709,6 +730,7 @@ body.cur-down #cd{transform:translate(-50%,-50%) scale(1.25)}
 .pers-grid{display:grid;grid-template-columns:1fr 1fr;gap:.7rem 1.2rem}
 .pers-item{padding:.9rem 1.1rem;border-radius:10px;border-left:3px solid var(--ca);background:var(--cam);transition:transform .25s var(--eout),box-shadow .3s}
 .pers-item:hover{transform:translateX(4px);box-shadow:0 8px 22px rgba(var(--ca-rgb),.13)}
+.pers-item.pers-va{border-left-style:dashed;background:rgba(var(--ca-rgb),.07)}
 .pers-label{font-size:.5rem;letter-spacing:.3em;text-transform:uppercase;color:var(--ca-sub);margin-bottom:.32rem}
 .pers-value{font-family:'Playfair Display',serif;font-size:.85rem;color:var(--ca-wine);line-height:1.5}
 @media(max-width:768px){.fam-grid{grid-template-columns:1fr}.pers-grid{grid-template-columns:1fr}}
@@ -969,6 +991,7 @@ footer{background:var(--bg);padding:clamp(1.8rem,3.8vh,3rem) clamp(1.5rem,5vw,4r
   <div class="s-tabs" id="s-tabs">
     <div class="s-tab active" data-f="all">Semua</div>
     <div class="s-tab" data-f="char">Karakter</div>
+    <div class="s-tab" data-f="support">Pendukung</div>
     <div class="s-tab" data-f="series">Series</div>
   </div>
   <div id="s-res"></div>
@@ -1059,7 +1082,8 @@ footer{background:var(--bg);padding:clamp(1.8rem,3.8vh,3rem) clamp(1.5rem,5vw,4r
   </div>
 
   <div class="stats-bar" data-rv>
-    <div class="stat-item"><div class="stat-num" data-count="6">0</div><div class="stat-lbl">Karakter</div></div>
+    <div class="stat-item"><div class="stat-num" data-count="6">0</div><div class="stat-lbl">Karakter Utama</div></div>
+    <div class="stat-item"><div class="stat-num" data-count="6">0</div><div class="stat-lbl">Karakter Pendukung</div></div>
     <div class="stat-item"><div class="stat-num" data-count="27">0</div><div class="stat-lbl">Episode Anime</div></div>
     <div class="stat-item"><div class="stat-num" data-count="122">0</div><div class="stat-lbl">Chapter Manga</div></div>
     <div class="stat-item"><div class="stat-num" data-count="5">0</div><div class="stat-lbl">Adaptasi Media</div></div>
@@ -1136,6 +1160,36 @@ footer{background:var(--bg);padding:clamp(1.8rem,3.8vh,3rem) clamp(1.5rem,5vw,4r
         <div class="card-glow"></div><div class="card-roman">V</div>
         <div class="card-fav" onclick="event.stopPropagation();toggleFav('itsuki',this)">♡</div>
         <div class="card-info"><div class="cn">Fifth · 五女</div><div class="cjp">中野 五月</div><div class="cen">Nakano Itsuki</div><div class="ccta">Biodata <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="h-divider"><div class="h-div-txt">✿ Karakter Pendukung · サポートキャラクター ✿</div></div>
+  <div class="support-section">
+    <div class="support-grid">
+      <div class="support-card" onclick="openChar('raiha')" tabindex="0" role="button">
+        <img src="raiha.jpg" alt="Raiha" onerror="this.style.opacity='.07'"/>
+        <div class="support-info"><p class="sup-role">Adik Fuutarou</p><p class="sup-jp">上杉 来羽</p><p class="sup-en">Raiha Uesugi</p></div>
+      </div>
+      <div class="support-card" onclick="openChar('isanari')" tabindex="0" role="button">
+        <img src="isanari.jpg" alt="Isanari" onerror="this.style.opacity='.07'"/>
+        <div class="support-info"><p class="sup-role">Ayah Fuutarou</p><p class="sup-jp">上杉 諭成</p><p class="sup-en">Isanari Uesugi</p></div>
+      </div>
+      <div class="support-card" onclick="openChar('maruo')" tabindex="0" role="button">
+        <img src="maruo.jpg" alt="Maruo" onerror="this.style.opacity='.07'"/>
+        <div class="support-info"><p class="sup-role">Ayah Tiri Nakano</p><p class="sup-jp">中野 丸男</p><p class="sup-en">Maruo Nakano</p></div>
+      </div>
+      <div class="support-card" onclick="openChar('rena')" tabindex="0" role="button">
+        <img src="rena.jpg" alt="Rena" onerror="this.style.opacity='.07'"/>
+        <div class="support-info"><p class="sup-role">Mendiang Ibu Nakano</p><p class="sup-jp">中野 れな</p><p class="sup-en">Rena Nakano</p></div>
+      </div>
+      <div class="support-card" onclick="openChar('yamada')" tabindex="0" role="button">
+        <img src="yamada.jpg" alt="Yamada" onerror="this.style.opacity='.07'"/>
+        <div class="support-info"><p class="sup-role">Teman Sekolah Nino</p><p class="sup-jp">ヤマダ</p><p class="sup-en">Yamada</p></div>
+      </div>
+      <div class="support-card" onclick="openChar('otori')" tabindex="0" role="button">
+        <img src="otori.jpg" alt="Otori" onerror="this.style.opacity='.07'"/>
+        <div class="support-info"><p class="sup-role">Teman Sekolah Nino</p><p class="sup-jp">オオトリ</p><p class="sup-en">Otori</p></div>
       </div>
     </div>
   </div>
@@ -1361,7 +1415,7 @@ const DB={
     {role:'Ibu',name:'Nyonya Uesugi',note:'Sosok yang jarang muncul dalam cerita — Fuutarou tumbuh besar terutama di bawah asuhan sang ayah.'},
     {role:'Adik',name:'Raiha Uesugi',note:'Adik perempuan Fuutarou yang akrab dengannya, bahkan sering memotong rambut kakaknya sendiri di rumah.'}
   ],
-  pers:[['Makanan Favorit','Masakan rumahan sederhana — terbiasa masak hemat untuk dirinya dan Raiha'],['Mata Pelajaran','Semua mata pelajaran — meraih nilai sempurna tanpa bimbingan les'],['Cita-cita Awal','Sekadar mencari uang tambahan untuk membantu ekonomi keluarga'],['Yang Tidak Disukai','Pemborosan dan sikap yang tidak jujur'],['Kenangan Masa Kecil','Pernah bertemu seorang gadis misterius yang mengubah cara pandangnya terhadap hidup']],
+  pers:[['Makanan Favorit','Masakan rumahan sederhana — terbiasa masak hemat untuk dirinya dan Raiha'],['Mata Pelajaran','Semua mata pelajaran — meraih nilai sempurna tanpa bimbingan les'],['Cita-cita Awal','Sekadar mencari uang tambahan untuk membantu ekonomi keluarga'],['Yang Tidak Disukai','Pemborosan dan sikap yang tidak jujur'],['Kenangan Masa Kecil','Pernah bertemu seorang gadis misterius yang mengubah cara pandangnya terhadap hidup'],['Pengisi Suara (JP)','Yoshitsugu Matsuoka'],['Pengisi Suara (EN)','Josh Grelle']],
   flog:'上杉 風太郎'},
 
   ichika:{ca:'#c9902a',cab:'#f5c06e',cap:'#fef3e2',cam:'#fde8c0',caRgb:'201,144,42',caWine:'#7c4a0a',caSub:'#a06820',caGold:'#e8b87a',bgDk:'#0d0804',d2:'#0d0804',d3:'#0a0603',pifDeco:'rgba(201,144,42,.18)',o1:'radial-gradient(circle,rgba(201,144,42,.16),transparent 70%)',o2:'radial-gradient(circle,rgba(120,64,8,.28),transparent 70%)',mesh:'radial-gradient(ellipse 65% 55% at 80% 40%,rgba(180,120,30,.2) 0%,transparent 65%),radial-gradient(ellipse 50% 50% at 10% 80%,rgba(100,60,8,.3) 0%,transparent 60%),#0d0804',
@@ -1389,7 +1443,7 @@ const DB={
     {role:'Ayah Tiri',name:'Maruo Nakano',note:'Dokter sekaligus pengusaha sukses pemilik rumah sakit. Awalnya terkesan dingin dan sibuk, namun sebenarnya sangat menyayangi kelima putrinya.'},
     {role:'Saudari',name:'Nino, Miku, Yotsuba, Itsuki',note:'Empat saudari kembar identik lainnya yang bersama Ichika membentuk kelima bersaudari Nakano.'}
   ],
-  pers:[['Makanan Favorit','Makanan manis dan dessert ringan'],['Cita-cita','Menjadi aktris/model profesional'],['Peran di Keluarga','Kakak sulung yang bersikap keibuan terhadap keempat adiknya'],['Yang Disembunyikan','Perasaannya sendiri, demi menjaga suasana tetap harmonis'],['Kenangan Masa Kecil','Tumbuh menjadi peniru ulung — bisa menirukan ekspresi dan sifat saudarinya dengan sangat meyakinkan']],
+  pers:[['Makanan Favorit','Makanan manis dan dessert ringan'],['Cita-cita','Menjadi aktris/model profesional'],['Peran di Keluarga','Kakak sulung yang bersikap keibuan terhadap keempat adiknya'],['Yang Disembunyikan','Perasaannya sendiri, demi menjaga suasana tetap harmonis'],['Kenangan Masa Kecil','Tumbuh menjadi peniru ulung — bisa menirukan ekspresi dan sifat saudarinya dengan sangat meyakinkan'],['Pengisi Suara (JP)','Kana Hanazawa'],['Pengisi Suara (EN)','Lindsay Seidel']],
   flog:'中野 一花'},
 
   nino:{ca:'#7c3aed',cab:'#a78bfa',cap:'#ede9fe',cam:'#ddd6fe',caRgb:'124,58,237',caWine:'#3b0764',caSub:'#6d28d9',caGold:'#c4b5fd',bgDk:'#06030f',d2:'#0a0514',d3:'#070310',pifDeco:'rgba(124,58,237,.18)',o1:'radial-gradient(circle,rgba(124,58,237,.16),transparent 70%)',o2:'radial-gradient(circle,rgba(59,7,100,.3),transparent 70%)',mesh:'radial-gradient(ellipse 65% 55% at 80% 40%,rgba(100,50,200,.2) 0%,transparent 65%),radial-gradient(ellipse 50% 50% at 10% 80%,rgba(50,10,100,.3) 0%,transparent 60%),#06030f',
@@ -1417,7 +1471,7 @@ const DB={
     {role:'Ayah Tiri',name:'Maruo Nakano',note:'Dokter dan pengusaha sukses. Hubungan Nino dengannya sempat renggang karena ia menganggap sang ayah terlalu jarang di rumah.'},
     {role:'Saudari',name:'Ichika, Miku, Yotsuba, Itsuki',note:'Empat saudari kembar identik lainnya yang tumbuh bersama Nino sejak kecil.'}
   ],
-  pers:[['Makanan Favorit','Masakan Jepang buatan sendiri'],['Cita-cita','Membuka restoran sendiri suatu hari nanti'],['Spesialisasi','Memasak — yang paling mahir di antara kelima saudari'],['Yang Tidak Disukai','Kebohongan dan sosok figur ayah yang jarang hadir'],['Kenangan Masa Kecil','Sempat sulit memercayai sosok ayah setelah ayah kandung mereka meninggalkan keluarga']],
+  pers:[['Makanan Favorit','Masakan Jepang buatan sendiri'],['Cita-cita','Membuka restoran sendiri suatu hari nanti'],['Spesialisasi','Memasak — yang paling mahir di antara kelima saudari'],['Yang Tidak Disukai','Kebohongan dan sosok figur ayah yang jarang hadir'],['Kenangan Masa Kecil','Sempat sulit memercayai sosok ayah setelah ayah kandung mereka meninggalkan keluarga'],['Pengisi Suara (JP)','Ayana Taketatsu'],['Pengisi Suara (EN)','Jill Harris']],
   flog:'中野 二乃'},
 
   miku:{ca:'#e05068',cab:'#f28fa0',cap:'#fce8ed',cam:'#fad5de',caRgb:'224,80,104',caWine:'#5c1526',caSub:'#8a4456',caGold:'#c8919e',bgDk:'#0e0408',d2:'#0c0308',d3:'#0a0205',pifDeco:'rgba(224,80,104,.18)',o1:'radial-gradient(circle,rgba(224,80,104,.16),transparent 70%)',o2:'radial-gradient(circle,rgba(92,21,38,.3),transparent 70%)',mesh:'radial-gradient(ellipse 65% 55% at 80% 40%,rgba(200,50,80,.22) 0%,transparent 65%),radial-gradient(ellipse 50% 50% at 10% 80%,rgba(100,20,40,.35) 0%,transparent 60%),#0e0408',
@@ -1445,7 +1499,7 @@ const DB={
     {role:'Ayah Tiri',name:'Maruo Nakano',note:'Dokter sekaligus pengusaha sukses yang mempekerjakan Fuutarou sebagai tutor privat untuk kelima putrinya.'},
     {role:'Saudari',name:'Ichika, Nino, Yotsuba, Itsuki',note:'Empat saudari kembar identik lainnya — Miku dikenal sebagai yang paling pendiam di antara mereka.'}
   ],
-  pers:[['Makanan Favorit','Kopi buatan sendiri dan wagashi (manisan tradisional Jepang)'],['Pekerjaan Sampingan','Bekerja paruh waktu di toko roti Komugiya'],['Cita-cita','Terus berkembang dalam memasak, terinspirasi oleh keahlian Nino'],['Ketertarikan Utama','Sejarah era Sengoku, terutama sosok Tokugawa Ieyasu'],['Kenangan Masa Kecil','Pendiam sejak kecil — headphone merahnya menjadi cara menciptakan dunia sendiri']],
+  pers:[['Makanan Favorit','Kopi buatan sendiri dan wagashi (manisan tradisional Jepang)'],['Pekerjaan Sampingan','Bekerja paruh waktu di toko roti Komugiya'],['Cita-cita','Terus berkembang dalam memasak, terinspirasi oleh keahlian Nino'],['Ketertarikan Utama','Sejarah era Sengoku, terutama sosok Tokugawa Ieyasu'],['Kenangan Masa Kecil','Pendiam sejak kecil — headphone merahnya menjadi cara menciptakan dunia sendiri'],['Pengisi Suara (JP)','Miku Itou'],['Pengisi Suara (EN)','Felecia Angelle']],
   flog:'中野 三玖'},
 
   yotsuba:{ca:'#16a34a',cab:'#4ade80',cap:'#f0fdf4',cam:'#dcfce7',caRgb:'22,163,74',caWine:'#14532d',caSub:'#15803d',caGold:'#86efac',bgDk:'#030d06',d2:'#031008',d3:'#020b05',pifDeco:'rgba(22,163,74,.18)',o1:'radial-gradient(circle,rgba(22,163,74,.16),transparent 70%)',o2:'radial-gradient(circle,rgba(5,70,20,.28),transparent 70%)',mesh:'radial-gradient(ellipse 65% 55% at 80% 40%,rgba(20,140,60,.18) 0%,transparent 65%),radial-gradient(ellipse 50% 50% at 10% 80%,rgba(5,70,20,.28) 0%,transparent 60%),#030d06',
@@ -1473,7 +1527,7 @@ const DB={
     {role:'Ayah Tiri',name:'Maruo Nakano',note:'Dokter dan pengusaha sukses. Yotsuba salah satu yang paling memahami sisi lembut di balik sikap tegasnya.'},
     {role:'Saudari',name:'Ichika, Nino, Miku, Itsuki',note:'Empat saudari kembar identik lainnya — Yotsuba dikenal sebagai penyemangat di antara mereka.'}
   ],
-  pers:[['Makanan Favorit','Menu berporsi besar dan bertenaga, cocok untuk aktivitas fisiknya'],['Spesialisasi','Atletik, terutama lari jarak jauh'],['Sifat Menonjol','Selalu berusaha membantu orang lain tanpa pamrih'],['Rahasia Besar','Menyimpan kenangan masa lalu bersama Fuutarou yang lama belum terungkap ke saudarinya'],['Kenangan Masa Kecil','Tumbuh menjadi sosok yang rela mengalah demi kebahagiaan bersama keluarganya']],
+  pers:[['Makanan Favorit','Menu berporsi besar dan bertenaga, cocok untuk aktivitas fisiknya'],['Spesialisasi','Atletik, terutama lari jarak jauh'],['Sifat Menonjol','Selalu berusaha membantu orang lain tanpa pamrih'],['Rahasia Besar','Menyimpan kenangan masa lalu bersama Fuutarou yang lama belum terungkap ke saudarinya'],['Kenangan Masa Kecil','Tumbuh menjadi sosok yang rela mengalah demi kebahagiaan bersama keluarganya'],['Pengisi Suara (JP)','Ayane Sakura'],['Pengisi Suara (EN)','Bryn Apprill']],
   flog:'中野 四葉'},
 
   itsuki:{ca:'#dc2626',cab:'#f87171',cap:'#fef2f2',cam:'#fecaca',caRgb:'220,38,38',caWine:'#7f1d1d',caSub:'#b91c1c',caGold:'#fca5a5',bgDk:'#0d0202',d2:'#0d0202',d3:'#0a0202',pifDeco:'rgba(220,38,38,.18)',o1:'radial-gradient(circle,rgba(220,38,38,.16),transparent 70%)',o2:'radial-gradient(circle,rgba(127,29,29,.28),transparent 70%)',mesh:'radial-gradient(ellipse 65% 55% at 80% 40%,rgba(200,30,30,.2) 0%,transparent 65%),radial-gradient(ellipse 50% 50% at 10% 80%,rgba(100,10,10,.3) 0%,transparent 60%),#0d0202',
@@ -1501,8 +1555,158 @@ const DB={
     {role:'Ayah Tiri',name:'Maruo Nakano',note:'Dokter dan pengusaha sukses. Itsuki termasuk yang paling dekat dengan harapan akademik sang ayah.'},
     {role:'Saudari',name:'Ichika, Nino, Miku, Yotsuba',note:'Empat saudari kembar identik lainnya — Itsuki dikenal sebagai yang paling protektif terhadap mereka.'}
   ],
-  pers:[['Makanan Favorit','Hampir semua makanan enak — terutama masakan buatan Nino'],['Cita-cita','Berkarier di dunia kuliner, termasuk mengulas makanan'],['Sifat Menonjol','Cerdas dan percaya diri, namun juga keras kepala'],['Peran di Keluarga','Paling protektif terhadap keempat saudarinya'],['Kenangan Masa Kecil','Sejak kecil terbiasa menjaga saudari-saudarinya dan bersikap dewasa lebih dulu']],
-  flog:'中野 五月'}
+  pers:[['Makanan Favorit','Hampir semua makanan enak — terutama masakan buatan Nino'],['Cita-cita','Berkarier di dunia kuliner, termasuk mengulas makanan'],['Sifat Menonjol','Cerdas dan percaya diri, namun juga keras kepala'],['Peran di Keluarga','Paling protektif terhadap keempat saudarinya'],['Kenangan Masa Kecil','Sejak kecil terbiasa menjaga saudari-saudarinya dan bersikap dewasa lebih dulu'],['Pengisi Suara (JP)','Inori Minase'],['Pengisi Suara (EN)','Tia Ballard']],
+  flog:'中野 五月'},
+  raiha:{
+  ca:'#34d399',cab:'#6ee7b7',cap:'#ecfdf5',cam:'#d1fae5',caRgb:'52,211,153',caWine:'#065f46',caSub:'#047857',caGold:'#a7f3d0',bgDk:'#020f0a',d2:'#031810',d3:'#02100b',pifDeco:'rgba(52,211,153,.18)',o1:'radial-gradient(circle,rgba(52,211,153,.16),transparent 70%)',o2:'radial-gradient(circle,rgba(6,95,70,.28),transparent 70%)',mesh:'radial-gradient(ellipse 65% 55% at 80% 40%,rgba(40,180,130,.2) 0%,transparent 65%),radial-gradient(ellipse 50% 50% at 10% 80%,rgba(6,95,70,.3) 0%,transparent 60%),#020f0a',
+  logo:'上杉来羽',kj:'来羽',jp:'上杉<br>来羽',en:'Uesugi Raiha',eye:'五等分の花嫁 · Adik Fuutarou',
+  tag:'Adik perempuan Fuutarou yang bijaksana melebihi usianya —<br>pandai memasak dan menjaga keharmonisan keluarga Uesugi.',
+  chips:['🍳 Juru Masak Keluarga','Murid SD','Bijaksana','Adik Kesayangan'],
+  img:'raiha.jpg',ord:'—',ht:'—',wt:'—',bd:'Tidak diketahui',zo:'✿',zol:'Uesugi',
+  pi:'raiha.jpg',pcap:'上杉 来羽 · Uesugi Raiha · © Negi Haruba / Kodansha',
+  ptit:'Adik Kecil yang Dewasa<br><em style="font-style:italic;font-size:.74em">Pengatur Rumah Tangga Keluarga Uesugi</em>',
+  pd:'Raiha Uesugi adalah adik perempuan Fuutarou yang meski masih duduk di bangku sekolah dasar, memiliki kebijaksanaan dan kepekaan yang jauh melampaui usianya. Ialah yang mengurus dapur dan memasak untuk keluarga kecil mereka sehari-hari.',
+  db:[['Nama','上杉 来羽'],['Hubungan','Adik kandung Fuutarou'],['Peran di Rumah','Juru masak keluarga'],['Rambut','Hitam panjang'],['Ciri Khas','Pita berbentuk kupu-kupu, jambul tinggi'],['Pendidikan','Sekolah Dasar']],
+  pc:['Juru Masak Cilik','Peka & Bijaksana','Penyayang Keluarga','Sedikit Cerdik'],
+  qjp:'「お兄ちゃん、ごはんできてるよ。」',qtr:'"Kak, makanannya sudah siap, lho."',qsrc:'— Raiha Uesugi kepada Fuutarou',
+  trt:'Sisi-Sisi Raiha',
+  tr:[{i:'🍳',n:'Juru Masak Cilik',d:'Meski masih kecil, Raiha sudah terbiasa memasak untuk keluarganya sehari-hari — sebuah tanggung jawab yang ia jalani tanpa mengeluh.'},{i:'🧠',n:'Bijaksana Melebihi Usia',d:'Memahami kondisi ekonomi keluarga dan situasi rumit yang dihadapi kakaknya jauh lebih baik dibanding anak seusianya.'},{i:'👀',n:'Peka & Perseptif',d:'Punya kepekaan tajam terhadap perasaan orang di sekitarnya, termasuk mengetahui banyak hal tentang urusan kakaknya.'},{i:'😏',n:'Sedikit Cerdik',d:'Diam-diam pandai memanfaatkan situasi keluarga untuk kepentingannya sendiri dengan cara yang halus dan tidak terlihat.'},{i:'❤️',n:'Penyayang Keluarga',d:'Sangat menyayangi kakaknya dan berusaha menjaga suasana rumah tetap hangat meski keluarga mereka kekurangan secara materi.'},{i:'🎭',n:'Pandai Membaca Ekspresi',d:'Mampu menggunakan ekspresi wajahnya sendiri untuk meyakinkan orang lain — sisi cerdik yang jarang disadari orang di sekitarnya.'}],
+  ge:'Galeri · Raiha',gt:'Ekspresi Raiha',
+  gal:[{s:'raiha.jpg',l:'上杉来羽 · Main Visual',t:true},{s:'raiha1.jpg',l:'Picture 1'},{s:'raiha2.jpg',l:'Picture 2'},{k:'来',l:'The Little Sister · 妹'}],
+  ht2:'Hal yang Raiha Jalani',
+  hob:[{n:'01',t:'Memasak untuk Keluarga',d:'Menyiapkan makanan sehari-hari untuk Fuutarou dan ayahnya — tanggung jawab yang sudah menjadi rutinitasnya.'},{n:'02',t:'Mengurus Rumah',d:'Membantu menjaga rumah tetap rapi di tengah kesibukan ayah dan kakaknya.'},{n:'03',t:'Memperhatikan Kakak',d:'Diam-diam selalu memantau perkembangan hubungan kakaknya dengan kelima saudari Nakano.'},{n:'04',t:'Sekolah',d:'Tetap menjalani kesehariannya sebagai murid sekolah dasar seperti anak-anak seusianya.'}],
+  ff:[{i:'✂️',t:'Tukang Gunting Rambut',d:'Menurut pengakuan Fuutarou, gaya rambutnya yang khas adalah hasil potongan tangan Raiha sendiri.'},{i:'🍚',t:'Andalan Dapur',d:'Menjadi tulang punggung dapur keluarga Uesugi meski usianya masih sangat muda.'},{i:'🦋',t:'Pita Kupu-kupu',d:'Ciri khasnya adalah pita berbentuk kupu-kupu sederhana yang selalu ia kenakan.'}],
+  tlt:'Kisah Raiha',tle:'Sang Penjaga Rumah',
+  tl:[{y:'Sehari-hari',h:'Menjaga Keluarga Kecil',b:'Bersama ayahnya, Raiha membantu menjaga keharmonisan rumah tangga Uesugi yang sederhana.'},{y:'Ketika Fuutarou Menjadi Tutor',h:'Menyaksikan dari Rumah',b:'Memperhatikan perubahan yang terjadi pada kakaknya sejak mulai mengajar kelima saudari Nakano.'}],
+  fam:[{role:'Ayah',name:'Isanari Uesugi',note:'Membesarkan Raiha dan Fuutarou seorang diri, bekerja keras di tengah keterbatasan ekonomi keluarga.'},{role:'Ibu',name:'Nyonya Uesugi',note:'Sosok yang jarang muncul dalam cerita dan minim detail yang terungkap.'},{role:'Saudara',name:'Fuutarou Uesugi',note:'Kakak laki-laki satu-satunya yang sangat disayangi Raiha — hubungan mereka sangat dekat.'}],
+  pers:[['Makanan Favorit','Tidak spesifik diketahui — namun ia sendiri yang memasak untuk keluarganya'],['Peran di Keluarga','Juru masak dan pengatur rumah tangga meski masih sekolah dasar'],['Sifat Menonjol','Bijaksana, peka, dan sedikit cerdik'],['Kedekatan','Sangat dekat dengan Fuutarou, sering memperhatikan kehidupannya'],['Fakta Menarik','Disebut sebagai orang yang memotong sendiri gaya rambut khas Fuutarou'],['Pengisi Suara (JP)','Natsumi Takamori'],['Pengisi Suara (EN)','Dani Chambers']],
+  flog:'上杉 来羽'
+  },
+  isanari:{
+  ca:'#d97706',cab:'#fbbf24',cap:'#fffbeb',cam:'#fef3c7',caRgb:'217,119,6',caWine:'#78350f',caSub:'#92400e',caGold:'#fcd34d',bgDk:'#0f0803',d2:'#120a04',d3:'#0c0703',pifDeco:'rgba(217,119,6,.18)',o1:'radial-gradient(circle,rgba(217,119,6,.16),transparent 70%)',o2:'radial-gradient(circle,rgba(120,53,15,.28),transparent 70%)',mesh:'radial-gradient(ellipse 65% 55% at 80% 40%,rgba(200,120,20,.2) 0%,transparent 65%),radial-gradient(ellipse 50% 50% at 10% 80%,rgba(120,53,15,.3) 0%,transparent 60%),#0f0803',
+  logo:'上杉諭成',kj:'諭成',jp:'上杉<br>諭成',en:'Uesugi Isanari',eye:'五等分の花嫁 · Ayah Fuutarou',
+  tag:'Ayah tunggal yang bekerja keras membesarkan Fuutarou dan Raiha —<br>sosok sederhana di balik ketangguhan sang tutor jenius.',
+  chips:['👨‍👦 Ayah Tunggal','Pekerja Keras','Sederhana','Penuh Kasih'],
+  img:'isanari.jpg',ord:'—',ht:'—',wt:'—',bd:'Tidak diketahui',zo:'✿',zol:'Uesugi',
+  pi:'isanari.jpg',pcap:'上杉 諭成 · Uesugi Isanari · © Negi Haruba / Kodansha',
+  ptit:'Ayah Tunggal yang Tangguh<br><em style="font-style:italic;font-size:.74em">Sosok di Balik Ketekunan Fuutarou</em>',
+  pd:'Isanari Uesugi adalah ayah dari Fuutarou dan Raiha. Ia membesarkan kedua anaknya seorang diri di tengah kondisi ekonomi yang sulit, menjadi teladan kerja keras yang menurun kepada putra sulungnya.',
+  db:[['Nama','上杉 諭成'],['Hubungan','Ayah dari Fuutarou dan Raiha'],['Kondisi Keluarga','Membesarkan kedua anak seorang diri'],['Ekonomi','Keluarga dengan keterbatasan finansial'],['Tempat Tinggal','Apartemen sederhana bersama kedua anaknya']],
+  pc:['Kepala Keluarga','Pekerja Keras','Rendah Hati','Penyayang'],
+  qjp:'「風太郎、来羽をよろしく頼むぞ。」',qtr:'"Fuutarou, tolong jaga Raiha baik-baik ya."',qsrc:'— Isanari Uesugi kepada putranya',
+  trt:'Sisi-Sisi Isanari',
+  tr:[{i:'💪',n:'Pekerja Keras',d:'Bekerja tanpa kenal lelah demi mencukupi kebutuhan hidup kedua anaknya di tengah keterbatasan ekonomi keluarga.'},{i:'🏠',n:'Ayah Tunggal yang Tangguh',d:'Menjalankan peran ganda sebagai ayah sekaligus figur yang membesarkan Fuutarou dan Raiha tanpa pendamping.'},{i:'🌱',n:'Menanamkan Nilai Kerja Keras',d:'Menjadi teladan yang menginspirasi etos kerja dan kegigihan Fuutarou dalam menghadapi kesulitan hidup.'},{i:'😌',n:'Rendah Hati & Sederhana',d:'Meski hidup serba pas-pasan, ia tidak pernah mengeluh dan selalu berusaha memberikan yang terbaik untuk anak-anaknya.'}],
+  ge:'Galeri · Isanari',gt:'Ekspresi Isanari',
+  gal:[{s:'isanari.jpg',l:'上杉諭成 · Main Visual',t:true},{k:'父',l:'The Father · 父親'}],
+  ht2:'Kehidupan Sehari-hari Isanari',
+  hob:[{n:'01',t:'Bekerja Mencari Nafkah',d:'Menghabiskan sebagian besar waktunya bekerja demi mencukupi kebutuhan keluarga kecilnya.'},{n:'02',t:'Membesarkan Kedua Anak',d:'Mendidik Fuutarou dan Raiha sendirian dengan penuh kasih meski waktu bersama mereka terbatas.'}],
+  ff:[{i:'👨‍👧‍👦',t:'Ayah Tunggal',d:'Membesarkan Fuutarou dan Raiha seorang diri sejak mereka masih kecil.'},{i:'💰',t:'Kondisi Ekonomi Terbatas',d:'Kesulitan finansial keluarganya menjadi alasan Fuutarou giat mencari pekerjaan sampingan.'}],
+  tlt:'Kisah Isanari',tle:'Sosok di Balik Layar',
+  tl:[{y:'Sepanjang Cerita',h:'Menjaga Keluarga Tetap Utuh',b:'Terus bekerja keras membesarkan Fuutarou dan Raiha meski jarang tersorot langsung dalam alur utama cerita.'}],
+  fam:[{role:'Anak',name:'Fuutarou Uesugi',note:'Putra sulung yang mewarisi etos kerja kerasnya dan tumbuh menjadi tutor jenius bagi kelima saudari Nakano.'},{role:'Anak',name:'Raiha Uesugi',note:'Putri bungsu yang mengurus rumah tangga keluarga meski masih duduk di sekolah dasar.'}],
+  pers:[['Peran Keluarga','Kepala keluarga tunggal bagi Fuutarou dan Raiha'],['Sifat Menonjol','Pekerja keras, sederhana, dan penuh kasih'],['Kondisi Hidup','Menghadapi keterbatasan ekonomi namun tetap gigih'],['Warisan untuk Anak','Menurunkan semangat kerja keras yang tercermin kuat pada diri Fuutarou'],['Kemunculan','Karakter pendukung yang jarang tampil langsung namun pengaruhnya terasa sepanjang cerita'],['Pengisi Suara (JP)','Satoshi Hino'],['Pengisi Suara (EN)','Jim Foronda']],
+  flog:'上杉 諭成'
+  },
+  maruo:{
+  ca:'#2563eb',cab:'#60a5fa',cap:'#eff6ff',cam:'#dbeafe',caRgb:'37,99,235',caWine:'#1e3a8a',caSub:'#1d4ed8',caGold:'#93c5fd',bgDk:'#020714',d2:'#03091a',d3:'#020610',pifDeco:'rgba(37,99,235,.18)',o1:'radial-gradient(circle,rgba(37,99,235,.16),transparent 70%)',o2:'radial-gradient(circle,rgba(30,58,138,.28),transparent 70%)',mesh:'radial-gradient(ellipse 65% 55% at 80% 40%,rgba(30,90,220,.2) 0%,transparent 65%),radial-gradient(ellipse 50% 50% at 10% 80%,rgba(30,58,138,.3) 0%,transparent 60%),#020714',
+  logo:'中野丸男',kj:'丸男',jp:'中野<br>丸男',en:'Nakano Maruo',eye:'五等分の花嫁 · Ayah Tiri Kelima Saudari',
+  tag:'Dokter sekaligus pengusaha sukses —<br>ayah tiri yang terkesan dingin namun menyimpan kasih sayang mendalam untuk kelima putrinya.',
+  chips:['🏥 Direktur Rumah Sakit','Ayah Tiri','Berwibawa','Penyayang Diam-diam'],
+  img:'maruo.jpg',ord:'—',ht:'—',wt:'—',bd:'Tidak diketahui',zo:'✿',zol:'Nakano',
+  pi:'maruo.jpg',pcap:'中野 丸男 · Nakano Maruo · © Negi Haruba / Kodansha',
+  ptit:'Sosok Ayah di Balik Kesibukan<br><em style="font-style:italic;font-size:.74em">Direktur Rumah Sakit yang Menyayangi Diam-diam</em>',
+  pd:'Maruo Nakano adalah ayah tiri dari kelima saudari kembar Nakano. Sebagai dokter sekaligus pengusaha sukses yang menjalankan rumah sakit, kesibukannya membuatnya jarang berada di rumah — namun di balik itu, ia menyimpan rasa sayang yang besar untuk putri-putrinya, dan dialah yang mempekerjakan Fuutarou sebagai tutor privat.',
+  db:[['Nama','中野 丸男'],['Hubungan','Ayah tiri kelima saudari Nakano'],['Pekerjaan','Direktur rumah sakit / pengusaha'],['Mendiang Istri','Rena Nakano'],['Peran Penting','Mempekerjakan Fuutarou sebagai tutor privat kelima putrinya']],
+  pc:['Direktur Rumah Sakit','Sibuk Bekerja','Berwibawa','Penyayang Diam-diam'],
+  qjp:'「娘たちを、よろしく頼みます。」',qtr:'"Tolong jaga putri-putriku baik-baik."',qsrc:'— Maruo Nakano kepada Fuutarou Uesugi',
+  trt:'Sisi-Sisi Maruo',
+  tr:[{i:'🏥',n:'Profesional yang Sibuk',d:'Kesibukannya sebagai direktur rumah sakit membuatnya sering absen dari rumah, menimbulkan kesan dingin di mata sebagian putrinya.'},{i:'❤️',n:'Penyayang di Balik Kesibukan',d:'Meski jarang menunjukkannya secara terbuka, ia sangat mencintai dan mengkhawatirkan kelima putrinya.'},{i:'🎯',n:'Pengambil Keputusan Tegas',d:'Keputusannya mempekerjakan Fuutarou sebagai tutor privat menjadi titik balik penting bagi seluruh keluarga.'},{i:'😔',n:'Menyimpan Duka Mendalam',d:'Kehilangan istrinya, Rena, meninggalkan bekas mendalam yang mempengaruhi caranya menjalani hidup dan mengasuh anak-anaknya.'}],
+  ge:'Galeri · Maruo',gt:'Ekspresi Maruo',
+  gal:[{s:'maruo.jpg',l:'中野丸男 · Main Visual',t:true},{k:'父',l:'The Step-Father · 義父'}],
+  ht2:'Kehidupan Maruo',
+  hob:[{n:'01',t:'Mengelola Rumah Sakit',d:'Menghabiskan sebagian besar waktunya menjalankan tanggung jawab sebagai direktur rumah sakit.'},{n:'02',t:'Mengawasi dari Kejauhan',d:'Meski jarang di rumah, tetap memantau perkembangan kelima putrinya dengan caranya sendiri.'},{n:'03',t:'Mempekerjakan Tutor Terbaik',d:'Berusaha memberikan yang terbaik untuk pendidikan putrinya, termasuk merekrut Fuutarou sebagai tutor privat.'}],
+  ff:[{i:'🏥',t:'Direktur Rumah Sakit',d:'Menjabat posisi penting yang membuatnya memiliki jadwal sangat padat setiap harinya.'},{i:'💍',t:'Menikah dengan Rena',d:'Menikahi Rena Nakano dan menjadi ayah tiri bagi kelima anak kembarnya.'},{i:'🤝',t:'Merekrut Fuutarou',d:'Keputusannya mempekerjakan Fuutarou menjadi awal mula seluruh kisah Go-Toubun no Hanayome.'}],
+  tlt:'Kisah Maruo',tle:'Ayah di Balik Layar',
+  tl:[{y:'Sebelum Cerita',h:'Menikahi Rena',b:'Menikah dengan Rena Nakano dan menjadi ayah tiri bagi kelima saudari kembar.'},{y:'Kehilangan Besar',h:'Wafatnya Rena',b:'Kehilangan istrinya karena sakit, meninggalkan duka mendalam bagi seluruh keluarga.'},{y:'Awal Cerita',h:'Merekrut Fuutarou',b:'Mempekerjakan Fuutarou Uesugi sebagai tutor privat bagi kelima putrinya yang bermasalah secara akademik.'}],
+  fam:[{role:'Mendiang Istri',name:'Rena Nakano',note:'Istri yang telah wafat — pernikahan mereka menjadikan Maruo ayah tiri bagi kelima saudari kembar.'},{role:'Anak Tiri',name:'Ichika, Nino, Miku, Yotsuba, Itsuki',note:'Kelima saudari kembar Nakano yang ia besarkan sebagai anak kandungnya sendiri.'}],
+  pers:[['Pekerjaan','Direktur rumah sakit sekaligus pengusaha sukses'],['Sifat Menonjol','Berwibawa dan terkesan dingin, namun penyayang di dalam hati'],['Peran Penting','Merekrut Fuutarou sebagai tutor privat kelima putrinya'],['Kehilangan','Kehilangan istrinya, Rena, menjadi bagian penting dari masa lalu keluarga Nakano'],['Kemunculan','Karakter pendukung yang jarang tampil langsung namun keputusannya mengubah jalan cerita'],['Pengisi Suara (EN)','Christopher Wehkamp']],
+  flog:'中野 丸男'
+  },
+  rena:{
+  ca:'#a855f7',cab:'#d8b4fe',cap:'#faf5ff',cam:'#f3e8ff',caRgb:'168,85,247',caWine:'#581c87',caSub:'#7e22ce',caGold:'#e9d5ff',bgDk:'#0a0313',d2:'#0d0417',d3:'#08030f',pifDeco:'rgba(168,85,247,.18)',o1:'radial-gradient(circle,rgba(168,85,247,.16),transparent 70%)',o2:'radial-gradient(circle,rgba(88,28,135,.28),transparent 70%)',mesh:'radial-gradient(ellipse 65% 55% at 80% 40%,rgba(150,70,220,.2) 0%,transparent 65%),radial-gradient(ellipse 50% 50% at 10% 80%,rgba(88,28,135,.3) 0%,transparent 60%),#0a0313',
+  logo:'中野れな',kj:'れな',jp:'中野<br>れな',en:'Nakano Rena',eye:'五等分の花嫁 · Mendiang Ibu Kelima Saudari',
+  tag:'Mendiang ibu kandung kelima saudari Nakano —<br>guru SMA yang disayangi murid-muridnya dan pencetus "Prinsip Gotoubun".',
+  chips:['👩‍🏫 Mantan Guru SMA','Mendiang Ibu','Hangat & Bijaksana','Kenangan Abadi'],
+  img:'rena.jpg',ord:'—',ht:'—',wt:'—',bd:'Tidak diketahui',zo:'✿',zol:'Nakano',
+  pi:'rena.jpg',pcap:'中野 れな · Nakano Rena · © Negi Haruba / Kodansha',
+  ptit:'Ibu yang Selalu Dikenang<br><em style="font-style:italic;font-size:.74em">Guru yang Menanamkan Prinsip Gotoubun</em>',
+  pd:'Rena Nakano adalah ibu kandung kelima saudari kembar Nakano yang telah wafat karena sakit sekitar lima tahun sebelum cerita dimulai. Semasa hidupnya, ia adalah seorang guru SMA yang sangat disayangi murid-muridnya, dan dialah yang menanamkan "Prinsip Gotoubun" — bahwa kelima putrinya adalah satu kesatuan yang harus saling berbagi dan mendukung.',
+  db:[['Nama','中野 れな'],['Hubungan','Ibu kandung kelima saudari Nakano'],['Profesi Semasa Hidup','Guru SMA'],['Suami','Maruo Nakano'],['Warisan','Prinsip Gotoubun — kelima putrinya adalah satu kesatuan']],
+  pc:['Guru yang Disayangi','Hangat & Bijaksana','Kenangan Abadi','Filosofi Gotoubun'],
+  qjp:'「五人はいつも一緒、一つの心だよ。」',qtr:'"Kalian berlima selalu bersama, satu hati yang sama."',qsrc:'— Rena Nakano kepada kelima putrinya',
+  trt:'Kenangan tentang Rena',
+  tr:[{i:'👩‍🏫',n:'Guru yang Disayangi',d:'Semasa hidupnya, Rena adalah seorang guru SMA yang sangat dihormati dan disayangi oleh murid-muridnya.'},{i:'💞',n:'Menanamkan Prinsip Gotoubun',d:'Mengajarkan kelima putrinya untuk selalu menjadi satu kesatuan yang saling berbagi perasaan dan mendukung satu sama lain.'},{i:'🌸',n:'Kehangatan yang Abadi',d:'Meski telah tiada, kehangatan dan nilai-nilai yang ia tanamkan terus hidup dalam diri kelima putrinya hingga dewasa.'},{i:'😢',n:'Kepergian yang Membekas',d:'Wafatnya meninggalkan duka mendalam bagi seluruh keluarga, terutama bagi kelima putrinya yang masih remaja saat itu.'}],
+  ge:'Galeri · Rena',gt:'Kenangan Rena',
+  gal:[{s:'rena.jpg',l:'中野れな · Main Visual',t:true},{k:'母',l:'The Mother · 母親'}],
+  ht2:'Warisan yang Ditinggalkan Rena',
+  hob:[{n:'01',t:'Mengajar di Sekolah',d:'Semasa hidupnya, mendedikasikan diri sebagai guru SMA yang disayangi murid-muridnya.'},{n:'02',t:'Membesarkan Kelima Putri',d:'Mendidik kelima anak kembarnya dengan penuh kasih sebelum sakit merenggut nyawanya.'},{n:'03',t:'Mengajarkan Kebersamaan',d:'Menanamkan filosofi bahwa kelima putrinya harus selalu menjadi satu kesatuan yang saling menopang.'}],
+  ff:[{i:'📖',t:'Prinsip Gotoubun',d:'Filosofi yang ia ajarkan menjadi salah satu tema sentral dalam hubungan kelima saudari sepanjang cerita.'},{i:'🕊️',t:'Wafat 5 Tahun Sebelumnya',d:'Meninggal karena sakit sekitar lima tahun sebelum kisah utama dimulai, saat kelima putrinya masih SMP.'},{i:'👩‍🏫',t:'Guru yang Dikenang',d:'Reputasinya sebagai guru yang hangat dan disayangi terus dikenang oleh orang-orang di sekitarnya.'}],
+  tlt:'Kisah Rena',tle:'Kenangan yang Tak Pernah Pudar',
+  tl:[{y:'Masa Muda',h:'Menjadi Guru SMA',b:'Mengabdikan diri sebagai pendidik yang disayangi murid-muridnya sebelum menikah dengan Maruo Nakano.'},{y:'Membesarkan Kelima Putri',h:'Menanamkan Prinsip Gotoubun',b:'Mengajarkan kelima putri kembarnya untuk selalu bersatu dan saling berbagi perasaan.'},{y:'Lima Tahun Sebelum Cerita',h:'Kepergian yang Membekas',b:'Wafat karena sakit, meninggalkan duka mendalam namun juga warisan nilai yang terus hidup dalam diri kelima putrinya.'}],
+  fam:[{role:'Suami',name:'Maruo Nakano',note:'Suami yang ditinggalkan bersama tanggung jawab membesarkan kelima putri kembar mereka.'},{role:'Anak',name:'Ichika, Nino, Miku, Yotsuba, Itsuki',note:'Kelima putri kembar yang ia besarkan dengan penuh kasih dan ajaran tentang kebersamaan.'}],
+  pers:[['Profesi Semasa Hidup','Guru SMA yang sangat disayangi murid-muridnya'],['Warisan Terbesar','Prinsip Gotoubun — filosofi kebersamaan bagi kelima putrinya'],['Sifat yang Dikenang','Hangat, bijaksana, dan penuh kasih'],['Kepergian','Wafat karena sakit sekitar lima tahun sebelum cerita utama dimulai'],['Pengaruh dalam Cerita','Nilai-nilai yang ia tanamkan terus membentuk kepribadian kelima putrinya hingga dewasa'],['Pengisi Suara (JP)','Yuuki Kyouka'],['Pengisi Suara (EN)','Brianna Roberts']],
+  flog:'中野 れな'
+  },
+  yamada:{
+  ca:'#0891b2',cab:'#67e8f9',cap:'#ecfeff',cam:'#cffafe',caRgb:'8,145,178',caWine:'#164e63',caSub:'#0e7490',caGold:'#a5f3fc',bgDk:'#020c0f',d2:'#031014',d3:'#020b0d',pifDeco:'rgba(8,145,178,.18)',o1:'radial-gradient(circle,rgba(8,145,178,.16),transparent 70%)',o2:'radial-gradient(circle,rgba(22,78,99,.28),transparent 70%)',mesh:'radial-gradient(ellipse 65% 55% at 80% 40%,rgba(10,140,180,.2) 0%,transparent 65%),radial-gradient(ellipse 50% 50% at 10% 80%,rgba(22,78,99,.3) 0%,transparent 60%),#020c0f',
+  logo:'ヤマダ',kj:'ヤマダ',jp:'ヤマダ<br>(Yamada)',en:'Yamada',eye:'五等分の花嫁 · Teman Sekolah Nino',
+  tag:'Teman sekelas Nino di Asahiyama High School —<br>salah satu sosok yang menemani kehidupan sosial Nino di sekolah.',
+  chips:['🏫 Teman Sekelas','Sahabat Nino','Asahiyama High','Ceria'],
+  img:'yamada.jpg',ord:'—',ht:'—',wt:'—',bd:'Tidak diketahui',zo:'✿',zol:'Teman Sekolah',
+  pi:'yamada.jpg',pcap:'ヤマダ · Yamada · © Negi Haruba / Kodansha',
+  ptit:'Sahabat di Sekolah<br><em style="font-style:italic;font-size:.74em">Teman Dekat Nino di Asahiyama</em>',
+  pd:'Yamada adalah murid Asahiyama High School dan salah satu teman dekat Nino Nakano di sekolah. Kehadirannya menggambarkan sisi kehidupan sosial Nino di luar rumah, sebagai remaja yang punya lingkaran pertemanan sendiri di tengah kesibukannya menjalani hari-hari sebagai salah satu dari lima bersaudari kembar.',
+  db:[['Nama','ヤマダ (Yamada)'],['Hubungan','Teman sekelas Nino Nakano'],['Sekolah','Asahiyama High School'],['Peran','Bagian dari lingkaran pertemanan Nino di sekolah']],
+  pc:['Teman Sekelas','Sahabat Nino','Ceria','Asahiyama High'],
+  qjp:'「二乃、今日も一緒に帰ろうよ！」',qtr:'"Nino, ayo pulang bareng lagi hari ini!"',qsrc:'— Yamada kepada Nino Nakano',
+  trt:'Sisi-Sisi Yamada',
+  tr:[{i:'🏫',n:'Teman Sekelas Nino',d:'Salah satu teman dekat Nino di Asahiyama High School yang sering terlihat menghabiskan waktu bersamanya di sekolah.'},{i:'😊',n:'Ceria & Ramah',d:'Memiliki kepribadian yang hangat dan mudah bergaul, mencerminkan sisi sosial kehidupan sekolah Nino.'},{i:'👭',n:'Bagian dari Lingkaran Pertemanan Nino',d:'Bersama Otori, menjadi teman dekat yang menemani keseharian Nino di luar rumah.'}],
+  ge:'Galeri · Yamada',gt:'Ekspresi Yamada',
+  gal:[{s:'yamada.jpg',l:'ヤマダ · Main Visual',t:true},{k:'友',l:'The Friend · 友達'}],
+  ht2:'Kehidupan Yamada di Sekolah',
+  hob:[{n:'01',t:'Menghabiskan Waktu dengan Nino',d:'Sering terlihat bersama Nino di lingkungan sekolah Asahiyama High.'},{n:'02',t:'Kehidupan Sekolah Biasa',d:'Menjalani keseharian sebagai murid SMA seperti teman-teman sekelasnya yang lain.'}],
+  ff:[{i:'👭',t:'Sahabat Nino',d:'Menjadi salah satu teman dekat Nino Nakano yang dikenal di lingkungan Asahiyama High School.'},{i:'🏫',t:'Karakter Pendukung Sekolah',d:'Merepresentasikan sisi kehidupan sosial Nino yang jarang tersorot dalam alur utama cerita.'}],
+  tlt:'Kisah Yamada',tle:'Sahabat di Balik Layar',
+  tl:[{y:'Sepanjang Cerita',h:'Menemani Keseharian Nino',b:'Muncul sebagai bagian dari kehidupan sosial Nino di sekolah, meski tidak banyak tersorot dalam alur utama.'}],
+  fam:[{role:'Teman Dekat',name:'Nino Nakano',note:'Sahabat sekelas yang sering menghabiskan waktu bersama di lingkungan Asahiyama High School.'}],
+  pers:[['Peran dalam Cerita','Teman sekelas dan sahabat Nino Nakano di sekolah'],['Sifat Menonjol','Ceria dan mudah bergaul'],['Kemunculan','Karakter pendukung minor yang muncul di lingkungan sekolah'],['Pengisi Suara (JP)','Hisako Toujou'],['Pengisi Suara (EN)','Hayden Daviau']],
+  flog:'ヤマダ'
+  },
+  otori:{
+  ca:'#db2777',cab:'#f9a8d4',cap:'#fdf2f8',cam:'#fce7f3',caRgb:'219,39,119',caWine:'#831843',caSub:'#9d174d',caGold:'#f9a8d4',bgDk:'#0f0209',d2:'#12030b',d3:'#0c0207',pifDeco:'rgba(219,39,119,.18)',o1:'radial-gradient(circle,rgba(219,39,119,.16),transparent 70%)',o2:'radial-gradient(circle,rgba(131,24,67,.28),transparent 70%)',mesh:'radial-gradient(ellipse 65% 55% at 80% 40%,rgba(210,40,130,.2) 0%,transparent 65%),radial-gradient(ellipse 50% 50% at 10% 80%,rgba(131,24,67,.3) 0%,transparent 60%),#0f0209',
+  logo:'オオトリ',kj:'オオトリ',jp:'オオトリ<br>(Otori)',en:'Otori',eye:'五等分の花嫁 · Teman Sekolah Nino',
+  tag:'Teman sekelas Nino di Asahiyama High School —<br>bagian dari lingkaran pertemanan yang menemani sisi sosial Nino.',
+  chips:['🏫 Teman Sekelas','Sahabat Nino','Asahiyama High','Hangat'],
+  img:'otori.jpg',ord:'—',ht:'—',wt:'—',bd:'Tidak diketahui',zo:'✿',zol:'Teman Sekolah',
+  pi:'otori.jpg',pcap:'オオトリ · Otori · © Negi Haruba / Kodansha',
+  ptit:'Sahabat di Sekolah<br><em style="font-style:italic;font-size:.74em">Teman Dekat Nino di Asahiyama</em>',
+  pd:'Otori adalah murid Asahiyama High School dan salah satu teman dekat Nino Nakano. Bersama Yamada, ia menjadi bagian dari lingkaran pertemanan Nino di sekolah yang menunjukkan sisi kehidupan sosialnya di luar rumah keluarga Nakano.',
+  db:[['Nama','オオトリ (Otori)'],['Hubungan','Teman sekelas Nino Nakano'],['Sekolah','Asahiyama High School'],['Peran','Bagian dari lingkaran pertemanan Nino di sekolah']],
+  pc:['Teman Sekelas','Sahabat Nino','Hangat','Asahiyama High'],
+  qjp:'「二乃ってほんと料理上手だよね。」',qtr:'"Nino itu benar-benar jago masak, ya."',qsrc:'— Otori tentang Nino Nakano',
+  trt:'Sisi-Sisi Otori',
+  tr:[{i:'🏫',n:'Teman Sekelas Nino',d:'Salah satu teman akrab Nino di Asahiyama High School yang mengenal kesehariannya di sekolah.'},{i:'😊',n:'Hangat & Suportif',d:'Menunjukkan sikap yang hangat dan mendukung terhadap Nino dalam lingkungan pertemanan mereka.'},{i:'👭',n:'Bagian dari Lingkaran Pertemanan Nino',d:'Bersama Yamada, menemani keseharian sosial Nino di luar rumah keluarga Nakano.'}],
+  ge:'Galeri · Otori',gt:'Ekspresi Otori',
+  gal:[{s:'otori.jpg',l:'オオトリ · Main Visual',t:true},{k:'友',l:'The Friend · 友達'}],
+  ht2:'Kehidupan Otori di Sekolah',
+  hob:[{n:'01',t:'Menghabiskan Waktu dengan Nino',d:'Sering terlihat bersama Nino dalam suasana sekolah sehari-hari.'},{n:'02',t:'Kehidupan Sekolah Biasa',d:'Menjalani keseharian sebagai murid SMA di Asahiyama High School.'}],
+  ff:[{i:'👭',t:'Sahabat Nino',d:'Dikenal sebagai salah satu teman dekat Nino Nakano di lingkungan sekolah.'},{i:'🏫',t:'Karakter Pendukung Sekolah',d:'Merepresentasikan sisi sosial Nino yang jarang tersorot dalam alur utama cerita.'}],
+  tlt:'Kisah Otori',tle:'Sahabat di Balik Layar',
+  tl:[{y:'Sepanjang Cerita',h:'Menemani Keseharian Nino',b:'Muncul sebagai bagian dari kehidupan sosial Nino di sekolah, meski tidak banyak tersorot dalam alur utama.'}],
+  fam:[{role:'Teman Dekat',name:'Nino Nakano',note:'Sahabat sekelas yang mengenal sisi kehidupan sosial Nino di Asahiyama High School.'}],
+  pers:[['Peran dalam Cerita','Teman sekelas dan sahabat Nino Nakano di sekolah'],['Sifat Menonjol','Hangat dan suportif'],['Kemunculan','Karakter pendukung minor yang muncul di lingkungan sekolah'],['Pengisi Suara (JP)','Kaoru Sakura'],['Pengisi Suara (EN)','Marissa Lenti']],
+  flog:'オオトリ'
+  }
 };
 
 const CHAR_ORDER=['fuutaro','ichika','nino','miku','yotsuba','itsuki'];
@@ -1531,7 +1735,11 @@ const R={
     const icons={'Ayah':'👨','Ibu':'👩','Ibu Kandung':'👩','Ayah Tiri':'🧑‍⚕️','Adik':'👧','Saudari':'✿'};
     return a.map((f,i)=>`<div class="fam-card" data-rv data-d="${(i%3)+1}"><span class="fam-icon">${icons[f.role]||'👤'}</span><p class="fam-role">${f.role}</p><p class="fam-name">${f.name}</p><p class="fam-note">${f.note}</p></div>`).join('');
   },
-  pers:(a)=>a.map(([l,v])=>`<div class="pers-item"><p class="pers-label">${l}</p><p class="pers-value">${v}</p></div>`).join('')
+  pers:(a)=>a.map(([l,v])=>{
+    const isVA=l.indexOf('Pengisi Suara')===0;
+    const icon=isVA?'🎙️ ':'';
+    return `<div class="pers-item${isVA?' pers-va':''}"><p class="pers-label">${icon}${l}</p><p class="pers-value">${v}</p></div>`;
+  }).join('')
 };
 
 // ════════════════════════════════
@@ -1584,6 +1792,12 @@ const SITEMS=[
   {id:'miku',type:'char',name:'Miku Nakano',jp:'中野 三玖',desc:'Putri ketiga · Headphone merah',color:'#e05068'},
   {id:'yotsuba',type:'char',name:'Yotsuba Nakano',jp:'中野 四葉',desc:'Putri keempat · Si ceria',color:'#16a34a'},
   {id:'itsuki',type:'char',name:'Itsuki Nakano',jp:'中野 五月',desc:'Putri kelima · Calon guru',color:'#dc2626'},
+  {id:'raiha',type:'support',name:'Raiha Uesugi',jp:'上杉 来羽',desc:'Adik Fuutarou · Juru masak keluarga',color:'#34d399'},
+  {id:'isanari',type:'support',name:'Isanari Uesugi',jp:'上杉 諭成',desc:'Ayah Fuutarou · Ayah tunggal pekerja keras',color:'#d97706'},
+  {id:'maruo',type:'support',name:'Maruo Nakano',jp:'中野 丸男',desc:'Ayah tiri kelima saudari · Direktur rumah sakit',color:'#2563eb'},
+  {id:'rena',type:'support',name:'Rena Nakano',jp:'中野 れな',desc:'Mendiang ibu · Guru SMA yang disayangi',color:'#a855f7'},
+  {id:'yamada',type:'support',name:'Yamada',jp:'ヤマダ',desc:'Teman sekelas Nino di Asahiyama High',color:'#0891b2'},
+  {id:'otori',type:'support',name:'Otori',jp:'オオトリ',desc:'Teman sekelas Nino di Asahiyama High',color:'#db2777'},
   {id:'s1',type:'series',name:'Season 1 Anime',jp:'五等分の花嫁',desc:'Anime · 12 ep · 2019',color:'#c9902a'},
   {id:'s2',type:'series',name:'Season 2 Anime',jp:'五等分の花嫁∬',desc:'Anime · 12 ep · 2021',color:'#7c3aed'},
   {id:'movie',type:'series',name:'The Movie',jp:'五等分の花嫁∞',desc:'Film · 2022 · Finale',color:'#e05068'},
@@ -1596,7 +1810,7 @@ function renderSearch(q){
   items=q?items.filter(i=>i.name.toLowerCase().includes(q.toLowerCase())||i.jp.includes(q)||i.desc.toLowerCase().includes(q.toLowerCase())):items;
   if(!items.length){document.getElementById('s-res').innerHTML='<div class="s-empty">Tidak ada hasil ditemukan ✿</div>';return}
   document.getElementById('s-res').innerHTML=items.map(i=>`
-    <div class="s-item" onclick="${i.type==='char'?`openChar('${i.id}')`:`openSeries('${i.id}')`};closeSearch()">
+    <div class="s-item" onclick="${i.type==='series'?`openSeries('${i.id}')`:`openChar('${i.id}')`};closeSearch()">
       <div class="s-dot" style="background:${i.color}"></div>
       <div><div class="s-name">${i.name} <span style="opacity:.45;font-size:.78rem">· ${i.jp}</span></div><div class="s-desc">${i.desc}</div></div>
     </div>`).join('');
@@ -1643,8 +1857,9 @@ document.getElementById('shuffle-btn').addEventListener('click',()=>{
 // ════════════════════════════════
 // FAVORITES
 // ════════════════════════════════
-const CNAMES={fuutaro:'Fuutarou',ichika:'Ichika',nino:'Nino',miku:'Miku',yotsuba:'Yotsuba',itsuki:'Itsuki'};
-const CCOLORS={fuutaro:'#6495ed',ichika:'#c9902a',nino:'#7c3aed',miku:'#e05068',yotsuba:'#16a34a',itsuki:'#dc2626'};
+const CNAMES={fuutaro:'Fuutarou',ichika:'Ichika',nino:'Nino',miku:'Miku',yotsuba:'Yotsuba',itsuki:'Itsuki',raiha:'Raiha',isanari:'Isanari',maruo:'Maruo',rena:'Rena',yamada:'Yamada',otori:'Otori'};
+const CCOLORS={fuutaro:'#6495ed',ichika:'#c9902a',nino:'#7c3aed',miku:'#e05068',yotsuba:'#16a34a',itsuki:'#dc2626',raiha:'#34d399',isanari:'#d97706',maruo:'#2563eb',rena:'#a855f7',yamada:'#0891b2',otori:'#db2777'};
+const SUPPORT_ORDER=['raiha','isanari','maruo','rena','yamada','otori'];
 let FAVS=JSON.parse(localStorage.getItem('gt_favs')||'[]');
 function toggleFav(id,btn){
   const i=FAVS.indexOf(id);
@@ -2960,9 +3175,15 @@ function openSeries(id){
 // ════════════════════════════════
 function renderCharDots(){
   const wrap=document.getElementById('char-dots');
+  const isMain=CHAR_ORDER.includes(CURRENT_CHAR);
+  document.getElementById('char-prev').classList.toggle('hide',!isMain);
+  document.getElementById('char-next').classList.toggle('hide',!isMain);
+  wrap.style.display=isMain?'':'none';
+  if(!isMain)return;
   wrap.innerHTML=CHAR_ORDER.map(id=>`<div class="char-dot${id===CURRENT_CHAR?' active':''}" onclick="openChar('${id}')" title="${CNAMES[id]||id}"></div>`).join('');
 }
 function navChar(dir){
+  if(!CHAR_ORDER.includes(CURRENT_CHAR))return;
   const idx=CHAR_ORDER.indexOf(CURRENT_CHAR);
   let next=idx+dir;
   if(next<0)next=CHAR_ORDER.length-1;
